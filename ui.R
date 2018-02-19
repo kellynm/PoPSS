@@ -1,9 +1,11 @@
 library(shiny)
-#library(shinyjs)
+library(shinyjs)
 library(raster)
 library(rgdal)
 
-ui <- fluidPage(title = "Generalizable Pest and Pathogen Model",#theme = "bootstrap.css",
+ui <- fluidPage(
+  useShinyjs(),
+  title = "Generalizable Pest and Pathogen Model",#theme = "bootstrap.css",
                 style = "background-color: black",
                 
                 
@@ -84,7 +86,8 @@ ui <- fluidPage(title = "Generalizable Pest and Pathogen Model",#theme = "bootst
                                    # Create an Action button that will run the model when pressed
                                    
                          ),
-                         actionButton("run", "Run Model")
+                         withBusyIndicatorUI(
+                           actionButton("run", "Run Model"))
                   ),
                   
                   column(width = 8,

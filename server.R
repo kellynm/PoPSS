@@ -1,11 +1,7 @@
-library(leaflet)
-library(RColorBrewer)
-library(scales)
-library(lattice)
-library(dplyr)
-library(shiny)
-library(raster)
-library(rgdal)
+
+
+source("helpers.R", local = TRUE)
+#source("Generalizablepestandpathogenmodel.R")
 
 # writeZip <- function(x, file, filename, format, ...) {
 #   if (format=="ESRI Shapefile") {
@@ -20,6 +16,16 @@ library(rgdal)
 # }
 
 server <- function(input, output) {
+  library(leaflet)
+  library(RColorBrewer)
+  library(scales)
+  library(lattice)
+  library(dplyr)
+  library(shiny)
+  library(raster)
+  library(rgdal)
+  #source("helpers.R", local = TRUE)
+  source("Generalizablepestandpathogenmodel.R", local = TRUE)
   options(shiny.maxRequestSize=70000*1024^2) 
   
   # Creates the text file that is downloaded upon model completion
@@ -30,16 +36,16 @@ server <- function(input, output) {
   pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "transparent")
   
   #Creates the text saying the model is running when the action button is pressed
-  modeltext <- eventReactive(input$run, {"Model is now running"})
+  modeltext <- eventReactive(input$run, {"Model has finished"})
   output$modelText <- renderText({modeltext()})
   
   #inTotalSpeciesData <- reactive(input$totalSpeciesData)
   #inTSD <- raster(inTotalSpeciesData())
   
   modelRun <- observeEvent(input$run, 
-                           {pest("./layers/UMCA_den_100m.img","./layers/OAKS_den_100m.img","./layers/TPH_den_100m.img", "./layers/init_2000_cnt.img",
+                           {withBusyIndicatorServer("run",{pest("./layers/UMCA_den_100m.img","./layers/OAKS_den_100m.img","./layers/TPH_den_100m.img", "./layers/init_2000_cnt.img",
                                  input$start, input$end, input$seasonQ, input$seasonMonths[1],input$seasonMonths[2], 
-                                 input$sporeRate, input$windQ, input$windDir, './layers/weather/weatherCoeff_2000_2014.nc')
+                                 input$sporeRate, input$windQ, input$windDir, './layers/weather/weatherCoeff_2000_2014.nc')})
                            })
   
   inTempData <- renderText(input$tempData$datapath)
