@@ -48,17 +48,19 @@ server <- function(input, output) {
     if (is.null(input$windData)==TRUE && is.null(input$tempData)==TRUE && is.null(input$totalSpeciesData)==TRUE){
       leaflet(height = "300px") %>%
         addProviderTiles("Esri.WorldImagery", group="background 1") %>%
-        addRasterImage(r, opacity=0.0) %>%
-        addLegend("bottomright", pal = pal, values = values(r),
-                  title = "Host species",
+        addRasterImage(r, opacity=0.0)
+        #addLegend("bottomright", pal = pal, values = values(r),
+                  #title = "Host species",
                   #labFormat = labelFormat(prefix = "$"),
-                  opacity = 1)
+                  #opacity = 1)
     } else if (is.null(input$windData)==TRUE && is.null(input$tempData)==TRUE && is.null(input$totalSpeciesData)==FALSE) {
       inTotalSpeciesData <- input$totalSpeciesData
+      rastTSD <- raster(inTotalSpeciesData$datapath)
+      pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastTSD), na.color = "transparent")
       leaflet(height = "300px") %>%
         addProviderTiles("Esri.WorldImagery", group="background 1") %>%
-        addRasterImage({raster(inTotalSpeciesData$datapath)}, opacity=0.6) %>%
-        addLegend("bottomright", pal = pal, values = values(r),
+        addRasterImage({raster(inTotalSpeciesData$datapath)}, opacity=0.5, colors = pal) %>%
+        addLegend("bottomright", pal = pal, values = values(rastTSD),
                   title = "Host species",
                   #labFormat = labelFormat(prefix = "$"),
                   opacity = 1)
