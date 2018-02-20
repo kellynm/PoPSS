@@ -6,10 +6,9 @@ library(dplyr)
 library(shiny)
 library(raster)
 library(rgdal)
+library(shinyjs)
 
 fluidPage(
-  #source("./Aphis Modeling Project/helpers.r", local = TRUE),
-  #source("./Aphis Modeling Project/Generalizablepestandpathogenmodel.r", local = TRUE),
   useShinyjs(),
   title = "Generalizable Pest and Pathogen Model",#theme = "bootstrap.css",
   style = "background-color: black",
