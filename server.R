@@ -30,32 +30,31 @@ function(input, output) {
       leaflet(height = "300px") %>%
         addProviderTiles("Esri.WorldImagery", group="background 1") %>%
         addRasterImage(r, opacity=0.0)
-        #addLegend("bottomright", pal = pal, values = values(r),
-                  #title = "Host species",
-                  #labFormat = labelFormat(prefix = "$"),
-                  #opacity = 1)
     } else if (is.null(input$windData)==TRUE && is.null(input$tempData)==TRUE && is.null(input$totalSpeciesData)==FALSE) {
       inTotalSpeciesData <- input$totalSpeciesData
       rastTSD <- raster(inTotalSpeciesData$datapath)
       pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastTSD), na.color = "transparent")
       leaflet(height = "300px") %>%
         addProviderTiles("Esri.WorldImagery", group="background 1") %>%
-        addRasterImage({raster(inTotalSpeciesData$datapath)}, opacity=0.5, colors = pal) %>%
+        addRasterImage({raster(inTotalSpeciesData$datapath)}, opacity=0.5, colors = pal, group = "Total Host") %>%
+        addLayersControl(
+          overlayGroups ="Total Host",
+          options = layersControlOptions(collapsed = FALSE, opacity =0.6)) %>%
         addLegend("bottomright", pal = pal, values = values(rastTSD),
                   title = "Host species",
                   #labFormat = labelFormat(prefix = "$"),
                   opacity = 1)
-    } else if (is.null(input$windData)==FALSE && is.null(input$tempData)==TRUE) {
+    } else if (is.null(input$windData)==FALSE && is.null(input$tempData)==TRUE && is.null(input$totalSpeciesData)==TRUE) {
       inWind <- input$windData
       leaflet(height = "300px") %>%
         addProviderTiles("Esri.WorldImagery", group="background 1") %>%
         addRasterImage({raster(inWind$datapath)}, opacity=0.6)
-    } else if (is.null(input$windData)==TRUE && is.null(input$tempData)==FALSE){
+    } else if (is.null(input$windData)==TRUE && is.null(input$tempData)==FALSE && is.null(input$totalSpeciesData)==TRUE){
       inTemp <- input$tempData
       leaflet(height = "300px") %>%
         addProviderTiles("Esri.WorldImagery", group="background 1") 
       addRasterImage({raster(inTemp$datapath)}, opacity=0.6)
-    } else if (is.null(input$windData)==FALSE && is.null(input$tempData)==FALSE) {
+    } else if (is.null(input$windData)==FALSE && is.null(input$tempData)==FALSE && is.null(input$totalSpeciesData)==TRUE) {
       inTemp <- input$tempData
       inWind <- input$windData
       leaflet(height = "300px") %>%
