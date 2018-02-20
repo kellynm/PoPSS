@@ -1,33 +1,8 @@
+source("helpers.r", local = TRUE)
+source("Generalizablepestandpathogenmodel.r")
 
-
-source("helpers.R", local = TRUE)
-#source("Generalizablepestandpathogenmodel.R")
-
-# writeZip <- function(x, file, filename, format, ...) {
-#   if (format=="ESRI Shapefile") {
-#     writeOGR(x, "./", filename, format, overwrite_layer=T, check_exists=T)
-#   } else {
-#     writeRaster(x, filename, format, bylayer=F, overwrite=T, ...)
-#   }
-#   f <- list.files(pattern=paste0(strsplit(filename, ".", fixed=T)[[1]][1], ".*"))
-#   zip(paste0(filename, ".zip"), f, flags="-9Xjm", zip="zip")
-#   file.copy(paste0(filename, ".zip"), file)
-#   file.remove(paste0(filename, ".zip"))
-# }
-
-server <- function(input, output) {
-  library(leaflet)
-  library(RColorBrewer)
-  library(scales)
-  library(lattice)
-  library(dplyr)
-  library(shiny)
-  library(raster)
-  library(rgdal)
-  #source("helpers.R", local = TRUE)
-  source("Generalizablepestandpathogenmodel.R", local = TRUE)
+function(input, output) {
   options(shiny.maxRequestSize=70000*1024^2) 
-  
   # Creates the text file that is downloaded upon model completion
   #output$model <- renderPrint({c("Model inputs are:",input$wind, input$windData, input$temp, input$tempData, input$precip, input$precipData)})
   
@@ -109,12 +84,4 @@ server <- function(input, output) {
     file.copy("C:\\Users\\Chris\\Desktop\\Generalizable Pest and Pathogen Model User.pdf",file)
   })
   
-  # output$saveData <- downloadHandler(
-  #   filename, function(file) {
-  #     x <- "some data to write"
-  #     path <- "path to write files to"
-  #     format <- "argument passed to writeRaster or writeOGR (needed in my case)"
-  #     writeZip(x, file, path, format)
-  #   })
-  # 
 }
