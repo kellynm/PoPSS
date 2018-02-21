@@ -7,18 +7,22 @@ function(input, output) {
   #output$model <- renderPrint({c("Model inputs are:",input$wind, input$windData, input$temp, input$tempData, input$precip, input$precipData)})
   
   # Used to set the initial zoom of the map and color of the rasters
-  r <- raster("C:\\Users\\cmjone25\\Dropbox\\Projects\\APHIS\\BayOakCode/layers/UMCA_den_100m.img")
+  r <- raster("C:\\Users\\chris\\Dropbox\\Projects\\APHIS\\BayOakCode/layers/UMCA_den_100m.img")
   pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "transparent")
   
   #Creates the text saying the model is running when the action button is pressed
-  modeltext <- eventReactive(input$run, {"Model has finished"})
+  modeltext <<- eventReactive(input$run, {"Model has finished"})
   output$modelText <- renderText({modeltext()})
+
+  # inTotalSpeciesData <- observe({input$totalSpeciesData})
+  # if (is.null(inTotalSpeciesData$datapath)==FALSE){
+  #   rastTSD <- raster(inTotalSpeciesData$datapath)
+  # }
   
-  #inTotalSpeciesData <- reactive(input$totalSpeciesData)
-  #inTSD <- raster(inTotalSpeciesData())
-  
-  modelRun <- observeEvent(input$run, 
-                           {withBusyIndicatorServer("run",{pest("./layers/UMCA_den_100m.img","./layers/OAKS_den_100m.img","./layers/TPH_den_100m.img", "./layers/init_2000_cnt.img",
+  modelRun <- observeEvent(input$run, {
+    inTotalSpeciesData <- input$totalSpeciesData
+    rastTSD <- raster(inTotalSpeciesData$datapath)
+                           withBusyIndicatorServer("run",{pest("./layers/UMCA_den_100m.img","./layers/OAKS_den_100m.img",rastTSD, "./layers/init_2000_cnt.img",
                                  input$start, input$end, input$seasonQ, input$seasonMonths[1],input$seasonMonths[2], 
                                  input$sporeRate, input$windQ, input$windDir, './layers/weather/weatherCoeff_2000_2014.nc')})
                            })

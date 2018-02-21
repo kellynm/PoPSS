@@ -25,8 +25,8 @@ suppressPackageStartupMessages(library(sp))        #Classes and methods for spat
 
 pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData){
 ##Define the main working directory based on the current script path
-setwd("C:\\Users\\cmjone25\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
-#setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
+#setwd("C:\\Users\\cmjone25\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
+setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
 
 ##Use an external source file w/ all modules (functions) used within this script. 
 ##Use FULL PATH if source file is not in the same folder w/ this script
@@ -41,8 +41,8 @@ oaks_rast <- raster(host2)
 #max
 mx <- cellStats(oaks_rast, stat='max') 
 #----> All live trees
-lvtree_rast <- raster(allTrees)
-
+#lvtree_rast <- raster(allTrees)
+lvtree_rast <- allTrees
 #raster resolution
 res_win <- res(umca_rast)[1]
 

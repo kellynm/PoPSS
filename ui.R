@@ -10,8 +10,9 @@ library(shinyjs)
 
 fluidPage(
   useShinyjs(),
-  title = "Generalizable Pest and Pathogen Model",#theme = "bootstrap.css",
-  style = "background-color: black",
+  title = "Generalizable Pest and Pathogen Model",
+  #theme = "bootstrap.css",
+  style = "background-color: black; padding-bottom: 10px",
   # Add Title to App
   h1("Generalizable Pest and Pathogen Model", style = "color: green"),
   # Create a sidebar for variable inputs that react to user changes
@@ -19,7 +20,7 @@ fluidPage(
     column(width = 4,
            # Create panel for Species paramaters
            wellPanel(h3("Species Parameters", icon("bug")),
-                     style = "background-color: #54ACC1; border: #ADBD60; color: black",
+                     style = "background-color: #54ACC1; border: #ADBD60; color: black; padding: 1px 10px 1px 10px",
                      textInput("pest", "Enter the name of the species being simulated (currently not used exept to keep track of model run information)"),
                      # Create date range box for simulation
                      #dateRangeInput("date", "Start date to end date"),
@@ -34,7 +35,7 @@ fluidPage(
                      ),
            # Create panel for Host variables
            wellPanel(h3("Hosts", icon("tree")),
-                     style = "background-color: #ADBD60; border: #ADBD60; color: black",
+                     style = "background-color: #ADBD60; border: #ADBD60; color: black; padding: 1px 10px 1px 10px",
                      # Create text box for pest or pathogen being simulated
                      # Create input for host data
                      selectInput(inputId = "hostQ", label = "Is the pest or pathogen a generalist or specialist?", choices = c("specialist","generalist")),
@@ -52,7 +53,8 @@ fluidPage(
                      fileInput("totalSpeciesData", "Select your raster file for total species data", accept = c(".tif"))
                      ),
            # Create panel for Environmental variables
-           wellPanel(h3("Environmental Effects", icon("sun-o"), style = "color: black"), style = "color: black;background-color: #E7B15F; border: #E7B15F",
+           wellPanel(h3("Environmental Effects", icon("sun-o"), style = "color: black"), 
+                     style = "color: black;background-color: #E7B15F; border: #E7B15F; padding: 1px 10px 1px 10px",
                      # Create box asking if wind affects spread and if wind data is available
                      selectInput(inputId = "windQ", label = "Does wind affect spread and do you have wind data?", choices = c("NO","YES")),
                      conditionalPanel(
