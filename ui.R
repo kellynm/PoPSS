@@ -31,7 +31,8 @@ fluidPage(
                      conditionalPanel(
                        condition = "input.seasonQ == 'YES'", sliderInput("seasonMonths", "Months that contribute to the spread of the pest or pathogen?", value = c(1,9), min =1, max =12, step =1)
                        ),
-                     numericInput(inputId ="sporeRate", label = "Enter the rate of reproduction or spore production.", value = "4.4", min=0, max = 100, step = 0.1)
+                     numericInput(inputId ="sporeRate", label = "Enter the rate of reproduction or spore production.", value = "4.4", min=0, max = 100, step = 0.1),
+                     fileInput(inputId = "initialInfection", label = "Select your raster file for your input point(s) of infection", accept = c(".tif"))
                      ),
            # Create panel for Host variables
            wellPanel(h3("Hosts", icon("tree")),
