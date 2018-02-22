@@ -46,7 +46,6 @@ function(input, output) {
           options = layersControlOptions(collapsed = FALSE, opacity =0.6)) %>%
         addLegend("bottomright", pal = pal, values = values(rastInitialInfection),
                   title = "Host species",
-                  #labFormat = labelFormat(prefix = "$"),
                   opacity = 1)
     } else if (is.null(input$initialInfection)==TRUE && is.null(input$totalSpeciesData)==FALSE && is.null(input$hostDataSingle)==TRUE && is.null(input$hostDataM1)==TRUE && is.null(input$hostDataM2)==TRUE) {
       inTotalSpeciesData <- input$totalSpeciesData
@@ -60,7 +59,6 @@ function(input, output) {
           options = layersControlOptions(collapsed = FALSE, opacity =0.6)) %>%
         addLegend("bottomright", pal = pal, values = values(rastTotalSpeciesData),
                   title = "Host species",
-                  #labFormat = labelFormat(prefix = "$"),
                   opacity = 1)
     } else if (is.null(input$initialInfection)==TRUE && is.null(input$totalSpeciesData)==TRUE && is.null(input$hostDataSingle)==FALSE && is.null(input$hostDataM1)==TRUE && is.null(input$hostDataM2)==TRUE) {
       inHostDataSingle <- input$hostDataSingle
@@ -74,7 +72,6 @@ function(input, output) {
           options = layersControlOptions(collapsed = FALSE, opacity =0.6)) %>%
         addLegend("bottomright", pal = pal, values = values(rastHostDataSingle),
                   title = "Host species",
-                  #labFormat = labelFormat(prefix = "$"),
                   opacity = 1)
     } else if (is.null(input$initialInfection)==TRUE && is.null(input$totalSpeciesData)==TRUE && is.null(input$hostDataSingle)==TRUE && is.null(input$hostDataM1)==FALSE && is.null(input$hostDataM2)==TRUE) {
       inHostDataM1 <- input$hostDataM1
@@ -88,7 +85,6 @@ function(input, output) {
           options = layersControlOptions(collapsed = FALSE, opacity =0.6)) %>%
         addLegend("bottomright", pal = pal, values = values(rastHostDataM1),
                   title = "Host species",
-                  #labFormat = labelFormat(prefix = "$"),
                   opacity = 1)
     } else if (is.null(input$initialInfection)==TRUE && is.null(input$totalSpeciesData)==TRUE && is.null(input$hostDataSingle)==TRUE && is.null(input$hostDataM1)==TRUE && is.null(input$hostDataM2)==FALSE) {
       inHostDataM2 <- input$hostDataM2
@@ -102,7 +98,6 @@ function(input, output) {
           options = layersControlOptions(collapsed = FALSE, opacity =0.6)) %>%
         addLegend("bottomright", pal = pal, values = values(rastHostDataM2),
                   title = "Host species",
-                  #labFormat = labelFormat(prefix = "$"),
                   opacity = 1)
     } else if (is.null(input$initialInfection)==TRUE && is.null(input$totalSpeciesData)==TRUE && is.null(input$hostDataSingle)==TRUE && is.null(input$hostDataM1)==FALSE && is.null(input$hostDataM2)==FALSE) {
       inHostDataM1 <- input$hostDataM1
@@ -114,7 +109,7 @@ function(input, output) {
       leaflet(height = "300px") %>%
         addProviderTiles("Esri.WorldImagery", group="background 1") %>%
         addRasterImage({rastHostDataM1}, opacity=0.5, colors = pal, group = "Host") %>%
-        addRasterImage({rastHostDataM2}, opacity=0.5, colors = pal, group = "Host 2") %>%
+        addRasterImage({rastHostDataM2}, opacity=0.5, colors = pal2, group = "Host 2") %>%
         addLayersControl(
           overlayGroups =c("Host","Host 2"),
           options = layersControlOptions(collapsed = FALSE, opacity =0.6))
@@ -177,6 +172,100 @@ function(input, output) {
         addRasterImage({rastTotalSpeciesData}, opacity=0.5, colors = pal, group = "All Trees") %>%
         addLayersControl(
           overlayGroups =c("All Trees", "Initial Infection"),
+          options = layersControlOptions(collapsed = FALSE, opacity =0.6))
+    } else if (is.null(input$initialInfection)==FALSE && is.null(input$totalSpeciesData)==FALSE && is.null(input$hostDataSingle)==TRUE && is.null(input$hostDataM1)==FALSE && is.null(input$hostDataM2)==FALSE) {
+      inInitialInfection <- input$initialInfection
+      rastInitialInfection <- raster(inInitialInfection$datapath)
+      inTotalSpeciesData <- input$totalSpeciesData
+      rastTotalSpeciesData <- raster(inTotalSpeciesData$datapath)
+      inHostDataM1 <- input$hostDataM1
+      rastHostDataM1 <- raster(inHostDataM1$datapath)
+      inHostDataM2 <- input$hostDataM2
+      rastHostDataM2 <- raster(inHostDataM2$datapath)
+      pal3 <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataM1), na.color = "transparent")
+      pal4 <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataM2), na.color = "transparent")
+      pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastTotalSpeciesData), na.color = "transparent")
+      pal2 <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastInitialInfection), na.color = "transparent")
+      leaflet(height = "300px") %>%
+        addProviderTiles("Esri.WorldImagery", group="background 1") %>%
+        addRasterImage({rastHostDataM1}, opacity=0.5, colors = pal3, group = "Host") %>%
+        addRasterImage({rastHostDataM2}, opacity=0.5, colors = pal4, group = "Host 2") %>%
+        addRasterImage({rastInitialInfection}, opacity=0.5, colors = pal2, group = "Initial Infection") %>%
+        addRasterImage({rastTotalSpeciesData}, opacity=0.5, colors = pal, group = "All Trees") %>%
+        addLayersControl(
+          overlayGroups =c("All Trees", "Initial Infection","Host","Host 2"),
+          options = layersControlOptions(collapsed = FALSE, opacity =0.6))
+    } else if (is.null(input$initialInfection)==TRUE && is.null(input$totalSpeciesData)==FALSE && is.null(input$hostDataSingle)==TRUE && is.null(input$hostDataM1)==FALSE && is.null(input$hostDataM2)==FALSE) {
+      inTotalSpeciesData <- input$totalSpeciesData
+      rastTotalSpeciesData <- raster(inTotalSpeciesData$datapath)
+      inHostDataM1 <- input$hostDataM1
+      rastHostDataM1 <- raster(inHostDataM1$datapath)
+      inHostDataM2 <- input$hostDataM2
+      rastHostDataM2 <- raster(inHostDataM2$datapath)
+      pal3 <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataM1), na.color = "transparent")
+      pal4 <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataM2), na.color = "transparent")
+      pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastTotalSpeciesData), na.color = "transparent")
+      leaflet(height = "300px") %>%
+        addProviderTiles("Esri.WorldImagery", group="background 1") %>%
+        addRasterImage({rastHostDataM1}, opacity=0.5, colors = pal3, group = "Host") %>%
+        addRasterImage({rastHostDataM2}, opacity=0.5, colors = pal4, group = "Host 2") %>%
+        addRasterImage({rastTotalSpeciesData}, opacity=0.5, colors = pal, group = "All Trees") %>%
+        addLayersControl(
+          overlayGroups =c("All Trees", "Host","Host 2"),
+          options = layersControlOptions(collapsed = FALSE, opacity =0.6))
+    } else if (is.null(input$initialInfection)==FALSE && is.null(input$totalSpeciesData)==TRUE && is.null(input$hostDataSingle)==TRUE && is.null(input$hostDataM1)==FALSE && is.null(input$hostDataM2)==FALSE) {
+      inInitialInfection <- input$initialInfection
+      rastInitialInfection <- raster(inInitialInfection$datapath)
+      inHostDataM1 <- input$hostDataM1
+      rastHostDataM1 <- raster(inHostDataM1$datapath)
+      inHostDataM2 <- input$hostDataM2
+      rastHostDataM2 <- raster(inHostDataM2$datapath)
+      pal3 <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataM1), na.color = "transparent")
+      pal4 <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataM2), na.color = "transparent")
+      pal2 <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastInitialInfection), na.color = "transparent")
+      leaflet(height = "300px") %>%
+        addProviderTiles("Esri.WorldImagery", group="background 1") %>%
+        addRasterImage({rastHostDataM1}, opacity=0.5, colors = pal3, group = "Host") %>%
+        addRasterImage({rastHostDataM2}, opacity=0.5, colors = pal4, group = "Host 2") %>%
+        addRasterImage({rastInitialInfection}, opacity=0.5, colors = pal2, group = "Initial Infection") %>%
+        addLayersControl(
+          overlayGroups =c("Initial Infection","Host","Host 2"),
+          options = layersControlOptions(collapsed = FALSE, opacity =0.6))
+    } else if (is.null(input$initialInfection)==FALSE && is.null(input$totalSpeciesData)==FALSE && is.null(input$hostDataSingle)==TRUE && is.null(input$hostDataM1)==FALSE && is.null(input$hostDataM2)==TRUE) {
+      inInitialInfection <- input$initialInfection
+      rastInitialInfection <- raster(inInitialInfection$datapath)
+      inTotalSpeciesData <- input$totalSpeciesData
+      rastTotalSpeciesData <- raster(inTotalSpeciesData$datapath)
+      inHostDataM1 <- input$hostDataM1
+      rastHostDataM1 <- raster(inHostDataM1$datapath)
+      pal3 <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataM1), na.color = "transparent")
+      pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastTotalSpeciesData), na.color = "transparent")
+      pal2 <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastInitialInfection), na.color = "transparent")
+      leaflet(height = "300px") %>%
+        addProviderTiles("Esri.WorldImagery", group="background 1") %>%
+        addRasterImage({rastHostDataM1}, opacity=0.5, colors = pal3, group = "Host") %>%
+        addRasterImage({rastInitialInfection}, opacity=0.5, colors = pal2, group = "Initial Infection") %>%
+        addRasterImage({rastTotalSpeciesData}, opacity=0.5, colors = pal, group = "All Trees") %>%
+        addLayersControl(
+          overlayGroups =c("All Trees", "Initial Infection","Host"),
+          options = layersControlOptions(collapsed = FALSE, opacity =0.6))
+    } else if (is.null(input$initialInfection)==FALSE && is.null(input$totalSpeciesData)==FALSE && is.null(input$hostDataSingle)==TRUE && is.null(input$hostDataM1)==TRUE && is.null(input$hostDataM2)==FALSE) {
+      inInitialInfection <- input$initialInfection
+      rastInitialInfection <- raster(inInitialInfection$datapath)
+      inTotalSpeciesData <- input$totalSpeciesData
+      rastTotalSpeciesData <- raster(inTotalSpeciesData$datapath)
+      inHostDataM2 <- input$hostDataM2
+      rastHostDataM2 <- raster(inHostDataM2$datapath)
+      pal4 <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataM2), na.color = "transparent")
+      pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastTotalSpeciesData), na.color = "transparent")
+      pal2 <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastInitialInfection), na.color = "transparent")
+      leaflet(height = "300px") %>%
+        addProviderTiles("Esri.WorldImagery", group="background 1") %>%
+        addRasterImage({rastHostDataM2}, opacity=0.5, colors = pal4, group = "Host 2") %>%
+        addRasterImage({rastInitialInfection}, opacity=0.5, colors = pal2, group = "Initial Infection") %>%
+        addRasterImage({rastTotalSpeciesData}, opacity=0.5, colors = pal, group = "All Trees") %>%
+        addLayersControl(
+          overlayGroups =c("All Trees", "Initial Infection","Host","Host 2"),
           options = layersControlOptions(collapsed = FALSE, opacity =0.6))
     }
   })
