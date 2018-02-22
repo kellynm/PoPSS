@@ -22,7 +22,13 @@ function(input, output) {
   modelRun <- observeEvent(input$run, {
     inTotalSpeciesData <- input$totalSpeciesData
     rastTSD <- raster(inTotalSpeciesData$datapath)
-                           withBusyIndicatorServer("run",{pest("./layers/UMCA_den_100m.img","./layers/OAKS_den_100m.img",rastTSD, "./layers/init_2000_cnt.img",
+    inInitialInfection <- input$initialInfection
+    rastInitialInfection <- raster(inInitialInfection$datapath)
+    inHostDataM1 <- input$hostDataM1
+    rastHostDataM1 <- raster(inHostDataM1$datapath)
+    inHostDataM2 <- input$hostDataM2
+    rastHostDataM2 <- raster(inHostDataM2$datapath)
+                           withBusyIndicatorServer("run",{pest(rastHostDataM1,rastHostDataM2,rastTSD, rastInitialInfection,
                                  input$start, input$end, input$seasonQ, input$seasonMonths[1],input$seasonMonths[2], 
                                  input$sporeRate, input$windQ, input$windDir, './layers/weather/weatherCoeff_2000_2014.nc')})
                            })

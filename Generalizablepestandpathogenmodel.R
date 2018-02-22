@@ -35,9 +35,11 @@ sourceCpp("./scripts/myCppFunctions.cpp") #for C++ custom functions
 
 ##Input rasters: abundance (tree density per hectare)
 #----> UMCA
-umca_rast <- raster(host1)
+#umca_rast <- raster(host1)
+umca_rast <- host1
 #----> ALL SOD-affected oaks
-oaks_rast <- raster(host2)
+#oaks_rast <- raster(host2)
+oaks_rast <- host2
 #max
 mx <- cellStats(oaks_rast, stat='max') 
 #----> All live trees
@@ -50,7 +52,8 @@ res_win <- res(umca_rast)[1]
 ### INFECTED AND SUSCEPTIBLES ####
 
 ##Initial infection (OAKS):
-I_oaks_rast <- raster(initialPopulation) 
+#I_oaks_rast <- raster(initialPopulation) 
+I_oaks_rast <- initialPopulation
 
 #define matrices for infected and susceptible species of interest
 I_oaks <- as.matrix(I_oaks_rast)
