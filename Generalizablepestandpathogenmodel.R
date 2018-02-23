@@ -25,8 +25,8 @@ suppressPackageStartupMessages(library(sp))        #Classes and methods for spat
 
 pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData){
 ##Define the main working directory based on the current script path
-setwd("C:\\Users\\cmjone25\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
-#setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
+#setwd("C:\\Users\\cmjone25\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
+setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
 
 ##Use an external source file w/ all modules (functions) used within this script. 
 ##Use FULL PATH if source file is not in the same folder w/ this script
@@ -96,8 +96,8 @@ formatting_str = paste("%0", floor( log10( length(tstep) ) ) + 1, "d", sep='')
 
 #weather coefficients
 mcf.array <- ncvar_get(nc_open('./layers/weather/weatherCoeff_2000_2014.nc'),  varid = "Mcoef") #M = moisture;
-#ccf.array <- ncvar_get(nc_open('./layers/weather/weatherCoeff_2000_2014.nc'),  varid = "Ccoef") #C = temperature;
-ccf.array <- ncvar_get(nc_open(tempData),  varid = "Ccoef") #C = temperature;
+ccf.array <- ncvar_get(nc_open('./layers/weather/weatherCoeff_2000_2014.nc'),  varid = "Ccoef") #C = temperature;
+#ccf.array <- ncvar_get(nc_open(tempData),  varid = "Ccoef") #C = temperature;
 ##Seasonality: Do you want the spread to be limited to certain months?
 ss <- SS   #'YES' or 'NO'
 if (ss == 'YES') months_msk <- paste('0', s1:s2, sep='') #1=January 9=September
