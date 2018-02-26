@@ -15,7 +15,7 @@ fluidPage(
   style = "background-color: black; padding-bottom: 10px",
   # Add Title to App
   h1("Generalizable Pest and Pathogen Model", style = "color: green"),
-  #tags$style(".shiny-file-input-progress {display: none}"),
+  tags$style(".shiny-file-input-progress {display: none}"),
   #tags$style(".progress-bar {background-color:#3c763d}"),
   # Create a sidebar for variable inputs that react to user changes
   fluidRow(
