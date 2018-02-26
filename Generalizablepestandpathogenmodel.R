@@ -54,7 +54,7 @@ res_win <- res(umca_rast)[1]
 ##Initial infection (OAKS):
 #I_oaks_rast <- raster(initialPopulation) 
 I_oaks_rast <- initialPopulation
-
+I_oaks_rast2 <- I_oaks_rast
 #define matrices for infected and susceptible species of interest
 I_oaks <- as.matrix(I_oaks_rast)
 S_oaks <- as.matrix(oaks_rast - I_oaks_rast)
@@ -91,7 +91,7 @@ tstep <- as.character(seq(dd_start, dd_end, 'weeks'))
 
 # create list for yearly output
 split_date2 = unlist(strsplit(tstep, '-'))
-split_date2 = as.data.frame(as.numeric(split_date[seq(1,length(split_date2),3)]))
+split_date2 = as.data.frame(as.numeric(split_date2[seq(1,length(split_date2),3)]))
 listvar = 1
 yearlyoutputlist = 0
 for (i in 2:nrow(split_date2)) {
@@ -220,7 +220,7 @@ for (tt in tstep){
     #I_oaks_rast[] <- ifelse(I_oaks_rast[] > 0, 1, 0) 
     #I_oaks_rast[] <- ifelse(I_oaks_rast[] > 0, 1, NA) 
         
-    if (cnt %% nth_output == 0){
+    if (cnt %in% yearlyoutputlist){
       
       #PLOT: overlay current plot on background image
       #bks <- c(0, 0.25, 0.5, 0.75, 1)
@@ -229,7 +229,7 @@ for (tt in tstep){
       bks <- seq(0, mx, length = 10)
       image(I_oaks_rast, breaks=bks, col=rev(heat.colors(length(bks)-1, alpha=1)), add=T, axes=F, box=F, ann=F, legend=F, useRaster=T)
       boxed.labels(xpos, ypos, tt, bg="white", border=NA, font=2)
-      
+      I_oaks_rast2 <- stack(I_oaks_rast2, I_oaks_rast[])
       #WRITE TO FILE:
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output
@@ -241,7 +241,7 @@ for (tt in tstep){
   }
   
 }
-
+return(I_oaks_rast2)
 message("Spread model finished")
 
 }
