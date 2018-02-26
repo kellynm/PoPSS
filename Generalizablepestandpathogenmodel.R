@@ -25,8 +25,8 @@ suppressPackageStartupMessages(library(sp))        #Classes and methods for spat
 
 pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData){
 ##Define the main working directory based on the current script path
-#setwd("C:\\Users\\cmjone25\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
-setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
+setwd("C:\\Users\\cmjone25\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
+#setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
 
 ##Use an external source file w/ all modules (functions) used within this script. 
 ##Use FULL PATH if source file is not in the same folder w/ this script
@@ -88,6 +88,19 @@ if (start > end) stop('start date must precede end date!!')
 dd_start <- as.POSIXlt(as.Date(paste(start,'-01-01',sep='')))
 dd_end <- as.POSIXlt(as.Date(paste(end,'-12-31',sep='')))
 tstep <- as.character(seq(dd_start, dd_end, 'weeks'))
+
+# create list for yearly output
+split_date2 = unlist(strsplit(tstep, '-'))
+split_date2 = as.data.frame(as.numeric(split_date[seq(1,length(split_date2),3)]))
+listvar = 1
+yearlyoutputlist = 0
+for (i in 2:nrow(split_date2)) {
+  if (split_date2[i,1] > split_date2[i-1,1]) {
+    yearlyoutputlist[listvar] <- i
+    listvar = listvar +1
+  } 
+}
+yearlyoutputlist[length(yearlyoutputlist)+1] <- length(tstep)
 
 #create formatting expression for padding zeros depending on total number of steps
 formatting_str = paste("%0", floor( log10( length(tstep) ) ) + 1, "d", sep='')

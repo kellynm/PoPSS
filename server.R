@@ -7,7 +7,7 @@ function(input, output) {
   #output$model <- renderPrint({c("Model inputs are:",input$wind, input$windData, input$temp, input$tempData, input$precip, input$precipData)})
   
   # Used to set the initial zoom of the map and color of the rasters
-  r <- raster("C:\\Users\\chris\\Dropbox\\Projects\\APHIS\\BayOakCode/layers/UMCA_den_100m.img")
+  r <- raster("C:\\Users\\cmjone25\\Dropbox\\Projects\\APHIS\\BayOakCode/layers/UMCA_den_100m.img")
   pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "transparent")
   
   #Creates the text saying the model is running when the action button is pressed
