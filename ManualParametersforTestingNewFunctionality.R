@@ -1,0 +1,14 @@
+host1 = "./layers/UMCA_den_100m.img"
+host1 = raster(host1)
+host2 = raster("./layers/OAKS_den_100m.img")
+allTrees = raster("./layers/TPH_den_100m.img")
+initialPopulation = raster ("./layers/init_2000_cnt.img")
+start = 2000
+end = 2010
+SS = 'YES'
+s1 = 1
+s2 = 9
+sporeRate =4.4
+windQ ='YES'
+windDir = 'NE'
+tempData = './layers/weather/weatherCoeff_2000_2014.nc'
