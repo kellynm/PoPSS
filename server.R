@@ -28,9 +28,9 @@ function(input, output) {
     rastHostDataM1 <- raster(inHostDataM1$datapath)
     inHostDataM2 <- input$hostDataM2
     rastHostDataM2 <- raster(inHostDataM2$datapath)
-                           withBusyIndicatorServer("run",{pest(rastHostDataM1,rastHostDataM2,rastTSD, rastInitialInfection,
+                           withBusyIndicatorServer("run",{I_oaks_rast2 <- pest(rastHostDataM1,rastHostDataM2,rastTSD, rastInitialInfection,
                                  input$start, input$end, input$seasonQ, input$seasonMonths[1],input$seasonMonths[2], 
-                                 input$sporeRate, input$windQ, input$windDir, './layers/weather/weatherCoeff_2000_2014.nc')})
+                                 input$sporeRate, input$windQ, input$windDir, './layers/weather/weatherCoeff_2000_2014.nc', I_oaks_rast2)})
                            })
   
   inTempData <- renderText(input$tempData$datapath)
