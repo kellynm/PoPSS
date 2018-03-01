@@ -91,12 +91,12 @@ tstep <- as.character(seq(dd_start, dd_end, 'weeks'))
 
 # create list for yearly output
 split_date2 = unlist(strsplit(tstep, '-'))
-split_date2 = as.data.frame(as.numeric(split_date2[seq(1,length(split_date2),3)]))
+split_date2 = as.data.frame(as.numeric(split_date2[seq(2,length(split_date2),3)]))
 listvar = 1
 yearlyoutputlist = 0
 for (i in 2:nrow(split_date2)) {
-  if (split_date2[i,1] > split_date2[i-1,1]) {
-    yearlyoutputlist[listvar] <- i
+  if (split_date2[i,1] > split_date2[i-1,1] && split_date2[i,1] == 10) {
+    yearlyoutputlist[listvar] <- i-1
     listvar = listvar +1
   } 
 }
@@ -229,12 +229,13 @@ for (tt in tstep){
       bks <- seq(0, mx, length = 10)
       image(I_oaks_rast, breaks=bks, col=rev(heat.colors(length(bks)-1, alpha=1)), add=T, axes=F, box=F, ann=F, legend=F, useRaster=T)
       boxed.labels(xpos, ypos, tt, bg="white", border=NA, font=2)
-      I_oaks_rast2 <- stack(I_oaks_rast2, I_oaks_rast[])
+      I_oaks_rast2 <- stack(I_oaks_rast, I_oaks_rast2)
+
       #WRITE TO FILE:
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='LOG1S', overwrite=TRUE)  # 0=non infected 1=infected output
-      
+      #return(I_oaks_rast)
       
     }
     
