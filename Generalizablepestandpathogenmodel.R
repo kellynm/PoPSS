@@ -23,10 +23,10 @@ suppressPackageStartupMessages(library(ncdf4))     #work with NetCDF datasets
 suppressPackageStartupMessages(library(dismo))     #Regression for ecological datasets
 suppressPackageStartupMessages(library(sp))        #Classes and methods for spatial data
 
-pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData){
+pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, I_oaks_rast2){
 ##Define the main working directory based on the current script path
-#setwd("C:\\Users\\cmjone25\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
-setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
+setwd("C:\\Users\\cmjone25\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
+#setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
 
 ##Use an external source file w/ all modules (functions) used within this script. 
 ##Use FULL PATH if source file is not in the same folder w/ this script
@@ -100,7 +100,7 @@ for (i in 2:nrow(split_date2)) {
     listvar = listvar +1
   } 
 }
-yearlyoutputlist[length(yearlyoutputlist)+1] <- length(tstep)
+#yearlyoutputlist[length(yearlyoutputlist)+1] <- length(tstep)
 
 #create formatting expression for padding zeros depending on total number of steps
 formatting_str = paste("%0", floor( log10( length(tstep) ) ) + 1, "d", sep='')
@@ -129,7 +129,7 @@ xpos <- (bbox(umca_rast)[1,2] + bbox(umca_rast)[1,1]) / 2
 ypos <- bbox(umca_rast)[2,2] - 150
 
 #time counter to access pos index in weather raster stacks
-cnt <- 0 
+cnt <- 1 
 
 ## ----> MAIN SIMULATION LOOP (weekly time steps) <------
 for (tt in tstep){
