@@ -13,8 +13,8 @@ windQ ='YES'
 windDir = 'NE'
 tempData = './layers/weather/weatherCoeff_2000_2014.nc'
 
-setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
-
+#setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
+I_oaks_rast2 <- pest(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, I_oaks_rast2)
 
 pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(initialPopulation), na.color = "transparent")
 olg <- c('init')
@@ -37,3 +37,6 @@ for (i in 1:nlayers(I_oaks_rast2)){
   print(i)
   m
 }
+
+
+

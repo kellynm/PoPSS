@@ -25,8 +25,8 @@ suppressPackageStartupMessages(library(sp))        #Classes and methods for spat
 
 pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, I_oaks_rast2){
 ##Define the main working directory based on the current script path
-setwd("C:\\Users\\cmjone25\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
-#setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
+#setwd("C:\\Users\\cmjone25\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
+setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
 
 ##Use an external source file w/ all modules (functions) used within this script. 
 ##Use FULL PATH if source file is not in the same folder w/ this script
@@ -55,6 +55,7 @@ res_win <- res(umca_rast)[1]
 #I_oaks_rast <- raster(initialPopulation) 
 I_oaks_rast <- initialPopulation
 I_oaks_rast2 <- I_oaks_rast
+
 #define matrices for infected and susceptible species of interest
 I_oaks <- as.matrix(I_oaks_rast)
 S_oaks <- as.matrix(oaks_rast - I_oaks_rast)
@@ -67,6 +68,9 @@ if(any(S_umca[I_oaks > 0] > 0)) I_umca[I_oaks > 0] <- mapply(function(x,y) ifels
 ##update susceptible matrices by subtracting the initialized infections 
 S_umca <- S_umca - I_umca 
 
+## Update Infected host rasters for output
+I_umca_rast[] <- I_umca
+I_umca_rast2 <- I_umca_rast
 ##define matrix for immune live trees
 N_live <- as.matrix(lvtree_rast)
 
@@ -84,14 +88,15 @@ end = end
 
 if (start > end) stop('start date must precede end date!!')
 
-#build time series for simulation steps:
+## build time series for simulation steps:
 dd_start <- as.POSIXlt(as.Date(paste(start,'-01-01',sep='')))
 dd_end <- as.POSIXlt(as.Date(paste(end,'-12-31',sep='')))
 tstep <- as.character(seq(dd_start, dd_end, 'weeks'))
 
-# create list for yearly output
+## create list for yearly output
 split_date2 = unlist(strsplit(tstep, '-'))
 split_date2 = as.data.frame(as.numeric(split_date2[seq(2,length(split_date2),3)]))
+#years = as.data.frame(as.numeric(split_date2[seq(2,length(split_date2),3)]))
 listvar = 1
 yearlyoutputlist = 0
 for (i in 2:nrow(split_date2)) {
@@ -100,7 +105,10 @@ for (i in 2:nrow(split_date2)) {
     listvar = listvar +1
   } 
 }
-#yearlyoutputlist[length(yearlyoutputlist)+1] <- length(tstep)
+
+## Create data frame for infected host data
+years = seq(start, end, 1)
+dataForOutput <- data.frame(years = years, InfectedHost1 = 0, InfectedHOst2 = 0) # replace infected host with actual host names
 
 #create formatting expression for padding zeros depending on total number of steps
 formatting_str = paste("%0", floor( log10( length(tstep) ) ) + 1, "d", sep='')
@@ -209,12 +217,14 @@ for (tt in tstep){
     
     ##CALCULATE OUTPUT TO PLOT:
     I_oaks_rast[] <- I_oaks
+    I_umca_rast[] <- I_umca
     
     # 1) values as % infected
     #I_oaks_rast[] <- ifelse(I_oaks_rast[] == 0, NA, I_oaks_rast[]/oaks_rast[])
     
     # 2) values as number of infected per cell
     I_oaks_rast[] <- ifelse(I_oaks_rast[] == 0, NA, I_oaks_rast[])
+    I_umca_rast[] <- ifelse(I_umca_rast[] == 0, NA, I_umca_rast[])
     
     # 3) values as 0 (non infected) and 1 (infected) cell
     #I_oaks_rast[] <- ifelse(I_oaks_rast[] > 0, 1, 0) 
@@ -230,7 +240,8 @@ for (tt in tstep){
       image(I_oaks_rast, breaks=bks, col=rev(heat.colors(length(bks)-1, alpha=1)), add=T, axes=F, box=F, ann=F, legend=F, useRaster=T)
       boxed.labels(xpos, ypos, tt, bg="white", border=NA, font=2)
       I_oaks_rast2 <- stack(I_oaks_rast, I_oaks_rast2)
-
+      I_umca_rast2 <- stack(I_umca_rast, I_umca_rast2)
+      
       #WRITE TO FILE:
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output
@@ -244,6 +255,7 @@ for (tt in tstep){
 }
 
 return(I_oaks_rast2)
+#return(plotData)
 message("Spread model finished")
 
 }

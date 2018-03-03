@@ -1,4 +1,4 @@
-setwd("C:\\Users\\cmjone25\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
+setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
 source("helpers.r", local = TRUE)
 source("Generalizablepestandpathogenmodel.r")
 
@@ -8,7 +8,7 @@ function(input, output) {
   #output$model <- renderPrint({c("Model inputs are:",input$wind, input$windData, input$temp, input$tempData, input$precip, input$precipData)})
   
   # Used to set the initial zoom of the map and color of the rasters
-  r <- raster("C:\\Users\\cmjone25\\Dropbox\\Projects\\APHIS\\BayOakCode/layers/UMCA_den_100m.img")
+  r <- raster("C:\\Users\\chris\\Dropbox\\Projects\\APHIS\\BayOakCode/layers/UMCA_den_100m.img")
   pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "transparent")
   
   #Creates the text saying the model is running when the action button is pressed
@@ -34,7 +34,17 @@ function(input, output) {
                                  input$sporeRate, input$windQ, input$windDir, './layers/weather/weatherCoeff_2000_2014.nc', I_oaks_rast2)})
                            })
   
-  inTempData <- renderText(input$tempData$datapath)
+  output$plotData <- renderLeaflet({
+    for (i in 1:I_oaks_rast2){
+      leafletProxy(output$plotData) %>%
+        addRasterImage(I_oaks_rast2[[i]], colors = pal, opacity= 0.8, group = paste("year",i)) %>%
+        addLayersControl(
+          overlayGroups = olg,
+          options = layersControlOptions(collapsed = FALSE, opacity =0.6))
+    }
+    })
+  
+  
   # Plot the data
   output$plotData <- renderLeaflet({
     if (is.null(input$initialInfection)==TRUE && is.null(input$totalSpeciesData)==TRUE && is.null(input$hostDataSingle)==TRUE && is.null(input$hostDataM1)==TRUE && is.null(input$hostDataM2)==TRUE){
