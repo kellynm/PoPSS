@@ -7,6 +7,8 @@ library(shiny)
 library(raster)
 library(rgdal)
 library(shinyjs)
+source("helpers.r", local = TRUE)
+source("Generalizablepestandpathogenmodel.r", local = TRUE)
 
 fluidPage(
   useShinyjs(),

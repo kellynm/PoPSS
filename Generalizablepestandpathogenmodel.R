@@ -13,25 +13,25 @@
 #install.packages(c("rgdal","raster","lubridate","CircStats","Rcpp", "rgrass7", "optparse", "plotrix", "ncdf4", "dismo", "sp"))
 
 ## load packages:
-suppressPackageStartupMessages(library(raster))    #Raster operation and I/O. Depends R (≥ 2.15.0)
-suppressPackageStartupMessages(library(rgdal))     #Geospatial data abstraction library. Depends R (≥ 2.14.0)
-suppressPackageStartupMessages(library(lubridate)) #Make dealing with dates a little easier. Depends R (≥ 3.0.0)
-suppressPackageStartupMessages(library(CircStats)) #Circular Statistics - Von Mises distribution
-suppressPackageStartupMessages(library(Rcpp))      #Seamless R and C++ Integration. Depends R (≥ 3.0.0)
-suppressPackageStartupMessages(library(plotrix))   #Add text annotations to plot
-suppressPackageStartupMessages(library(ncdf4))     #work with NetCDF datasets
-suppressPackageStartupMessages(library(dismo))     #Regression for ecological datasets
-suppressPackageStartupMessages(library(sp))        #Classes and methods for spatial data
+suppressPackageStartupMessages(library(raster))    # Raster operation and I/O. Depends R (≥ 2.15.0)
+suppressPackageStartupMessages(library(rgdal))     # Geospatial data abstraction library. Depends R (≥ 2.14.0)
+suppressPackageStartupMessages(library(lubridate)) # Make dealing with dates a little easier. Depends R (≥ 3.0.0)
+suppressPackageStartupMessages(library(CircStats)) # Circular Statistics - Von Mises distribution
+suppressPackageStartupMessages(library(Rcpp))      # Seamless R and C++ Integration. Depends R (≥ 3.0.0)
+suppressPackageStartupMessages(library(plotrix))   # Add text annotations to plot
+suppressPackageStartupMessages(library(ncdf4))     # work with NetCDF datasets
+suppressPackageStartupMessages(library(dismo))     # Regression for ecological datasets
+suppressPackageStartupMessages(library(sp))        # Classes and methods for spatial data
 
 pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, I_oaks_rast2){
-##Define the main working directory based on the current script path
+## Define the main working directory based on the current script path
 #setwd("C:\\Users\\cmjone25\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
-setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
+#setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
 
-##Use an external source file w/ all modules (functions) used within this script. 
-##Use FULL PATH if source file is not in the same folder w/ this script
+## Use an external source file w/ all modules (functions) used within this script. 
+## Use FULL PATH if source file is not in the same folder w/ this script
 source('./scripts/myfunctions_SOD.r')
-sourceCpp("./scripts/myCppFunctions.cpp") #for C++ custom functions
+sourceCpp("./scripts/myCppFunctions.cpp") # for C++ custom functions
 
 ##Input rasters: abundance (tree density per hectare)
 #----> UMCA
