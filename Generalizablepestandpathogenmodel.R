@@ -69,6 +69,7 @@ if(any(S_umca[I_oaks > 0] > 0)) I_umca[I_oaks > 0] <- mapply(function(x,y) ifels
 S_umca <- S_umca - I_umca 
 
 ## Update Infected host rasters for output
+I_umca_rast <- I_oaks_rast
 I_umca_rast[] <- I_umca
 I_umca_rast2 <- I_umca_rast
 ##define matrix for immune live trees
