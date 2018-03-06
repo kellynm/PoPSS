@@ -27,7 +27,7 @@ function(input, output) {
                            withBusyIndicatorServer("run",{modelRastOut <- pest(rastHostDataM1,rastHostDataM2,rastTSD, rastInitialInfection,
                                  input$start, input$end, input$seasonQ, input$seasonMonths[1],input$seasonMonths[2], 
                                  input$sporeRate, input$windQ, input$windDir, './layers/weather/weatherCoeff_2000_2014.nc')})  
-                           proxy <- leafletProxy("plotData")
+                           proxy <- leafletProxy("mapData")
                            if (nlayers(modelRastOut)>1) {
                              olg = c("All Trees", "Initial Infection","Host","Host 2")
                              olg <- list(olg)
@@ -45,7 +45,7 @@ function(input, output) {
   
 
   # Plot the data
-  output$plotData <- renderLeaflet({
+  output$mapData <- renderLeaflet({
     if (is.null(input$initialInfection)==TRUE && is.null(input$totalSpeciesData)==TRUE && is.null(input$hostDataSingle)==TRUE && is.null(input$hostDataM1)==TRUE && is.null(input$hostDataM2)==TRUE){
       leaflet(height = "300px") %>%
         addProviderTiles("Esri.WorldImagery", group="background 1") %>%

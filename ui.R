@@ -101,6 +101,6 @@ fluidPage(
            verbatimTextOutput("modelText"),
            # Create a download link for the user Manual
            downloadLink("pdf", "Download User Manual ", icon("cloud-download"), style = "color: green"),
-           leafletOutput("plotData", height = "600px")
+           leafletOutput("mapData", height = "600px")
            )
     ))
