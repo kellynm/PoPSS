@@ -42,7 +42,7 @@ function(input, output) {
                            }}
                            })
   
-  ## 
+  ## Set up GUI maps to be flexible
   observeEvent(input$initialInfection, {
     inInitialInfection <- input$initialInfection
     rastInitialInfection <<- raster(inInitialInfection$datapath)
@@ -57,7 +57,6 @@ function(input, output) {
                 title = "Host species",
                 opacity = 1)
   })
-
   observeEvent(input$totalSpeciesData, {
     inTotalSpeciesData <- input$totalSpeciesData
     rastTotalSpeciesData <<- raster(inTotalSpeciesData$datapath)
@@ -73,7 +72,37 @@ function(input, output) {
                   title = "Host species",
                   opacity = 1)
   })
-  
+  observeEvent(input$hostDataM1, {
+    inHostDataM1 <- input$hostDataM1
+    rastHostDataM1 <- raster(inHostDataM1$datapath)
+    pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataM1), na.color = "transparent")
+    olg <<- c(olg, "Host 1")
+    proxy <- proxy %>%
+      addProviderTiles("Esri.WorldImagery", group="background 1") %>%
+      addRasterImage({rastHostDataM1}, opacity=0.5, colors = pal, group = "All Trees") %>%
+      addLayersControl(
+        overlayGroups = olg,
+        options = layersControlOptions(collapsed = FALSE, opacity =0.6)) %>%
+      addLegend("bottomright", pal = pal, values = values(rastHostDataM1),
+                title = "Host species",
+                opacity = 1)
+  })
+  observeEvent(input$hostDataM2, {
+    inHostDataM2 <- input$hostDataM2
+    rastHostDataM2 <- raster(inHostDataM2$datapath)
+    pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataM2), na.color = "transparent")
+    olg <<- c(olg, "Host 2")
+    proxy <- proxy %>%
+      addProviderTiles("Esri.WorldImagery", group="background 1") %>%
+      addRasterImage({rastHostDataM2}, opacity=0.5, colors = pal, group = "Host 2") %>%
+      addLayersControl(
+        overlayGroups = olg,
+        options = layersControlOptions(collapsed = FALSE, opacity =0.6)) %>%
+      addLegend("bottomright", pal = pal, values = values(rastHostDataM2),
+                title = "Host species",
+                opacity = 1)
+  })
+
   output$mapData <- renderLeaflet({
       leaflet(height = "300px") %>%
         addProviderTiles("Esri.WorldImagery", group="background 1") %>%
