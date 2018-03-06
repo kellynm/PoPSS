@@ -53,3 +53,7 @@ if (nlayers(I_oaks_rast2)>1) {
   }}
 
 paste("year", (years[nlayers(I_oaks_rast2)-i]))
+
+
+cumulativeinfection <- sum(na.omit(I_oaks_rast2[[1]]@data@values))
+areainfected

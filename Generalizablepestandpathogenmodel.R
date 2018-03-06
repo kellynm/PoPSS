@@ -243,7 +243,7 @@ for (tt in tstep){
       boxed.labels(xpos, ypos, tt, bg="white", border=NA, font=2)
       I_oaks_rast2 <- stack(I_oaks_rast, I_oaks_rast2)
       I_umca_rast2 <- stack(I_umca_rast, I_umca_rast2)
-    
+      # infectedData
       #WRITE TO FILE:
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output
@@ -257,7 +257,8 @@ for (tt in tstep){
 }
 
 return(I_oaks_rast2)
-#return(plotData)
+#return(c(I_oaks_rast2, infectedData))
+
 message("Spread model finished")
 
 }

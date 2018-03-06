@@ -13,7 +13,6 @@ function(input, output) {
   modeltext <<- eventReactive(input$run, {"Model has finished"})
   output$modelText <- renderText({modeltext()})
 
-  
   modelRun <- observeEvent(input$run, {
     inTotalSpeciesData <- input$totalSpeciesData
     rastTSD <- raster(inTotalSpeciesData$datapath)
@@ -42,7 +41,6 @@ function(input, output) {
                            }}
                            #return(proxy)
                            })
-  
 
   # Plot the data
   output$mapData <- renderLeaflet({
@@ -340,6 +338,10 @@ function(input, output) {
           overlayGroups =c("All Trees","Host"),
           options = layersControlOptions(collapsed = FALSE, opacity =0.6))
     }
+  })
+  
+  observeEvent(input$totalSpeciesData, {
+    inTSD = raster(input$totalSpeciesData$datapath)
   })
   
   output$extentMatch <- renderText({
