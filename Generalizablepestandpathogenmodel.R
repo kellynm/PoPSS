@@ -107,16 +107,9 @@ for (i in 2:nrow(split_date2)) {
   } 
 }
 
-## Create data frame for infected host data and a leaflet image to pass back
+## Create data frame for infected host data 
 years = seq(start, end, 1)
 dataForOutput <- data.frame(years = years, InfectedHost1 = 0, InfectedHOst2 = 0) # replace infected host with actual host names
-pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(initialPopulation), na.color = "transparent")
-olg <- c('init')
-plotData = leaflet() %>% addTiles() %>% clearImages %>%
-  addRasterImage(initialPopulation, colors = pal, opacity= 0.8, group = "init") %>%
-  addLayersControl(
-    overlayGroups = olg,
-    options = layersControlOptions(collapsed = FALSE, opacity =0.6))
 yearTracker = 0
 
 ## create formatting expression for padding zeros depending on total number of steps

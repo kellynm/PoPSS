@@ -38,5 +38,18 @@ for (i in 1:nlayers(I_oaks_rast2)){
   m
 }
 
+years = seq(start, end, 1)
+if (nlayers(I_oaks_rast2)>1) {
+  olg = c("All Trees", "Initial Infection","Host","Host 2")
+  olg <- list(olg)
+  for (i in 1:(nlayers(I_oaks_rast2)-1)){
+    pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(I_oaks_rast2[[i]]), na.color = "transparent")
+    olg[i+1] <- c(olg[i], paste("year", (years[nlayers(I_oaks_rast2)-i])))
+    m<- m %>% 
+      addRasterImage(I_oaks_rast2[[i]], opacity= 0.8, group = paste("year", (years[nlayers(I_oaks_rast2)-i]))) %>%
+      addLayersControl(
+        overlayGroups = olg[[i+1]],
+        options = layersControlOptions(collapsed = FALSE, opacity =0.6))
+  }}
 
-
+paste("year", (years[nlayers(I_oaks_rast2)-i]))
