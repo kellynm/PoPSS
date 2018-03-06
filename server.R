@@ -17,8 +17,8 @@ function(input, output) {
   modelRun <- observeEvent(input$run, {
     #inTotalSpeciesData <- input$totalSpeciesData
     #rastTotalSpeciesData <<- raster(inTotalSpeciesData$datapath)
-    inInitialInfection <- input$initialInfection
-    rastInitialInfection <- raster(inInitialInfection$datapath)
+    #inInitialInfection <- input$initialInfection
+    #rastInitialInfection <- raster(inInitialInfection$datapath)
     inHostDataM1 <- input$hostDataM1
     rastHostDataM1 <- raster(inHostDataM1$datapath)
     inHostDataM2 <- input$hostDataM2
@@ -40,9 +40,9 @@ function(input, output) {
                                  overlayGroups = olg[[i+1]],
                                  options = layersControlOptions(collapsed = FALSE, opacity =0.6))
                            }}
-                           #return(proxy)
                            })
-
+  
+  ## 
   observeEvent(input$initialInfection, {
     inInitialInfection <- input$initialInfection
     rastInitialInfection <<- raster(inInitialInfection$datapath)
