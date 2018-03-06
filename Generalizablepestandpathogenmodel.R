@@ -23,7 +23,7 @@ suppressPackageStartupMessages(library(ncdf4))     # work with NetCDF datasets
 suppressPackageStartupMessages(library(dismo))     # Regression for ecological datasets
 suppressPackageStartupMessages(library(sp))        # Classes and methods for spatial data
 
-pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, I_oaks_rast2){
+pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData){
 ## Define the main working directory based on the current script path
 #setwd("C:\\Users\\cmjone25\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
 #setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
@@ -107,20 +107,28 @@ for (i in 2:nrow(split_date2)) {
   } 
 }
 
-## Create data frame for infected host data
+## Create data frame for infected host data and a leaflet image to pass back
 years = seq(start, end, 1)
 dataForOutput <- data.frame(years = years, InfectedHost1 = 0, InfectedHOst2 = 0) # replace infected host with actual host names
+pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(initialPopulation), na.color = "transparent")
+olg <- c('init')
+plotData = leaflet() %>% addTiles() %>% clearImages %>%
+  addRasterImage(initialPopulation, colors = pal, opacity= 0.8, group = "init") %>%
+  addLayersControl(
+    overlayGroups = olg,
+    options = layersControlOptions(collapsed = FALSE, opacity =0.6))
+yearTracker = 0
 
-#create formatting expression for padding zeros depending on total number of steps
+## create formatting expression for padding zeros depending on total number of steps
 formatting_str = paste("%0", floor( log10( length(tstep) ) ) + 1, "d", sep='')
 
-##WEATHER SUITABILITY: read and stack weather suitability raster BEFORE running the simulation
+## WEATHER SUITABILITY: read and stack weather suitability raster BEFORE running the simulation
 
-#weather coefficients
+# weather coefficients
 mcf.array <- ncvar_get(nc_open('./layers/weather/weatherCoeff_2000_2014.nc'),  varid = "Mcoef") #M = moisture;
 ccf.array <- ncvar_get(nc_open('./layers/weather/weatherCoeff_2000_2014.nc'),  varid = "Ccoef") #C = temperature;
 #ccf.array <- ncvar_get(nc_open(tempData),  varid = "Ccoef") #C = temperature;
-##Seasonality: Do you want the spread to be limited to certain months?
+## Seasonality: Do you want the spread to be limited to certain months?
 ss <- SS   #'YES' or 'NO'
 if (ss == 'YES') months_msk <- paste('0', s1:s2, sep='') #1=January 9=September
 
@@ -232,7 +240,7 @@ for (tt in tstep){
     #I_oaks_rast[] <- ifelse(I_oaks_rast[] > 0, 1, NA) 
         
     if (cnt %in% yearlyoutputlist){
-      
+      yearTracker = yearTracker+1
       #PLOT: overlay current plot on background image
       #bks <- c(0, 0.25, 0.5, 0.75, 1)
       #my_palette <- colorRampPalette(c("springgreen", "yellow1", "orange", "red1"))(n = 4)
@@ -242,7 +250,7 @@ for (tt in tstep){
       boxed.labels(xpos, ypos, tt, bg="white", border=NA, font=2)
       I_oaks_rast2 <- stack(I_oaks_rast, I_oaks_rast2)
       I_umca_rast2 <- stack(I_umca_rast, I_umca_rast2)
-      
+    
       #WRITE TO FILE:
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output

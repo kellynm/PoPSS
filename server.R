@@ -6,8 +6,11 @@ function(input, output) {
   # Used to set the initial zoom of the map and color of the rasters
   r <- raster("./layers/UMCA_den_100m.img")
   pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "transparent")
+  olg <- c("All Trees", "Initial Infection","Host","Host 2")
+  # Create Raster Stack for holding output from model run
+  modelRastOut <- r
   
-  #Creates the text saying the model is running when the action button is pressed
+  # Creates the text saying the model is running when the action button is pressed
   modeltext <<- eventReactive(input$run, {"Model has finished"})
   output$modelText <- renderText({modeltext()})
 
@@ -21,21 +24,37 @@ function(input, output) {
     rastHostDataM1 <- raster(inHostDataM1$datapath)
     inHostDataM2 <- input$hostDataM2
     rastHostDataM2 <- raster(inHostDataM2$datapath)
-                           withBusyIndicatorServer("run",{I_oaks_rast2 <- pest(rastHostDataM1,rastHostDataM2,rastTSD, rastInitialInfection,
+    years = seq(input$start, input$end, 1)
+                           withBusyIndicatorServer("run",{modelRastOut <- pest(rastHostDataM1,rastHostDataM2,rastTSD, rastInitialInfection,
                                  input$start, input$end, input$seasonQ, input$seasonMonths[1],input$seasonMonths[2], 
-                                 input$sporeRate, input$windQ, input$windDir, './layers/weather/weatherCoeff_2000_2014.nc', I_oaks_rast2)})
+                                 input$sporeRate, input$windQ, input$windDir, './layers/weather/weatherCoeff_2000_2014.nc')})  
+                           proxy <- leafletProxy("plotData")
+                           if (nlayers(modelRastOut)>1) {
+                             olg = c("All Trees", "Initial Infection","Host","Host 2")
+                             olg <- list(olg)
+                             for (i in 1:(nlayers(modelRastOut)-1)){
+                              pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(modelRastOut[[i]]), na.color = "transparent")
+                              olg[i+1] <- c(olg[[i]], paste("year", (years[nlayers(modelRastOut)-i])))
+                              proxy <- proxy %>% 
+                               addRasterImage(modelRastOut[[i]], opacity= 0.8, group = paste("year", (years[nlayers(modelRastOut)-i]))) %>%
+                               addLayersControl(
+                                 overlayGroups = olg[[i+1]],
+                                 options = layersControlOptions(collapsed = FALSE, opacity =0.6))
+                           }}
+                           #return(proxy)
                            })
   
-  output$plotData <- renderLeaflet({
-    for (i in 1:I_oaks_rast2){
-      leafletProxy(output$plotData) %>%
-        addRasterImage(I_oaks_rast2[[i]], colors = pal, opacity= 0.8, group = paste("year",i)) %>%
-        addLayersControl(
-          overlayGroups = olg,
-          options = layersControlOptions(collapsed = FALSE, opacity =0.6))
-    }
-    })
-  
+  # if (nlayers(modelRastOut)>1) {
+  #   output$plotData <- renderLeaflet({
+  #     for (i in 1:modelRastOut){
+  #       leafletProxy(output$plotData) %>%
+  #         addRasterImage(modelRastOut[[i]], colors = pal, opacity= 0.8, group = paste("year",i)) %>%
+  #         addLayersControl(
+  #           overlayGroups = olg,
+  #           options = layersControlOptions(collapsed = FALSE, opacity =0.6))
+  #     }
+  #   })
+  # }
   
   # Plot the data
   output$plotData <- renderLeaflet({
@@ -47,11 +66,12 @@ function(input, output) {
       inInitialInfection <- input$initialInfection
       rastInitialInfection <- raster(inInitialInfection$datapath)
       pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastInitialInfection), na.color = "transparent")
+      olg <- c("Initial Infection")
       leaflet(height = "300px") %>%
         addProviderTiles("Esri.WorldImagery", group="background 1") %>%
         addRasterImage({rastInitialInfection}, opacity=0.5, colors = pal, group = "Initial Infection") %>%
         addLayersControl(
-          overlayGroups ="Initial Infection",
+          overlayGroups = olg,
           options = layersControlOptions(collapsed = FALSE, opacity =0.6)) %>%
         addLegend("bottomright", pal = pal, values = values(rastInitialInfection),
                   title = "Host species",
@@ -60,11 +80,12 @@ function(input, output) {
       inTotalSpeciesData <- input$totalSpeciesData
       rastTotalSpeciesData <- raster(inTotalSpeciesData$datapath)
       pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastTotalSpeciesData), na.color = "transparent")
+      olg <- c("All Trees")
       leaflet(height = "300px") %>%
         addProviderTiles("Esri.WorldImagery", group="background 1") %>%
         addRasterImage({rastTotalSpeciesData}, opacity=0.5, colors = pal, group = "All Trees") %>%
         addLayersControl(
-          overlayGroups ="All Trees",
+          overlayGroups = olg,
           options = layersControlOptions(collapsed = FALSE, opacity =0.6)) %>%
         addLegend("bottomright", pal = pal, values = values(rastTotalSpeciesData),
                   title = "Host species",
@@ -73,11 +94,12 @@ function(input, output) {
       inHostDataSingle <- input$hostDataSingle
       rastHostDataSingle <- raster(inHostDataSingle$datapath)
       pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataSingle), na.color = "transparent")
+      olg <- c("Host")
       leaflet(height = "300px") %>%
         addProviderTiles("Esri.WorldImagery", group="background 1") %>%
         addRasterImage({rastHostDataSingle}, opacity=0.5, colors = pal, group = "Host") %>%
         addLayersControl(
-          overlayGroups ="Host",
+          overlayGroups = olg,
           options = layersControlOptions(collapsed = FALSE, opacity =0.6)) %>%
         addLegend("bottomright", pal = pal, values = values(rastHostDataSingle),
                   title = "Host species",
@@ -191,6 +213,7 @@ function(input, output) {
       rastHostDataM1 <- raster(inHostDataM1$datapath)
       inHostDataM2 <- input$hostDataM2
       rastHostDataM2 <- raster(inHostDataM2$datapath)
+      olg <- c("All Trees", "Initial Infection","Host","Host 2")
       pal3 <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataM1), na.color = "transparent")
       pal4 <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataM2), na.color = "transparent")
       pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastTotalSpeciesData), na.color = "transparent")
@@ -202,7 +225,7 @@ function(input, output) {
         addRasterImage({rastInitialInfection}, opacity=0.5, colors = pal2, group = "Initial Infection") %>%
         addRasterImage({rastTotalSpeciesData}, opacity=0.5, colors = pal, group = "All Trees") %>%
         addLayersControl(
-          overlayGroups =c("All Trees", "Initial Infection","Host","Host 2"),
+          overlayGroups = olg,
           options = layersControlOptions(collapsed = FALSE, opacity =0.6))
     } else if (is.null(input$initialInfection)==TRUE && is.null(input$totalSpeciesData)==FALSE && is.null(input$hostDataSingle)==TRUE && is.null(input$hostDataM1)==FALSE && is.null(input$hostDataM2)==FALSE) {
       inTotalSpeciesData <- input$totalSpeciesData
