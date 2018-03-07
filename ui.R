@@ -13,7 +13,7 @@ style = "background-color: black"
 fluidPage(
   useShinyjs(),
   title = "Generalizable Pest and Pathogen Model",
-  #theme = "bootstrap.css",
+  theme = "shiny.css",
   style = "background-color: black; padding-bottom: 10px",
   tags$style(".shiny-file-input-progress {display: none}"),
   tags$head(tags$style(type="text/css","a{color: green;}")),
