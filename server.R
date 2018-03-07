@@ -123,6 +123,8 @@ function(input, output) {
       }
   })
   
+  output$plotData <- renderPlot({})
+  
   # Allows for the downloading of the user manual when the download link is pressed
   output$pdf <- downloadHandler("generalizablepestandpathogenmodel.pdf", content = function(file){
     file.copy("C:\\Users\\Chris\\Desktop\\Generalizable Pest and Pathogen Model User.pdf",file)

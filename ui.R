@@ -101,6 +101,11 @@ fluidPage(
            verbatimTextOutput("modelText"),
            # Create a download link for the user Manual
            downloadLink("pdf", "Download User Manual ", icon("cloud-download"), style = "color: green"),
-           leafletOutput("mapData", height = "600px")
+           leafletOutput("mapData", height = "600px"),
+           tabsetPanel(
+             tabPanel(title = "Plot", plotOutput("plotData", height = "600px"), style = "font-color: green"),
+             tabPanel(title = "State Summary", leafletOutput("stateData", height = "600px")),
+             tabPanel(title = "County Summary", leafletOutput("countyData", height = "600px"))
+           )
            )
     ))
