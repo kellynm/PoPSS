@@ -45,7 +45,7 @@ fluidPage(
                      # Create input for host data
                      selectInput(inputId = "hostQ", label = "Is the pest or pathogen a generalist or specialist?", choices = c("specialist","generalist")),
                      conditionalPanel(
-                       condition = "input.hostQ == 'specialist'", fileInput("hostDataSingle", "Select your raster file for your host data", accept = c(".tif"))
+                       condition = "input.hostQ == 'specialist'", fileInput("hostDataS1", "Select your raster file for your host data", accept = c(".tif"))
                      ),
                      conditionalPanel(
                        condition = "input.hostQ == 'generalist'", numericInput("hostMulti", "How many hosts affect the spread of the pest or pathogen?", value = 2, min =1, max =10, step =1)
