@@ -9,7 +9,7 @@ suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(shinyjs))
 source("helpers.R")
 source("Generalizablepestandpathogenmodel.R")
-style = "background-color: black"
+
 fluidPage(
   useShinyjs(),
   title = "Generalizable Pest and Pathogen Model",

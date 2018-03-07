@@ -15,6 +15,10 @@ tempData = './layers/weather/weatherCoeff_2000_2014.nc'
 
 #setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
 I_oaks_rast2 <- pest(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData)
+data <- pest(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData)
+
+data2 <- data[[1]]
+I_oaks_rast2 <- data[[2]]
 
 pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(initialPopulation), na.color = "transparent")
 olg <- c('init')
@@ -56,4 +60,4 @@ paste("year", (years[nlayers(I_oaks_rast2)-i]))
 
 
 cumulativeinfection <- sum(na.omit(I_oaks_rast2[[1]]@data@values))
-areainfected
+areainfected <- ncell(na.omit(I_oaks_rast2[[1]]@data@values))*res(I_oaks_rast2[[1]])[2]*res(I_oaks_rast2[[1]])[1]

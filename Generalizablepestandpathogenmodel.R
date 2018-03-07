@@ -97,7 +97,6 @@ tstep <- as.character(seq(dd_start, dd_end, 'weeks'))
 ## create list for yearly output
 split_date2 = unlist(strsplit(tstep, '-'))
 split_date2 = as.data.frame(as.numeric(split_date2[seq(2,length(split_date2),3)]))
-#years = as.data.frame(as.numeric(split_date2[seq(2,length(split_date2),3)]))
 listvar = 1
 yearlyoutputlist = 0
 for (i in 2:nrow(split_date2)) {
@@ -109,7 +108,7 @@ for (i in 2:nrow(split_date2)) {
 
 ## Create data frame for infected host data 
 years = seq(start, end, 1)
-dataForOutput <- data.frame(years = years, InfectedHost1 = 0, InfectedHOst2 = 0) # replace infected host with actual host names
+dataForOutput <- data.frame(years = years, infectedHost1Individuals = 0, infectedHost1Area = 0, infectedHost2Individuals = 0, infectedHost2Area = 0) # replace infected host with actual host names
 yearTracker = 0
 
 ## create formatting expression for padding zeros depending on total number of steps
@@ -121,15 +120,15 @@ formatting_str = paste("%0", floor( log10( length(tstep) ) ) + 1, "d", sep='')
 mcf.array <- ncvar_get(nc_open('./layers/weather/weatherCoeff_2000_2014.nc'),  varid = "Mcoef") #M = moisture;
 ccf.array <- ncvar_get(nc_open('./layers/weather/weatherCoeff_2000_2014.nc'),  varid = "Ccoef") #C = temperature;
 #ccf.array <- ncvar_get(nc_open(tempData),  varid = "Ccoef") #C = temperature;
+
 ## Seasonality: Do you want the spread to be limited to certain months?
 ss <- SS   #'YES' or 'NO'
-if (ss == 'YES') months_msk <- paste('0', s1:s2, sep='') #1=January 9=September
+if (ss == 'YES') months_msk <- paste('0', s1:s2, sep='') #1=January 9=September (Default to 1-12)
 
 ##Wind: Do you want the spread to be affected by wind?
 wind <- windQ #'YES' or 'NO'
 pwdir <- windDir
 spore_rate <- sporeRate
-nth_output <- 4
 
 #plot background image
 plot(bkr_img, xaxs = "i", yaxs = "i")
@@ -243,7 +242,10 @@ for (tt in tstep){
       boxed.labels(xpos, ypos, tt, bg="white", border=NA, font=2)
       I_oaks_rast2 <- stack(I_oaks_rast, I_oaks_rast2)
       I_umca_rast2 <- stack(I_umca_rast, I_umca_rast2)
-      # infectedData
+      dataForOutput$infectedHost1Individuals[yearTracker] <- sum(na.omit(I_umca_rast@data@values))
+      dataForOutput$infectedHost1Area[yearTracker] <- ncell(na.omit(I_umca_rast@data@values))*res(I_umca_rast)[2]*res(I_umca_rast)[1]
+      dataForOutput$infectedHost2Individuals[yearTracker] <- sum(na.omit(I_oaks_rast@data@values))
+      dataForOutput$infectedHost2Area[yearTracker] <- ncell(na.omit(I_oaks_rast@data@values))*res(I_oaks_rast)[2]*res(I_oaks_rast)[1]
       #WRITE TO FILE:
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output
@@ -256,9 +258,10 @@ for (tt in tstep){
   
 }
 
-return(I_oaks_rast2)
-#return(c(I_oaks_rast2, infectedData))
-
+data <- list(dataForOutput, I_oaks_rast2)
+#return(dataForOutput)
+#return(I_oaks_rast2)
+return(data)
 message("Spread model finished")
 
 }

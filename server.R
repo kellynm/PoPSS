@@ -16,10 +16,12 @@ function(input, output) {
 
   modelRun <- observeEvent(input$run, {
     years = seq(input$start, input$end, 1)
-                           withBusyIndicatorServer("run",{modelRastOut <- pest(rastHostDataM1,rastHostDataM2,rastTotalSpeciesData, rastInitialInfection,
+                           withBusyIndicatorServer("run",{dataList <- pest(rastHostDataM1,rastHostDataM2,rastTotalSpeciesData, rastInitialInfection,
                                  input$start, input$end, input$seasonQ, input$seasonMonths[1],input$seasonMonths[2], 
                                  input$sporeRate, input$windQ, input$windDir, './layers/weather/weatherCoeff_2000_2014.nc')})  
                            proxy <- leafletProxy("mapData")
+                           modelRastOut <<- dataList[[2]]
+                           dataReturn <<- dataList[[1]]
                            if (nlayers(modelRastOut)>1) {
                              #olg <- list(olg)
                              for (i in 1:(nlayers(modelRastOut)-1)){
