@@ -7,12 +7,13 @@ suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(raster))
 suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(shinyjs))
+suppressPackageStartupMessages(library(ggplot2))
 source("helpers.R")
 source("Generalizablepestandpathogenmodel.R")
 
 fluidPage(
   useShinyjs(),
-  title = "Generalizable Pest and Pathogen Model",
+  #title = h1("Generalizable Pest and Pathogen Model", icon("bug")),
   theme = "shiny.css",
   style = "background-color: black; padding-bottom: 10px",
   tags$style(".shiny-file-input-progress {display: none}"),
@@ -21,7 +22,7 @@ fluidPage(
   #tags$style(".progress-bar {background-color:#3c763d}"),
   
   # Add Title to App
-  h1("Generalizable Pest and Pathogen Model", style = "color: green;"),
+  h1("Generalizable Pest and Pathogen Model", icon("envira"), style = "color: green;"),
  
   # Create a sidebar for variable inputs that react to user changes
   fluidRow(

@@ -1,11 +1,14 @@
+# Used to set the initial zoom of the map and color of the rasters
+r <<- raster("./layers/UMCA_den_100m.img")
+pal <<- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "transparent")
+usCounties <<- readOGR("./layers/usLower48Counties.shp")
+usStates <<- readOGR("./layers/usLower48States.shp")
+
 function(input, output) {
   options(shiny.maxRequestSize=70000*1024^2) 
   # Creates the text file that is downloaded upon model completion
   #output$model <- renderPrint({c("Model inputs are:",input$wind, input$windData, input$temp, input$tempData, input$precip, input$precipData)})
   
-  # Used to set the initial zoom of the map and color of the rasters
-  r <- raster("./layers/UMCA_den_100m.img")
-  pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "transparent")
   # Create Raster Stack for holding output from model run
   modelRastOut <- r
   olg <- c()
@@ -36,6 +39,23 @@ function(input, output) {
                                  options = layersControlOptions(collapsed = FALSE, opacity =0.6))
                            }}
                            })
+  
+  ## Set up plot and tab GUI state and county maps
+  output$plotData <- renderPlot({plot(dataReturn$years, dataReturn$infectedHost2Individuals)})
+  output$stateData <- renderLeaflet({
+    leaflet(usStates) %>%
+      addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
+                  opacity = 1.0, fillOpacity = 0.5,
+                  highlightOptions = highlightOptions(color = "white", weight = 2,
+                                                      bringToFront = TRUE))
+  })
+  output$countyData <- renderLeaflet({
+    leaflet(usCounties) %>%
+      addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
+                  opacity = 1.0, fillOpacity = 0.5,
+                  highlightOptions = highlightOptions(color = "white", weight = 2,
+                                                      bringToFront = TRUE))
+  })
   
   ## Set up GUI maps to be flexible
   observeEvent(input$initialInfection, {
@@ -125,7 +145,7 @@ function(input, output) {
       }
   })
   
-  output$plotData <- renderPlot({})
+  output$plotData <- renderPlot({ggplot(dataReturn, aes(x=years, y=infectedHost1Area))+geom_line(aes(years,infectedHost1Area))})
   
   # Allows for the downloading of the user manual when the download link is pressed
   output$pdf <- downloadHandler("generalizablepestandpathogenmodel.pdf", content = function(file){

@@ -246,6 +246,8 @@ for (tt in tstep){
       dataForOutput$infectedHost1Area[yearTracker] <- ncell(na.omit(I_umca_rast@data@values))*res(I_umca_rast)[2]*res(I_umca_rast)[1]
       dataForOutput$infectedHost2Individuals[yearTracker] <- sum(na.omit(I_oaks_rast@data@values))
       dataForOutput$infectedHost2Area[yearTracker] <- ncell(na.omit(I_oaks_rast@data@values))*res(I_oaks_rast)[2]*res(I_oaks_rast)[1]
+      
+      
       #WRITE TO FILE:
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output
