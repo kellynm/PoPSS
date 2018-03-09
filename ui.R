@@ -18,7 +18,7 @@ fluidPage(
   style = "background-color: black; padding-bottom: 10px",
   tags$style(".shiny-file-input-progress {display: none}"),
   tags$head(tags$style(type="text/css","a{color: green;}")),
-  tags$style(HTML(".tabbable > .nav > li[class=active] > a {background-color: green; color: black;}")),
+  tags$style(HTML(".tabbable > .nav > li[class=active] > a {background-color: green; color: black; border: green;}")),
   #tags$style(".progress-bar {background-color:#3c763d}"),
   
   # Add Title to App
@@ -26,7 +26,7 @@ fluidPage(
  
   # Create a sidebar for variable inputs that react to user changes
   fluidRow(
-    column(width = 4,
+    column(width = 4, style = "padding: 10px",
            # Create panel for Species paramaters
            wellPanel(h3("Species Parameters", icon("bug")),
                      style = "background-color: #54ACC1; border: #ADBD60; color: black; padding: 1px 10px 1px 10px",
