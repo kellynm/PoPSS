@@ -25,6 +25,13 @@ function(input, output) {
                            proxy <- leafletProxy("mapData")
                            modelRastOut <<- dataList[[2]]
                            dataReturn <<- dataList[[1]]
+                           make1 <- dataReturn[,1:3]
+                           make2 <- dataReturn[,c(1,4:5)]
+                           names(make1) <- c('Year','Area','Count')
+                           names(make2) <- c('Year','Area','Count')
+                           make1$Host <- 'Tanoak'
+                           make2$Host <- 'Oaks'
+                           dataForPlot <<- rbind(make1,make2)
                            if (nlayers(modelRastOut)>1) {
                              #olg <- list(olg)
                              for (i in 1:(nlayers(modelRastOut)-1)){
@@ -145,7 +152,18 @@ function(input, output) {
       }
   })
   
-  output$plotData <- renderPlot({ggplot(dataReturn, aes(x=years, y=infectedHost1Area))+geom_line(aes(years,infectedHost1Area))})
+  output$plotData <- renderPlot({
+    title = "Model Output"
+    theme = theme_set(theme_classic())
+    theme = theme_update(legend.position="top", legend.title=element_blank(),legend.spacing=unit(-0.5,"lines"), plot.background = element_rect(fill = "#3F3E3E"), panel.background = element_rect(fill = "#3F3E3E"), legend.background = element_rect(fill = "#3F3E3E"))
+    theme = theme_update(axis.text = element_text(colour="white"), axis.ticks=element_blank(), plot.title = element_text(hjust = 0.5,colour="white"), axis.line = element_line(colour="white"))
+    ggplot(dataForPlot, aes(x=Year, y=Area, color=factor(Host)))+geom_line(aes(Year,Area), size =1.5)+
+    scale_color_manual(values=c("#54ACC1", "#ADBD60"))+scale_fill_manual(values=c("blue", "red"))+
+    ggtitle(title)+
+    theme(axis.text=element_text(size=12,colour="white"),axis.title=element_text(size=16, vjust=0,35,colour="white"),legend.text=element_text(size=12,colour="white"),plot.title=element_text(size=18))+
+    scale_x_continuous(name="Year", breaks=seq(start, end, 2))+
+    scale_y_continuous(name=expression("Infected Area "*~(m^2)))+guides(col=guide_legend(ncol=3),shape=guide_legend(ncol = 1))
+      })
   
   # Allows for the downloading of the user manual when the download link is pressed
   output$pdf <- downloadHandler("generalizablepestandpathogenmodel.pdf", content = function(file){

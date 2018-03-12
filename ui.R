@@ -11,14 +11,12 @@ suppressPackageStartupMessages(library(ggplot2))
 source("helpers.R")
 source("Generalizablepestandpathogenmodel.R")
 
-fluidPage(
+fluidPage(  theme = "shiny.css",
   useShinyjs(),
-  #title = h1("Generalizable Pest and Pathogen Model", icon("bug")),
-  theme = "shiny.css",
-  style = "background-color: black; padding-bottom: 10px",
   tags$style(".shiny-file-input-progress {display: none}"),
   tags$head(tags$style(type="text/css","a{color: green;}")),
   tags$style(HTML(".tabbable > .nav > li[class=active] > a {background-color: green; color: black; border: green;}")),
+  tags$style(HTML(".shiny-plot-output > a{border-color: black} ")),
   #tags$style(".progress-bar {background-color:#3c763d}"),
   
   # Add Title to App
@@ -108,7 +106,8 @@ fluidPage(
            downloadLink("pdf", "Download User Manual ", icon("cloud-download"), style = "color: green"),
            leafletOutput("mapData", height = "600px"),
            tabsetPanel(
-             tabPanel(title = "Plot", plotOutput("plotData", height = "600px")),
+             tabPanel(title = "Plot", div(class="myPlot",
+                                          plotOutput("plotData", height = "600px"))),
              tabPanel(title = "State Summary", leafletOutput("stateData", height = "600px")),
              tabPanel(title = "County Summary", leafletOutput("countyData", height = "600px"))
            )

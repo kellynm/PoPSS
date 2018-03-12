@@ -31,14 +31,14 @@ make <- rbind(make1,make2)
 
 title = "Model Output"
 theme = theme_set(theme_classic())
-theme = theme_update(legend.position="top", legend.title=element_blank(),legend.spacing=unit(-0.5,"lines"), plot.background = element_rect(fill = "#3F3E3E"), panel.background = element_rect(fill = "#3F3E3E"), legend.box.background = element_rect(fill = "#3F3E3E"))
-theme = theme_update(axis.text = element_text(colour="#227032"), axis.ticks=element_blank(), plot.title = element_text(hjust = 0.5,colour="#227032"), axis.line = element_line(colour="#227032"))
-plot3 = ggplot(make, aes(x=Year, y=Area, color=factor(Host)))+geom_line(aes(Year,Area))
-plot3 = plot3+scale_color_manual(values=c("blue", "red"))+scale_fill_manual(values=c("blue", "red"))
+theme = theme_update(legend.position="top", legend.title=element_blank(),legend.spacing=unit(-0.5,"lines"), plot.background = element_rect(fill = "#3F3E3E"), panel.background = element_rect(fill = "#3F3E3E"), legend.background = element_rect(fill = "#3F3E3E"))
+theme = theme_update(axis.text = element_text(colour="white"), axis.ticks=element_blank(), plot.title = element_text(hjust = 0.5,colour="white"), axis.line = element_line(colour="white"))
+plot3 = ggplot(make, aes(x=Year, y=Area, color=factor(Host)))+geom_line(aes(Year,Area), size =1.5)
+plot3 = plot3+scale_color_manual(values=c("#54ACC1", "#ADBD60"))+scale_fill_manual(values=c("blue", "red"))
 plot3 = plot3+ggtitle(title)
-plot3 = plot3 + theme(axis.text=element_text(size=10,colour="#227032"),axis.title=element_text(size=16, vjust=0,35,colour="#227032"),legend.text=element_text(size=10,colour="#227032"),plot.title=element_text(size=20))
+plot3 = plot3 + theme(axis.text=element_text(size=12,colour="white"),axis.title=element_text(size=16, vjust=0,35,colour="white"),legend.text=element_text(size=12,colour="white"),plot.title=element_text(size=18))
 plot3 = plot3 + scale_x_continuous(name="Year", breaks=seq(start, end, 2))
-plot3 = plot3 + scale_y_continuous(name=expression("Area "*~m^2))+guides(col=guide_legend(ncol=3),shape=guide_legend(ncol = 1))
+plot3 = plot3 + scale_y_continuous(name=expression("Infected Area "*~(m^2)))+guides(col=guide_legend(ncol=3),shape=guide_legend(ncol = 1))
 plot3
 
 
