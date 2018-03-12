@@ -35,15 +35,12 @@ sourceCpp("./scripts/myCppFunctions.cpp") # for C++ custom functions
 
 ##Input rasters: abundance (tree density per hectare)
 #----> UMCA
-#umca_rast <- raster(host1)
 umca_rast <- host1
 #----> ALL SOD-affected oaks
-#oaks_rast <- raster(host2)
 oaks_rast <- host2
 #max
 mx <- cellStats(oaks_rast, stat='max') 
 #----> All live trees
-#lvtree_rast <- raster(allTrees)
 lvtree_rast <- allTrees
 #raster resolution
 res_win <- res(umca_rast)[1]
@@ -52,7 +49,6 @@ res_win <- res(umca_rast)[1]
 ### INFECTED AND SUSCEPTIBLES ####
 
 ##Initial infection (OAKS):
-#I_oaks_rast <- raster(initialPopulation) 
 I_oaks_rast <- initialPopulation
 I_oaks_rast2 <- I_oaks_rast
 
@@ -76,16 +72,11 @@ I_umca_rast2 <- I_umca_rast
 N_live <- as.matrix(lvtree_rast)
 
 ##background satellite image for plotting
-bkr_img <- raster("./layers/ortho_5m_color.tif") 
+#bkr_img <- raster("./layers/ortho_5m_color.tif") 
 
-##Start-End date:
-#if (start >1960 && start<2020){
-  start = start
-#} else {
- # start <- 2000
-#}
+## Start-End date:
+start = start
 end = end
-#end <- 2010
 
 if (start > end) stop('start date must precede end date!!')
 
@@ -131,7 +122,7 @@ pwdir <- windDir
 spore_rate <- sporeRate
 
 #plot background image
-plot(bkr_img, xaxs = "i", yaxs = "i")
+#plot(bkr_img, xaxs = "i", yaxs = "i")
 
 #plot coordinates for plotting text:
 xpos <- (bbox(umca_rast)[1,2] + bbox(umca_rast)[1,1]) / 2
@@ -166,9 +157,9 @@ for (tt in tstep){
     #bks <- c(0, 0.25, 0.5, 0.75, 1)
     #my_palette <- colorRampPalette(c("springgreen", "yellow1", "orange", "red1"))(n = 4)
     #image(I_oaks_rast, breaks=bks, col=addalpha(my_palette, 1), add=T, axes=F, box=F, ann=F, legend=F, useRaster=T)
-    bks <- seq(0, mx, length = 10)
-    image(I_oaks_rast, breaks=bks, col=rev(heat.colors(length(bks)-1, alpha=1)), add=T, axes=F, box=F, ann=F, legend=F, useRaster=T)
-    boxed.labels(xpos, ypos, tt, bg="white", border=NA, font=2)
+    #bks <- seq(0, mx, length = 10)
+    #image(I_oaks_rast, breaks=bks, col=rev(heat.colors(length(bks)-1, alpha=1)), add=T, axes=F, box=F, ann=F, legend=F, useRaster=T)
+    #boxed.labels(xpos, ypos, tt, bg="white", border=NA, font=2)
     
     #WRITE TO FILE:
     #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
@@ -237,9 +228,9 @@ for (tt in tstep){
       #bks <- c(0, 0.25, 0.5, 0.75, 1)
       #my_palette <- colorRampPalette(c("springgreen", "yellow1", "orange", "red1"))(n = 4)
       #image(I_oaks_rast, breaks=bks, col=addalpha(my_palette, .5), add=T, axes=F, box=F, ann=F, legend=F, useRaster=T)
-      bks <- seq(0, mx, length = 10)
-      image(I_oaks_rast, breaks=bks, col=rev(heat.colors(length(bks)-1, alpha=1)), add=T, axes=F, box=F, ann=F, legend=F, useRaster=T)
-      boxed.labels(xpos, ypos, tt, bg="white", border=NA, font=2)
+      #bks <- seq(0, mx, length = 10)
+      #image(I_oaks_rast, breaks=bks, col=rev(heat.colors(length(bks)-1, alpha=1)), add=T, axes=F, box=F, ann=F, legend=F, useRaster=T)
+      #boxed.labels(xpos, ypos, tt, bg="white", border=NA, font=2)
       I_oaks_rast2 <- stack(I_oaks_rast, I_oaks_rast2)
       I_umca_rast2 <- stack(I_umca_rast, I_umca_rast2)
       dataForOutput$infectedHost1Individuals[yearTracker] <- sum(na.omit(I_umca_rast@data@values))

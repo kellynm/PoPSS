@@ -106,8 +106,14 @@ fluidPage(  theme = "shiny.css",
            downloadLink("pdf", "Download User Manual ", icon("cloud-download"), style = "color: green"),
            leafletOutput("mapData", height = "600px"),
            tabsetPanel(
-             tabPanel(title = "Plot", div(class="myPlot",
-                                          plotOutput("plotData", height = "600px"))),
+             tabPanel(title = "Plot", 
+                      plotOutput("plotData", height = "600px"),
+                      absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
+                                    draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
+                                    width = 330, height = "auto",
+                                    selectInput(inputId = "plotDataSelect", label = "Select data to display", choices = names(dataForPlot)[2:length(names(dataForPlot))])
+                      )
+                      ),
              tabPanel(title = "State Summary", leafletOutput("stateData", height = "600px")),
              tabPanel(title = "County Summary", leafletOutput("countyData", height = "600px"))
            )
