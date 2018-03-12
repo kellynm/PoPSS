@@ -3,7 +3,7 @@ r <<- raster("./layers/UMCA_den_100m.img")
 pal <<- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "transparent")
 usCounties <<- readOGR("./layers/usLower48Counties.shp")
 usStates <<- readOGR("./layers/usLower48States.shp")
-
+#dataForPlot <- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
 function(input, output) {
   options(shiny.maxRequestSize=70000*1024^2) 
   # Creates the text file that is downloaded upon model completion
@@ -12,10 +12,10 @@ function(input, output) {
   # Create Raster Stack for holding output from model run
   modelRastOut <- r
   olg <- c()
-  
+
   # Creates the text saying the model is running when the action button is pressed
-  modeltext <<- eventReactive(input$run, {"Model has finished"})
-  output$modelText <- renderText({modeltext()})
+  # modeltext <<- eventReactive(input$run, {"Model has finished"})
+  # output$modelText <- renderText({modeltext()})
 
   modelRun <- observeEvent(input$run, {
     years = seq(input$start, input$end, 1)
@@ -154,15 +154,20 @@ function(input, output) {
   })
   
   output$plotData <- renderPlot({
+    data <- data.frame(Year = dataForPlot$Year, Variable = dataForPlot[[input$plotDataSelect]], Host = dataForPlot$Host)
+    if (input$plotDataSelect == "Area"){
+      yName <- expression("Infected Area "*~(m^2))
+    } else {
+      yName <- expression("Number of Infected Trees")
+    }
     title = "Model Output"
     theme = theme_set(theme_classic())
-    theme = theme_update(legend.position="top", legend.title=element_blank(),legend.spacing=unit(-0.5,"lines"), plot.background = element_rect(fill = "#3F3E3E"), panel.background = element_rect(fill = "#3F3E3E"), legend.background = element_rect(fill = "#3F3E3E"))
-    theme = theme_update(axis.text = element_text(colour="white"), axis.ticks=element_blank(), plot.title = element_text(hjust = 0.5,colour="white"), axis.line = element_line(colour="white"))
-    ggplot(dataForPlot, aes(x=Year, y=input$plotDataSelect, color=factor(Host)))+geom_line(aes(Year, input$plotDataSelect), size = 1.5)+scale_color_manual(values=c("#54ACC1", "#ADBD60"))+scale_fill_manual(values=c("#54ACC1", "#ADBD60"))+
+    theme = theme_update(legend.position="top", legend.title=element_blank(),legend.spacing=unit(-0.5,"lines"), plot.background = element_rect(fill = "#3F3E3E", colour = "#3F3E3E"), panel.background = element_rect(fill = "#3F3E3E", colour = "#3F3E3E"), legend.background = element_rect(fill = "#3F3E3E"))#,panel.margin =unit(c(0,0,0,0),"null"), plot.margin =unit(c(0,0,0,0),"null"))
+    theme = theme_update(axis.text = element_text(size = 12, colour="white"), axis.ticks=element_blank(), plot.title = element_text(hjust = 0.5,colour="white", size =18), axis.line = element_line(colour="white"),axis.title=element_text(size=16, vjust=0,35,colour="white"),legend.text=element_text(size=12,colour="white"))
+    ggplot(data, aes(x=Year, y=Variable, color=factor(Host)))+geom_line(aes(Year, Variable), size = 1.5)+scale_color_manual(values=c("#54ACC1", "#ADBD60"))+scale_fill_manual(values=c("#54ACC1", "#ADBD60"))+
     ggtitle(title)+
-    theme(axis.text=element_text(size=12,colour="white"),axis.title=element_text(size=16, vjust=0,35,colour="white"),legend.text=element_text(size=12,colour="white"),plot.title=element_text(size=18))+
     scale_x_continuous(name="Year", breaks=seq(start, end, 2))+
-    scale_y_continuous(name=expression("Infected Area "*~(m^2)))+guides(col=guide_legend(ncol=3),shape=guide_legend(ncol = 1))
+    scale_y_continuous(name=yName)+guides(col=guide_legend(ncol=3),shape=guide_legend(ncol = 1))
       })
   
   # Allows for the downloading of the user manual when the download link is pressed
