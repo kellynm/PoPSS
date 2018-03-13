@@ -7,12 +7,14 @@ suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(raster))
 suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(shinyjs))
+suppressPackageStartupMessages(library(shinyalert))
 suppressPackageStartupMessages(library(ggplot2))
 source("helpers.R")
 source("Generalizablepestandpathogenmodel.R")
 
-fluidPage(  theme = "shiny.css",
+fluidPage(theme = "shiny.css",
   useShinyjs(),
+  useShinyalert(),
   tags$style(".shiny-file-input-progress {display: none}"),
   tags$head(tags$style(type="text/css","a{color: green;}")),
   tags$style(HTML(".tabbable > .nav > li[class=active] > a {background-color: green; color: black; border: green;}")),
@@ -31,7 +33,7 @@ fluidPage(  theme = "shiny.css",
                      textInput("pest", "Enter the name of the species being simulated (currently not used exept to keep track of model run information)"),
                      # Create date range box for simulation
                      #dateRangeInput("date", "Start date to end date"),
-                     numericInput("start", "Year to start simulation", value = 2000, min = 1960, max = 2020),
+                     numericInput("start", label = ("Year to start simulation"), value = 2000, min = 1960, max = 2020),
                      numericInput("end", "Year to end simulation", value = 2010, min = 1960, max = 2020),
                      # Create seasonality box
                      selectInput(inputId = "seasonQ", label = "Does spread occur during specific seasons (Currently set up to take in specific months but will be set to work with daylength as well)?", choices = c("YES","NO")),
@@ -93,26 +95,25 @@ fluidPage(  theme = "shiny.css",
                          ),
            # Create an Action button that will run the model when pressed
            withBusyIndicatorUI(
-             actionButton("run", "Run Model"))
+             actionButton("run", " Run Model", icon = icon("play")))
            ),
     column(width = 8,
            # Create a text file with all input values 
            #textOutput("model"),
            # Let the user know if their extents match
            #textOutput("extentMatch")
-           # Create a text box saying the the model is running while model is processes data
-           #verbatimTextOutput("modelText"),
            # Create a download link for the user Manual
            downloadLink("pdf", "Download User Manual ", icon("cloud-download"), style = "color: green"),
            leafletOutput("mapData", height = "600px"),
            tabsetPanel(id = "tabsPanel",
              tabPanel(title = "Plot", 
                       plotOutput("plotData", height = "600px"),
-                      absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
-                                    draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
-                                    width = 330, height = "auto",
-                                    selectInput(inputId = "plotDataSelect", label = "Select data to display", choices = names(dataForPlot)[2:(length(names(dataForPlot))-1)])
-                      )
+                      selectInput(inputId = "plotDataSelect", label = "Select data to display", choices = names(dataForPlot)[2:(length(names(dataForPlot))-1)])
+                      # absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
+                      #               draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
+                      #               width = 330, height = "auto",
+                      #               selectInput(inputId = "plotDataSelect", label = "Select data to display", choices = names(dataForPlot)[2:(length(names(dataForPlot))-1)])
+                      # )
                       ),
              tabPanel(title = "State Summary", leafletOutput("stateData", height = "600px")),
              tabPanel(title = "County Summary", leafletOutput("countyData", height = "600px"))

@@ -3,7 +3,8 @@ r <<- raster("./layers/UMCA_den_100m.img")
 pal <<- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "transparent")
 usCounties <<- readOGR("./layers/usLower48Counties.shp")
 usStates <<- readOGR("./layers/usLower48States.shp")
-#dataForPlot <- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
+data2 <- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
+
 function(input, output) {
   options(shiny.maxRequestSize=70000*1024^2) 
   # Creates the text file that is downloaded upon model completion
@@ -12,12 +13,9 @@ function(input, output) {
   # Create Raster Stack for holding output from model run
   modelRastOut <- r
   olg <- c()
+  dataForPlot <<- data2
 
-  # Creates the text saying the model is running when the action button is pressed
-  # modeltext <<- eventReactive(input$run, {"Model has finished"})
-  # output$modelText <- renderText({modeltext()})
-
-  modelRun <- observeEvent(input$run, {
+  observeEvent(input$run, {
     years = seq(input$start, input$end, 1)
                            withBusyIndicatorServer("run",{dataList <- pest(rastHostDataM1,rastHostDataM2,rastTotalSpeciesData, rastInitialInfection,
                                  input$start, input$end, input$seasonQ, input$seasonMonths[1],input$seasonMonths[2], 
@@ -25,14 +23,15 @@ function(input, output) {
                              proxy <- leafletProxy("mapData")
                              modelRastOut <<- dataList[[2]]
                              dataReturn <<- dataList[[1]]
-                             make1 <- dataReturn[,1:3]
-                             make2 <- dataReturn[,c(1,4:5)]
-                             names(make1) <- c('Year','Area','Count')
-                             names(make2) <- c('Year','Area','Count')
-                             make1$Host <- 'Tanoak'
-                             make2$Host <- 'Oaks'
-                             dataForPlot <<- rbind(make1,make2) 
-                           
+                             if (nrow(dataForPlot)<=1 && nrow(dataReturn)>1){
+                               make1 <- dataReturn[,1:3]
+                               make2 <- dataReturn[,c(1,4:5)]
+                               names(make1) <- c('Year','Area','Count')
+                               names(make2) <- c('Year','Area','Count')
+                               make1$Host <- 'Tanoak'
+                               make2$Host <- 'Oaks'
+                               dataForPlot <<- rbind(make1,make2) 
+                             }
                            if (nlayers(modelRastOut)>1) {
                              #olg <- list(olg)
                              for (i in 1:(nlayers(modelRastOut)-1)){
@@ -47,6 +46,11 @@ function(input, output) {
                                  options = layersControlOptions(collapsed = FALSE, opacity =0.6))
                            }}
                            })
+  
+  ## Create information file of model input parameters
+  observeEvent(input$run,{
+    parameterTable <<- data.frame(Species = input$pest, Start = input$start, End = input$end, Seasonality = input$seasonQ, monthStart = input$seasonMonths[1],monthEnd = input$seasonMonths[2], ReproductionRate = input$sporeRate)
+  })
   
   ## Set up plot and tab GUI state and county maps
   output$plotData <- renderPlot({plot(dataReturn$years, dataReturn$infectedHost2Individuals)})
@@ -165,10 +169,10 @@ function(input, output) {
     theme = theme_update(legend.position="top", legend.title=element_blank(),legend.spacing=unit(-0.5,"lines"), plot.background = element_rect(fill = "#3F3E3E", colour = "#3F3E3E"), panel.background = element_rect(fill = "#3F3E3E", colour = "#3F3E3E"), legend.background = element_rect(fill = "#3F3E3E"))#,panel.margin =unit(c(0,0,0,0),"null"), plot.margin =unit(c(0,0,0,0),"null"))
     theme = theme_update(axis.text = element_text(size = 12, colour="white"), axis.ticks=element_blank(), plot.title = element_text(hjust = 0.5,colour="white", size =18), axis.line = element_line(colour="white"),axis.title=element_text(size=16, vjust=0,35,colour="white"),legend.text=element_text(size=12,colour="white"))
     ggplot(data, aes(x=Year, y=Variable, color=factor(Host)))+geom_line(aes(Year, Variable), size = 1.5)+scale_color_manual(values=c("#54ACC1", "#ADBD60"))+scale_fill_manual(values=c("#54ACC1", "#ADBD60"))+
-    ggtitle(title)+
-    scale_x_continuous(name="Year", breaks=seq(start, end, 2))+
-    scale_y_continuous(name=yName)+guides(col=guide_legend(ncol=3),shape=guide_legend(ncol = 1))
-      })
+      ggtitle(title)+
+      scale_x_continuous(name="Year", breaks=seq(input$start, input$end, 2))+
+      scale_y_continuous(name=yName)+guides(col=guide_legend(ncol=3),shape=guide_legend(ncol = 1))
+  })
   
   # Allows for the downloading of the user manual when the download link is pressed
   output$pdf <- downloadHandler("generalizablepestandpathogenmodel.pdf", content = function(file){

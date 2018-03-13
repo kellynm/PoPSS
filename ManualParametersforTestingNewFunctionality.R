@@ -52,3 +52,15 @@ ggplot(dataForPlot, aes(x=Year, y=Area, color=factor(Host)))+geom_line(aes(Year,
   scale_y_continuous(name=expression("Infected Area "*~(m^2)))+guides(col=guide_legend(ncol=3),shape=guide_legend(ncol = 1))
 #cumulativeinfection <- sum(na.omit(I_oaks_rast2[[1]]@data@values))
 #areainfected <- ncell(na.omit(I_oaks_rast2[[1]]@data@values))*res(I_oaks_rast2[[1]])[2]*res(I_oaks_rast2[[1]])[1]
+
+
+zipped.csv <- function(df, zippedfile) {
+  # init temp csv
+  temp <- tempfile(fileext=".csv")
+  # write temp csv
+  write.csv(df, file=temp)
+  # zip temp csv
+  zip(zippedfile,temp)
+  # delete temp csv
+  unlink(temp)
+}

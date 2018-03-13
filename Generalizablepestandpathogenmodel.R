@@ -24,8 +24,8 @@ suppressPackageStartupMessages(library(dismo))     # Regression for ecological d
 suppressPackageStartupMessages(library(sp))        # Classes and methods for spatial data
 
 pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData){
+  
 ## Define the main working directory based on the current script path
-#setwd("C:\\Users\\cmjone25\\Dropbox\\Projects\\Code\\Aphis Modeling Project\\BayOakCode")
 #setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
 
 ## Use an external source file w/ all modules (functions) used within this script. 
@@ -45,7 +45,6 @@ lvtree_rast <- allTrees
 #raster resolution
 res_win <- res(umca_rast)[1]
 
-###################################
 ### INFECTED AND SUSCEPTIBLES ####
 
 ##Initial infection (OAKS):
@@ -152,15 +151,6 @@ for (tt in tstep){
     #I_oaks_rast[] <- ifelse(I_oaks_rast[] > 0, 1, 0) 
     #I_oaks_rast[] <- ifelse(I_oaks_rast[] > 0, 1, NA) 
     
-    #PLOT: overlay current plot on background image
-    
-    #bks <- c(0, 0.25, 0.5, 0.75, 1)
-    #my_palette <- colorRampPalette(c("springgreen", "yellow1", "orange", "red1"))(n = 4)
-    #image(I_oaks_rast, breaks=bks, col=addalpha(my_palette, 1), add=T, axes=F, box=F, ann=F, legend=F, useRaster=T)
-    #bks <- seq(0, mx, length = 10)
-    #image(I_oaks_rast, breaks=bks, col=rev(heat.colors(length(bks)-1, alpha=1)), add=T, axes=F, box=F, ann=F, legend=F, useRaster=T)
-    #boxed.labels(xpos, ypos, tt, bg="white", border=NA, font=2)
-    
     #WRITE TO FILE:
     #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
     #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output
@@ -174,10 +164,10 @@ for (tt in tstep){
     #update week counter
     cnt <- cnt + 1
     
-    #is current week time step within a spread month (as defined by input parameters)?
+    ## is current week time step within a spread month (as defined by input parameters)?
     if (ss == 'YES' & !any(substr(tt,6,7) %in% months_msk)) next
     
-    #Total weather suitability:
+    ## Total weather suitability:
     W <- mcf.array[,,cnt] * ccf.array[,,cnt]
     
     #GENERATE SPORES:  
@@ -185,7 +175,7 @@ for (tt in tstep){
     set.seed(42)
     spores_mat <- SporeGenCpp(I_umca, W, rate = spore_rate) #rate: spores/week for each infected host (4.4 default)
     
-    #SPORE DISPERSAL:  
+    ##SPORE DISPERSAL:  
     #'List'
     if (wind == 'YES') {
       
@@ -224,13 +214,6 @@ for (tt in tstep){
         
     if (cnt %in% yearlyoutputlist){
       yearTracker = yearTracker+1
-      #PLOT: overlay current plot on background image
-      #bks <- c(0, 0.25, 0.5, 0.75, 1)
-      #my_palette <- colorRampPalette(c("springgreen", "yellow1", "orange", "red1"))(n = 4)
-      #image(I_oaks_rast, breaks=bks, col=addalpha(my_palette, .5), add=T, axes=F, box=F, ann=F, legend=F, useRaster=T)
-      #bks <- seq(0, mx, length = 10)
-      #image(I_oaks_rast, breaks=bks, col=rev(heat.colors(length(bks)-1, alpha=1)), add=T, axes=F, box=F, ann=F, legend=F, useRaster=T)
-      #boxed.labels(xpos, ypos, tt, bg="white", border=NA, font=2)
       I_oaks_rast2 <- stack(I_oaks_rast, I_oaks_rast2)
       I_umca_rast2 <- stack(I_umca_rast, I_umca_rast2)
       dataForOutput$infectedHost1Individuals[yearTracker] <- sum(na.omit(I_umca_rast@data@values))
@@ -238,8 +221,7 @@ for (tt in tstep){
       dataForOutput$infectedHost2Individuals[yearTracker] <- sum(na.omit(I_oaks_rast@data@values))
       dataForOutput$infectedHost2Area[yearTracker] <- ncell(na.omit(I_oaks_rast@data@values))*res(I_oaks_rast)[2]*res(I_oaks_rast)[1]
       
-      
-      #WRITE TO FILE:
+      ## WRITE TO FILE:
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output
       #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='LOG1S', overwrite=TRUE)  # 0=non infected 1=infected output
@@ -252,11 +234,7 @@ for (tt in tstep){
 }
 
 data <- list(dataForOutput, I_oaks_rast2)
-#return(dataForOutput)
-#return(I_oaks_rast2)
 return(data)
-message("Spread model finished")
-
 }
 
 
