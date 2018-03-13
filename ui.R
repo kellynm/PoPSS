@@ -11,6 +11,7 @@ suppressPackageStartupMessages(library(shinyalert))
 suppressPackageStartupMessages(library(ggplot2))
 source("helpers.R")
 source("Generalizablepestandpathogenmodel.R")
+dataForPlot <<- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
 
 fluidPage(theme = "shiny.css",
   useShinyjs(),
@@ -106,7 +107,7 @@ fluidPage(theme = "shiny.css",
            downloadLink("pdf", "Download User Manual ", icon("cloud-download"), style = "color: green"),
            leafletOutput("mapData", height = "600px"),
            tabsetPanel(id = "tabsPanel",
-             tabPanel(title = "Plot", 
+               tabPanel(title = "Plot", 
                       plotOutput("plotData", height = "600px"),
                       selectInput(inputId = "plotDataSelect", label = "Select data to display", choices = names(dataForPlot)[2:(length(names(dataForPlot))-1)])
                       # absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,

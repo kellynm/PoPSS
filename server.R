@@ -3,7 +3,7 @@ r <<- raster("./layers/UMCA_den_100m.img")
 pal <<- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "transparent")
 usCounties <<- readOGR("./layers/usLower48Counties.shp")
 usStates <<- readOGR("./layers/usLower48States.shp")
-data2 <- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
+#data2 <- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
 
 function(input, output) {
   options(shiny.maxRequestSize=70000*1024^2) 
@@ -13,7 +13,7 @@ function(input, output) {
   # Create Raster Stack for holding output from model run
   modelRastOut <- r
   olg <- c()
-  dataForPlot <<- data2
+  #dataForPlot <<- data2
 
   observeEvent(input$run, {
     years = seq(input$start, input$end, 1)
@@ -23,15 +23,13 @@ function(input, output) {
                              proxy <- leafletProxy("mapData")
                              modelRastOut <<- dataList[[2]]
                              dataReturn <<- dataList[[1]]
-                             if (nrow(dataForPlot)<=1 && nrow(dataReturn)>1){
-                               make1 <- dataReturn[,1:3]
-                               make2 <- dataReturn[,c(1,4:5)]
-                               names(make1) <- c('Year','Area','Count')
-                               names(make2) <- c('Year','Area','Count')
-                               make1$Host <- 'Tanoak'
-                               make2$Host <- 'Oaks'
-                               dataForPlot <<- rbind(make1,make2) 
-                             }
+                             make1 <- dataReturn[,1:3]
+                             make2 <- dataReturn[,c(1,4:5)]
+                             names(make1) <- c('Year','Area','Count')
+                             names(make2) <- c('Year','Area','Count')
+                             make1$Host <- 'Tanoak'
+                             make2$Host <- 'Oaks'
+                             dataForPlot <<- rbind(make1,make2) 
                            if (nlayers(modelRastOut)>1) {
                              #olg <- list(olg)
                              for (i in 1:(nlayers(modelRastOut)-1)){
