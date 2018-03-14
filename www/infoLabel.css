@@ -1,0 +1,7 @@
+.btn[id*="info"] {background-color: transparent; border-color: transparent;}
+.btn:hover[id*="info"] {background-color: gray; border-color: gray;}
+
+h4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}

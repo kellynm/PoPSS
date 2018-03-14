@@ -8,18 +8,21 @@ suppressPackageStartupMessages(library(raster))
 suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(shinyjs))
 suppressPackageStartupMessages(library(shinyalert))
+suppressPackageStartupMessages(library(shinyBS))
 suppressPackageStartupMessages(library(ggplot2))
 source("helpers.R")
 source("Generalizablepestandpathogenmodel.R")
+source("infoLabelInput.R")
 dataForPlot <<- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
 
 fluidPage(theme = "shiny.css",
   useShinyjs(),
   useShinyalert(),
-  tags$style(".shiny-file-input-progress {display: none}"),
+  #useShinyBS(),
+  #tags$style(".shiny-file-input-progress {display: none}"),
   tags$head(tags$style(type="text/css","a{color: green;}")),
-  tags$style(HTML(".tabbable > .nav > li[class=active] > a {background-color: green; color: black; border: green;}")),
-  tags$style(HTML(".shiny-plot-output > a{border-color: black} ")),
+  #tags$style(HTML(".tabbable > .nav > li[class=active] > a {background-color: green; color: black; border: green;}")),
+  #tags$style(HTML(".shiny-plot-output > a{border-color: black} ")),
   #tags$style(".progress-bar {background-color:#3c763d}"),
   
   # Add Title to App
@@ -31,10 +34,13 @@ fluidPage(theme = "shiny.css",
            # Create panel for Species paramaters
            wellPanel(h3("Species Parameters", icon("bug")),
                      style = "background-color: #54ACC1; border: #ADBD60; color: black; padding: 1px 10px 1px 10px",
-                     textInput("pest", "Enter the name of the species being simulated (currently not used exept to keep track of model run information)"),
+                     textInput(inputId = "pest", "Enter the name of the species being simulated (currently not used exept to keep track of model run information)"),
                      # Create date range box for simulation
                      #dateRangeInput("date", "Start date to end date"),
-                     numericInput("start", label = ("Year to start simulation"), value = 2000, min = 1960, max = 2020),
+                     numericInput("start", label = infoLabelInputUI("start", title = "Year to start simulation"), value = 2000, min = 1960, max = 2020),
+                     #numericInput("start", label = h4("Year to start simulation",bsButton(inputId = "infoStart", icon = icon("info"), label = "", size = "small")), value = 2000, min = 1960, max = 2020),
+                     #bsTooltip(id = "infoStart", title = "help", trigger = "click", placement = "right"),
+                     #actionButton(inputId = "infoStart", icon = icon("info"), label = ""),
                      numericInput("end", "Year to end simulation", value = 2010, min = 1960, max = 2020),
                      # Create seasonality box
                      selectInput(inputId = "seasonQ", label = "Does spread occur during specific seasons (Currently set up to take in specific months but will be set to work with daylength as well)?", choices = c("YES","NO")),
@@ -42,7 +48,8 @@ fluidPage(theme = "shiny.css",
                        condition = "input.seasonQ == 'YES'", sliderInput("seasonMonths", "Months that contribute to the spread of the pest or pathogen?", value = c(1,9), min =1, max =12, step =1)
                        ),
                      numericInput(inputId ="sporeRate", label = "Enter the rate of reproduction or spore production.", value = "4.4", min=0, max = 100, step = 0.1),
-                     fileInput(inputId = "initialInfection", label = "Select your raster file for your input point(s) of infection", accept = c(".tif"))
+                     fileInput(inputId = "initialInfection", label = "Select your raster file for your input point(s) of infection", accept = c(".tif")),
+                     selectInput(inputId = "kernelType", label = "Select the appropriate dispersal kernel", choices = c('Cauchy', 'Cauchy Mixture', 'Exponential', 'Gauss'))
                      ),
            # Create panel for Host variables
            wellPanel(h3("Hosts", icon("tree")),

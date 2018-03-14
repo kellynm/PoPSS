@@ -5,7 +5,7 @@ usCounties <<- readOGR("./layers/usLower48Counties.shp")
 usStates <<- readOGR("./layers/usLower48States.shp")
 #data2 <- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
 
-function(input, output) {
+function(input, output, session) {
   options(shiny.maxRequestSize=70000*1024^2) 
   # Creates the text file that is downloaded upon model completion
   #output$model <- renderPrint({c("Model inputs are:",input$wind, input$windData, input$temp, input$tempData, input$precip, input$precipData)})
@@ -177,4 +177,6 @@ function(input, output) {
     file.copy("C:\\Users\\Chris\\Desktop\\Generalizable Pest and Pathogen Model User.pdf",file)
   })
   
+  #observeEvent(input$infoStart, {showModal(modalDialog(easyClose = TRUE, "This is the year that the simulation will start from", size = "s", footer = NULL))})
+  #addTooltip(session, id= "start", title = "this works", placement = "right", trigger = "hover")
 }

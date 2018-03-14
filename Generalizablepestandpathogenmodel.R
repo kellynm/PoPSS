@@ -70,9 +70,6 @@ I_umca_rast2 <- I_umca_rast
 ##define matrix for immune live trees
 N_live <- as.matrix(lvtree_rast)
 
-##background satellite image for plotting
-#bkr_img <- raster("./layers/ortho_5m_color.tif") 
-
 ## Start-End date:
 start = start
 end = end

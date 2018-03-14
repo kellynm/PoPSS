@@ -5,6 +5,12 @@ body, label, input, button, select {
   font-weight: 200;
 }
 
+.shiny-plot-output > a{border-color: black}
+
+.tabbable > .nav > li[class=active] > a {background-color: green; color: black; border: green;}
+
+.shiny-file-input-progress {display: none}
+
 .leaflet-container.crosshair-cursor-enabled {
     cursor:crosshair;
 }
@@ -32,4 +38,12 @@ body, label, input, button, select {
 
 #tabsPanel {
   padding: 0 0 0 0;
+}
+
+.btn[id*="info"] {background-color: transparent; border-color: transparent;}
+.btn:hover[id*="info"] {background-color: gray; border-color: gray;}
+
+h4 {
+  margin-top: 0;
+  margin-bottom: 0;
 }
