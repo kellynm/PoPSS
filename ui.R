@@ -35,7 +35,7 @@ fluidPage(theme = "shiny.css",
                      # Create seasonality box
                      selectInput(inputId = "seasonQ", label = infoLabelInputUI(id = "SeasonQ", label = "Does seasonality affect spread?", title = "Limits spread to only months selected to limit computational time"), choices = c("YES","NO")),
                      conditionalPanel(
-                       condition = "input.seasonQ == 'YES'", sliderInput("seasonMonths", "Months that contribute to the spread of the pest or pathogen?", value = c(1,9), min =1, max =12, step =1)
+                       condition = "input.seasonQ == 'YES'", sliderInput("seasonMonths", label = infoLabelInputUI(id = "seasonMonths", label = "Month Range", title = "Months that contribute to the spread of pest/pathogen."), value = c(1,9), min =1, max =12, step =1)
                        ),
                      numericInput(inputId ="sporeRate", label = "Enter the rate of reproduction or spore production.", value = "4.4", min=0, max = 100, step = 0.1),
                      fileInput(inputId = "initialInfection", label = "Select your raster file for your input point(s) of infection", accept = c(".tif")),
