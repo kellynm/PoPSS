@@ -1,14 +1,3 @@
-#---------------------------------------------------------------------------------------------------------------
-# Name:         GeneralizedPestandPathogen.r
-# Purpose:      Generalizable spread model of pests and pathogens over forest or agriculutural ecosystems.
-# Author:       Chris Jones
-# Email:        cjones1688@gmail.com
-# Created:      06/06/2017
-# Copyright:    (c) 2017 by Chris Jones
-# License:      GNU General Public License (GPL)
-# Software:     In developement using R version 3.4 (http://www.r-project.org/)
-#-----------------------------------------------------------------------------------------------------------------------
-
 ## install packages (only needed on first run of the model)
 #install.packages(c("rgdal","raster","lubridate","CircStats","Rcpp", "rgrass7", "optparse", "plotrix", "ncdf4", "dismo", "sp"))
 
