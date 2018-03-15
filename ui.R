@@ -18,32 +18,22 @@ dataForPlot <<- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
 fluidPage(theme = "shiny.css",
   useShinyjs(),
   useShinyalert(),
-  #useShinyBS(),
-  #tags$style(".shiny-file-input-progress {display: none}"),
   tags$head(tags$style(type="text/css","a{color: green;}")),
-  #tags$style(HTML(".tabbable > .nav > li[class=active] > a {background-color: green; color: black; border: green;}")),
-  #tags$style(HTML(".shiny-plot-output > a{border-color: black} ")),
-  #tags$style(".progress-bar {background-color:#3c763d}"),
-  
-  # Add Title to App
+  ## Add Title to App
   h1("Generalizable Pest and Pathogen Model", icon("envira"), style = "color: green;"),
- 
-  # Create a sidebar for variable inputs that react to user changes
+  ## Create a sidebar for variable inputs that react to user changes
   fluidRow(
     column(width = 4, style = "padding: 10px",
            # Create panel for Species paramaters
            wellPanel(h3("Species Parameters", icon("bug")),
                      style = "background-color: #54ACC1; border: #ADBD60; color: black; padding: 1px 10px 1px 10px",
-                     textInput(inputId = "pest", "Enter the name of the species being simulated (currently not used exept to keep track of model run information)"),
+                     textInput(inputId = "pest", label = infoLabelInputUI("pest", label = "Species Name", title = "Pest or Pathogen that is being simulated!")),
                      # Create date range box for simulation
                      #dateRangeInput("date", "Start date to end date"),
-                     numericInput("start", label = infoLabelInputUI("start", title = "Year to start simulation"), value = 2000, min = 1960, max = 2020),
-                     #numericInput("start", label = h4("Year to start simulation",bsButton(inputId = "infoStart", icon = icon("info"), label = "", size = "small")), value = 2000, min = 1960, max = 2020),
-                     #bsTooltip(id = "infoStart", title = "help", trigger = "click", placement = "right"),
-                     #actionButton(inputId = "infoStart", icon = icon("info"), label = ""),
-                     numericInput("end", "Year to end simulation", value = 2010, min = 1960, max = 2020),
+                     numericInput("start", label = infoLabelInputUI(id = "start", label = "Start Year", title = "Year to start simulation"), value = 2000, min = 1960, max = 2020),
+                     numericInput("end", label = infoLabelInputUI(id = "end", label = "End Year", title = "Year to end simulation"), value = 2010, min = 1960, max = 2020),
                      # Create seasonality box
-                     selectInput(inputId = "seasonQ", label = "Does spread occur during specific seasons (Currently set up to take in specific months but will be set to work with daylength as well)?", choices = c("YES","NO")),
+                     selectInput(inputId = "seasonQ", label = infoLabelInputUI(id = "SeasonQ", label = "Does seasonality affect spread?", title = "Limits spread to only months selected to limit computational time"), choices = c("YES","NO")),
                      conditionalPanel(
                        condition = "input.seasonQ == 'YES'", sliderInput("seasonMonths", "Months that contribute to the spread of the pest or pathogen?", value = c(1,9), min =1, max =12, step =1)
                        ),
@@ -113,6 +103,7 @@ fluidPage(theme = "shiny.css",
            # Create a download link for the user Manual
            downloadLink("pdf", "Download User Manual ", icon("cloud-download"), style = "color: green"),
            leafletOutput("mapData", height = "600px"),
+           br(),
            tabsetPanel(id = "tabsPanel",
                tabPanel(title = "Plot", 
                       plotOutput("plotData", height = "600px"),

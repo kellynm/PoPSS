@@ -1,20 +1,20 @@
-infoLabelInputUI <- function(id, title = "help", trigger = "hover", placement = "right", size ="extra-small", icons = icon("info")){
+infoLabelInputUI <- function(id, label = "", title = "help", trigger = "hover", placement = "right", size ="extra-small", icons = icon("info")){
   #theme = "infoLabel.css"
   ns <- NS(id)
   tagList(
-    h4("Year to start simulation",bsButton(inputId = ns("info"), icon = icons, label = "", size = size)),
+    h5(label, bsButton(inputId = ns("info"), icon = icons, label = "", size = size)),
     bsTooltip(id = ns("info"), title = title, trigger = trigger, placement = "right")
   )
 }
 infoLabelInput <- function(input,output, session) {
 }
-# 
-# ui <- fluidPage(
-#   theme = "infoLabel.css",
-#   numericInput("start", label = infoLabelInputUI("start", title = "Year to start simulation"), value = 2000, min = 1960, max = 2020),
-#   numericInput("start2", label = infoLabelInputUI("start2", title = "Year to start simulation"), value = 2000, min = 1960, max = 2020)
-# )
-# server <- function(input,output) {
-# }
-# 
-# shinyApp(ui,server)
+
+ui <- fluidPage(
+  theme = "infoLabel.css",
+  numericInput("start", label = infoLabelInputUI("start", title = "Year to start simulation"), value = 2000, min = 1960, max = 2020),
+  numericInput("start2", label = infoLabelInputUI("start2", label = "Awesome!", title = "Year to start simulation yada yada yada"), value = 2000, min = 1960, max = 2020)
+)
+server <- function(input,output) {
+}
+
+shinyApp(ui,server)

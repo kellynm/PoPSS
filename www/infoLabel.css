@@ -1,7 +1,12 @@
 .btn[id*="info"] {background-color: transparent; border-color: transparent;}
 .btn:hover[id*="info"] {background-color: gray; border-color: gray;}
+.tooltip > .tooltip-inner {background-color: gray;}
+.tooltip.right  > .tooltip-arrow {border-right-color: gray;}
+.tooltip-inner {text-align: left;}
 
-h4 {
+h5 {
   margin-top: 0;
   margin-bottom: 0;
+  font-weight: 300;
+  font-family: 'Helvetica Neue', Helvetica;
 }
