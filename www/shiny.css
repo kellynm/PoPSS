@@ -5,7 +5,7 @@ body, label, input, button, select {
   font-weight: 250;
 }
 
-.shiny-plot-output > a{border-color: black}
+.shiny-plot-output > a{border-color: black; font-weight: Helvetica;}
 
 .tabbable > .nav > li[class=active] > a {background-color: green; color: black; border: green;}
 
@@ -32,7 +32,7 @@ body, label, input, button, select {
 h5 {
   margin-top: 0;
   margin-bottom: 0;
-  font-weight: 250;
+  font-weight: 200;
   font-family: 'Helvetica Neue', Helvetica;
 }
 
