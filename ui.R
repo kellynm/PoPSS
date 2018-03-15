@@ -10,7 +10,6 @@ suppressPackageStartupMessages(library(shinyjs))
 suppressPackageStartupMessages(library(shinyalert))
 suppressPackageStartupMessages(library(shinyBS))
 suppressPackageStartupMessages(library(extrafont))
-extrafont::loadfonts(device = "win")
 suppressPackageStartupMessages(library(ggplot2))
 source("helpers.R")
 source("Generalizablepestandpathogenmodel.R")
@@ -39,9 +38,9 @@ fluidPage(theme = "shiny.css",
                      conditionalPanel(
                        condition = "input.seasonQ == 'YES'", sliderInput("seasonMonths", label = infoLabelInputUI(id = "seasonMonths", label = "Month Range", title = "Months that contribute to the spread of pest/pathogen."), value = c(1,9), min =1, max =12, step =1)
                        ),
-                     numericInput(inputId ="sporeRate", label = "Enter the rate of reproduction or spore production.", value = "4.4", min=0, max = 100, step = 0.1),
-                     fileInput(inputId = "initialInfection", label = "Select your raster file for your input point(s) of infection", accept = c(".tif")),
-                     selectInput(inputId = "kernelType", label = "Select the appropriate dispersal kernel", choices = c('Cauchy', 'Cauchy Mixture', 'Exponential', 'Gauss'))
+                     numericInput(inputId ="sporeRate", label = infoLabelInputUI(id = "sporeRate", label = "Spread Rate", title = "Determines the average number of individuals that infect another cell during a time step."), value = "4.4", min=0, max = 100, step = 0.1),
+                     fileInput(inputId = "initialInfection", label = infoLabelInputUI(id = "initialInfection", label = "Initial Infection Data:", title = "Input a raster or shapefile of the location of infections at the start of simulation."), accept = c(".tif")),
+                     selectInput(inputId = "kernelType", label = infoLabelInputUI(id = "kernelType", label = "Select the best dispersal kernel.", title = "Choose the dispersal kernel that heuristically fits the dispersal pattern of your pest/pathogen."), choices = c('Cauchy', 'Cauchy Mixture', 'Exponential', 'Gauss'))
                      ),
            # Create panel for Host variables
            wellPanel(h3("Hosts", icon("tree")),
