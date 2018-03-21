@@ -3,7 +3,6 @@ r <<- raster("./layers/UMCA_den_100m.img")
 pal <<- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "transparent")
 usCounties <<- readOGR("./layers/usLower48Counties.shp")
 usStates <<- readOGR("./layers/usLower48States.shp")
-#data2 <- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
 
 function(input, output, session) {
   options(shiny.maxRequestSize=70000*1024^2) 
@@ -13,8 +12,7 @@ function(input, output, session) {
   # Create Raster Stack for holding output from model run
   modelRastOut <- r
   olg <- c()
-  #dataForPlot <<- data2
-
+  
   observeEvent(input$run, {
     years = seq(input$start, input$end, 1)
                            withBusyIndicatorServer("run",{dataList <- pest(rastHostDataM1,rastHostDataM2,rastTotalSpeciesData, rastInitialInfection,
@@ -56,8 +54,7 @@ function(input, output, session) {
     leaflet(usStates) %>%
       addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
                   opacity = 1.0, fillOpacity = 0.5,
-                  highlightOptions = highlightOptions(color = "white", weight = 2,
-                                                      bringToFront = TRUE))
+                  highlightOptions = highlightOptions(color = "white", weight = 2, bringToFront = TRUE))
   })
   output$countyData <- renderLeaflet({
     leaflet(usCounties) %>%
@@ -123,20 +120,6 @@ function(input, output, session) {
       # addLegend("bottomright", pal = pal, values = values(rastHostDataM2),
       #           title = "Host species",
       #           opacity = 1)
-  })
-  observeEvent(input$hostDataS1, {
-    inHostDataS1 <- input$hostDataS1
-    rastHostDataS1 <<- raster(inHostDataS1$datapath)
-    pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataS1), na.color = "transparent")
-    olg <<- c(olg, "Host 2")
-    proxy <- proxy %>%
-      addRasterImage({rastHostDataS1}, opacity=0.5, colors = pal, group = "Host") %>%
-      addLayersControl(
-        overlayGroups = olg,
-        options = layersControlOptions(collapsed = FALSE, opacity =0.6))
-    # addLegend("bottomright", pal = pal, values = values(rastHostDataS1),
-    #           title = "Host species",
-    #           opacity = 1)
   })
   
   output$mapData <- renderLeaflet({
