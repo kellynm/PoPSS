@@ -1,5 +1,5 @@
 infoLabelInputUI <- function(id, label = "", title = "help", trigger = "hover", placement = "right", size ="extra-small", icons = icon("info")){
-  #theme = "infoLabel.css"
+  theme = "infoLabel.css"
   ns <- NS(id)
   tagList(
     h5(label, bsButton(inputId = ns("info"), icon = icons, label = "", size = size)),

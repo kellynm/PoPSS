@@ -7,7 +7,6 @@ usStates <<- readOGR("./layers/usLower48States.shp")
 function(input, output, session) {
   options(shiny.maxRequestSize=70000*1024^2) 
   # Creates the text file that is downloaded upon model completion
-  #output$model <- renderPrint({c("Model inputs are:",input$wind, input$windData, input$temp, input$tempData, input$precip, input$precipData)})
   
   # Create Raster Stack for holding output from model run
   modelRastOut <- r
@@ -50,12 +49,14 @@ function(input, output, session) {
   
   ## Set up plot and tab GUI state and county maps
   output$plotData <- renderPlot({plot(dataReturn$years, dataReturn$infectedHost2Individuals)})
+  
   output$stateData <- renderLeaflet({
     leaflet(usStates) %>%
       addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
                   opacity = 1.0, fillOpacity = 0.5,
                   highlightOptions = highlightOptions(color = "white", weight = 2, bringToFront = TRUE))
   })
+  
   output$countyData <- renderLeaflet({
     leaflet(usCounties) %>%
       addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
@@ -163,7 +164,4 @@ function(input, output, session) {
   output$pdf <- downloadHandler("generalizablepestandpathogenmodel.pdf", content = function(file){
     file.copy("C:\\Users\\Chris\\Desktop\\Generalizable Pest and Pathogen Model User.pdf",file)
   })
-  
-  #observeEvent(input$infoStart, {showModal(modalDialog(easyClose = TRUE, "This is the year that the simulation will start from", size = "s", footer = NULL))})
-  #addTooltip(session, id= "start", title = "this works", placement = "right", trigger = "hover")
 }

@@ -1,5 +1,5 @@
-.btn[id*="info"] {background-color: transparent; border-color: transparent;display: inline-block; vertical-align: middle;}
-.btn:hover[id*="info"] {background-color: gray; border-color: gray;display: inline-block; vertical-align: middle;}
+.btn[id*="info"] {background-color: transparent; border-color: transparent;display: inline; vertical-align: baseline;}
+.btn:hover[id*="info"] {background-color: gray; border-color: gray;display: inline; vertical-align: baseline;}
 .tooltip > .tooltip-inner {background-color: gray;}
 .tooltip.right  > .tooltip-arrow {border-right-color: gray;}
 .tooltip-inner {text-align: left;}
@@ -7,13 +7,8 @@
 h5, label {
   margin-top: 0;
   margin-bottom: 0;
-  font-weight: 300;
   font-family: arial;
-  vertical-align: bottom;
-  padding: 0 0 2px 0;
-  font-size: medium;
-}
-
-icon {
-  margin-bottom: 0;
+  vertical-align: middle;
+  padding: 0 0 1px 0;
+  font-size: 16px;
 }
