@@ -16,7 +16,7 @@ function(input, output, session) {
     years = seq(input$start, input$end, 1)
                            withBusyIndicatorServer("run",{dataList <- pest(rastHostDataM1,rastHostDataM2,rastTotalSpeciesData, rastInitialInfection,
                                  input$start, input$end, input$seasonQ, input$seasonMonths[1],input$seasonMonths[2], 
-                                 input$sporeRate, input$windQ, input$windDir, './layers/weather/weatherCoeff_2000_2014.nc')}) 
+                                 input$sporeRate, input$windQ, input$windDir, './layers/weather/weatherCoeff_2000_2014.nc', input$kernelType)}) 
                              proxy <- leafletProxy("mapData")
                              modelRastOut <<- dataList[[2]]
                              dataReturn <<- dataList[[1]]
@@ -28,15 +28,12 @@ function(input, output, session) {
                              make2$Host <- 'Oaks'
                              dataForPlot <<- rbind(make1,make2) 
                            if (nlayers(modelRastOut)>1) {
-                             #olg <- list(olg)
                              for (i in 1:(nlayers(modelRastOut)-1)){
                               pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(modelRastOut[[i]]), na.color = "transparent")
-                              #olg[[i+1]] <- c(olg[[i]], paste("year", (years[nlayers(modelRastOut)-i])))
                               olg <<- c(olg, paste("year", (years[nlayers(modelRastOut)-i])))
                               proxy <- proxy %>% 
                                addRasterImage(modelRastOut[[i]], opacity= 0.8, group = paste("year", (years[nlayers(modelRastOut)-i]))) %>%
                                addLayersControl(
-                                 #overlayGroups = olg[[i+1]],
                                  overlayGroups = olg,
                                  options = layersControlOptions(collapsed = FALSE, opacity =0.6))
                            }}

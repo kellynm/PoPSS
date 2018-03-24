@@ -40,7 +40,7 @@ fluidPage(theme = "shiny.css",
                        condition = "input.seasonQ == 'YES'", sliderInput("seasonMonths", label = infoLabelInputUI(id = "seasonMonths", label = "Month Range", title = "Months that contribute to the spread of pest/pathogen."), value = c(1,9), min =1, max =12, step =1)
                        ),
                      numericInput(inputId ="sporeRate", label = infoLabelInputUI(id = "sporeRate", label = "Spread Rate", title = "Determines the average number of individuals that infect another cell during a time step."), value = "4.4", min=0, max = 100, step = 0.1),
-                     fileInput(inputId = "initialInfection", label = infoLabelInputUI(id = "initialInfection", label = "Initial Infection Data:", title = "Input a raster or shapefile of the location of infections at the start of simulation."), accept = c(".tif")),
+                     fileInput(inputId = "initialInfection", label = infoLabelInputUI(id = "initialInfection", label = "Initial Infection Data:", title = "Input a raster or shapefile of the location of infections at the start of simulation."), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")),
                      selectInput(inputId = "kernelType", label = infoLabelInputUI(id = "kernelType", label = "Select the best dispersal kernel.", title = "Choose the dispersal kernel that heuristically fits the dispersal pattern of your pest/pathogen."), choices = c('Cauchy', 'Cauchy Mixture', 'Exponential', 'Gauss'))
                      ),
            # Create panel for Host variables
@@ -52,54 +52,54 @@ fluidPage(theme = "shiny.css",
                        condition = "input.hostQ == 'multi-host'",
                        numericInput("hostMulti", label = infoLabelInputUI(id = "hostMulti", label = "Number of host species", title = "Select the number of host species that affect spread."), value = 2, min =2, max =10, step =1)
                        ),
-                     fileInput("hostDataM1", label = infoLabelInputUI(id = "hostData2", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif")),
+                     fileInput("hostDataM1", label = infoLabelInputUI(id = "hostData2", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")),
                      conditionalPanel(
                        condition = "input.hostQ == 'multi-host' && input.hostMulti >= 2",
                        numericInput(inputId = "hostIndexScore1", label = infoLabelInputUI(id = "hostIndexScore1", label = "Host Index Score:", title = "This indicates the host preference or compotency with 10 being most competent and 1 being least."), value = 10, min=1, max=10, step = 1),
-                       fileInput("hostDataM2",label = infoLabelInputUI(id = "hostData2", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif")),
+                       fileInput("hostDataM2",label = infoLabelInputUI(id = "hostData2", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")),
                        numericInput(inputId = "hostIndexScore2", label = infoLabelInputUI(id = "hostIndexScore2", label = "Host Index Score:", title = "This indicates the host preference or compotency with 10 being most competent and 1 being least."), value = 10, min=1, max=10, step = 1)
                        ),
                      conditionalPanel(
                        condition = "input.hostQ == 'multi-host' && input.hostMulti >= 3",
-                       fileInput("hostDataM3",label = infoLabelInputUI(id = "hostData3", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif")),
+                       fileInput("hostDataM3",label = infoLabelInputUI(id = "hostData3", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")),
                        numericInput(inputId = "hostIndexScore3", label = infoLabelInputUI(id = "hostIndexScore3", label = "Host Index Score:", title = "This indicates the host preference or compotency with 10 being most competent and 1 being least."), value = 10, min=1, max=10, step = 1)
                        ),
                      conditionalPanel(
                        condition = "input.hostQ == 'multi-host' && input.hostMulti >= 4",
-                       fileInput("hostDataM4",label = infoLabelInputUI(id = "hostData4", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif")),
+                       fileInput("hostDataM4",label = infoLabelInputUI(id = "hostData4", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")),
                        numericInput(inputId = "hostIndexScore4", label = infoLabelInputUI(id = "hostIndexScore4", label = "Host Index Score:", title = "This indicates the host preference or compotency with 10 being most competent and 1 being least."), value = 10, min=1, max=10, step = 1)
                      ),
                      conditionalPanel(
                        condition = "input.hostQ == 'multi-host' && input.hostMulti >= 5",
-                       fileInput("hostDataM5",label = infoLabelInputUI(id = "hostData5", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif")),
+                       fileInput("hostDataM5",label = infoLabelInputUI(id = "hostData5", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")),
                        numericInput(inputId = "hostIndexScore5", label = infoLabelInputUI(id = "hostIndexScore5", label = "Host Index Score:", title = "This indicates the host preference or compotency with 10 being most competent and 1 being least."), value = 10, min=1, max=10, step = 1)
                      ),
                      conditionalPanel(
                        condition = "input.hostQ == 'multi-host' && input.hostMulti >= 6",
-                       fileInput("hostDataM6",label = infoLabelInputUI(id = "hostData6", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif")),
+                       fileInput("hostDataM6",label = infoLabelInputUI(id = "hostData6", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")),
                        numericInput(inputId = "hostIndexScore6", label = infoLabelInputUI(id = "hostIndexScore6", label = "Host Index Score:", title = "This indicates the host preference or compotency with 10 being most competent and 1 being least."), value = 10, min=1, max=10, step = 1)
                      ),
                      conditionalPanel(
                        condition = "input.hostQ == 'multi-host' && input.hostMulti >= 7",
-                       fileInput("hostDataM7",label = infoLabelInputUI(id = "hostData7", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif")),
+                       fileInput("hostDataM7",label = infoLabelInputUI(id = "hostData7", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")),
                        numericInput(inputId = "hostIndexScore7", label = infoLabelInputUI(id = "hostIndexScore7", label = "Host Index Score:", title = "This indicates the host preference or compotency with 10 being most competent and 1 being least."), value = 10, min=1, max=10, step = 1)
                      ),
                      conditionalPanel(
                        condition = "input.hostQ == 'multi-host' && input.hostMulti >= 8",
-                       fileInput("hostDataM8",label = infoLabelInputUI(id = "hostData8", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif")),
+                       fileInput("hostDataM8",label = infoLabelInputUI(id = "hostData8", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")),
                        numericInput(inputId = "hostIndexScore8", label = infoLabelInputUI(id = "hostIndexScore8", label = "Host Index Score:", title = "This indicates the host preference or compotency with 10 being most competent and 1 being least."), value = 10, min=1, max=10, step = 1)
                      ),
                      conditionalPanel(
                        condition = "input.hostQ == 'multi-host' && input.hostMulti >= 9",
-                       fileInput("hostDataM9",label = infoLabelInputUI(id = "hostData9", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif")),
+                       fileInput("hostDataM9",label = infoLabelInputUI(id = "hostData9", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")),
                        numericInput(inputId = "hostIndexScore9", label = infoLabelInputUI(id = "hostIndexScore9", label = "Host Index Score:", title = "This indicates the host preference or compotency with 10 being most competent and 1 being least."), value = 10, min=1, max=10, step = 1)
                      ),
                      conditionalPanel(
                        condition = "input.hostQ == 'multi-host' && input.hostMulti >= 10",
-                       fileInput("hostDataM10",label = infoLabelInputUI(id = "hostData10", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif")),
+                       fileInput("hostDataM10",label = infoLabelInputUI(id = "hostData10", label = "Host Data:", title = "Select the raster data of host species density"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")),
                        numericInput(inputId = "hostIndexScore10", label = infoLabelInputUI(id = "hostIndexScore10", label = "Host Index Score:", title = "This indicates the host preference or compotency with 10 being most competent and 1 being least."), value = 10, min=1, max=10, step = 1)
                      ),
-                     fileInput("totalSpeciesData", label = infoLabelInputUI(id = "totalSpeciesData", label = "Total Species Data:?", title = "Select the raster of all tree species. Used to determine percent of area occuppied by host species."), accept = c(".tif"))
+                     fileInput("totalSpeciesData", label = infoLabelInputUI(id = "totalSpeciesData", label = "Total Species Data:?", title = "Select the raster of all tree species. Used to determine percent of area occuppied by host species."), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img"))
                      ),
            # Create panel for Environmental variables
            wellPanel(h3("Environmental Effects", icon("sun-o"), style = "color: black"), 
@@ -111,7 +111,7 @@ fluidPage(theme = "shiny.css",
                        ),
                      # add a data input box if yes is selected
                      conditionalPanel(
-                       condition = "input.windQ == 'YES' && input.windType == 'Raster'", fileInput("windData", label = infoLabelInputUI(id = "windData", label = "Wind data:", title = "Select wind wind data raster or netcdf file"), accept = c(".tif"))
+                       condition = "input.windQ == 'YES' && input.windType == 'Raster'", fileInput("windData", label = infoLabelInputUI(id = "windData", label = "Wind data:", title = "Select wind wind data raster or netcdf file"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img"))
                        ),
                      # add a data type option for wind in case detailed wind data isn't available but predominate wind direction
                      conditionalPanel(
@@ -127,7 +127,7 @@ fluidPage(theme = "shiny.css",
                      selectInput(inputId = "precip", label = infoLabelInputUI(id = "precip", label = "Does precipitation affect spread?", title = "Select yes if you have precipitation data for your study area and precipitation affects the ability of your species to disperse."), choices = c("NO","YES")),
                      # add a data input box if yes is selected
                      conditionalPanel(
-                       condition = "input.precip == 'YES'", fileInput("precipData", label = infoLabelInputUI(id = "precipData", label = "Precipitation Data:?", title = "Select the precipitation raster or netcdf file"), accept = c(".tif"))
+                       condition = "input.precip == 'YES'", fileInput("precipData", label = infoLabelInputUI(id = "precipData", label = "Precipitation Data:?", title = "Select the precipitation raster or netcdf file"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img"))
                        )
                          ),
            # Create an Action button that will run the model when pressed

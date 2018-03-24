@@ -12,7 +12,7 @@ suppressPackageStartupMessages(library(ncdf4))     # work with NetCDF datasets
 suppressPackageStartupMessages(library(dismo))     # Regression for ecological datasets
 suppressPackageStartupMessages(library(sp))        # Classes and methods for spatial data
 
-pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData){
+pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, kernelType ='Cauchy'){
   
 ## Define the main working directory based on the current script path
 #setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
@@ -92,10 +92,11 @@ formatting_str = paste("%0", floor( log10( length(tstep) ) ) + 1, "d", sep='')
 
 ## WEATHER SUITABILITY: read and stack weather suitability raster BEFORE running the simulation
 
-# weather coefficients
-mcf.array <- ncvar_get(nc_open('./layers/weather/weatherCoeff_2000_2014.nc'),  varid = "Mcoef") #M = moisture;
-ccf.array <- ncvar_get(nc_open('./layers/weather/weatherCoeff_2000_2014.nc'),  varid = "Ccoef") #C = temperature;
-#ccf.array <- ncvar_get(nc_open(tempData),  varid = "Ccoef") #C = temperature;
+## weather coefficients
+#mcf.array <- ncvar_get(nc_open('./layers/weather/weatherCoeff_2000_2014.nc'),  varid = "Mcoef") #M = moisture;
+#ccf.array <- ncvar_get(nc_open('./layers/weather/weatherCoeff_2000_2014.nc'),  varid = "Ccoef") #C = temperature;
+mcf.array <- ncvar_get(nc_open(tempData),  varid = "Mcoef") #M = moisture;
+ccf.array <- ncvar_get(nc_open(tempData),  varid = "Ccoef") #C = temperature;
 
 ## Seasonality: Do you want the spread to be limited to certain months?
 ss <- SS   #'YES' or 'NO'
@@ -168,11 +169,11 @@ for (tt in tstep){
       #Check if predominant wind direction has been specified correctly:
       if (!(pwdir %in% c('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'))) stop('A predominant wind direction must be specified: N, NE, E, SE, S, SW, W, NW')
       out <- SporeDispCppWind_mh(spores_mat, S_UM=S_umca, S_OK=S_oaks, I_UM=I_umca, I_OK=I_oaks, N_LVE=N_live, 
-                                 W, rs=res_win, rtype='Cauchy', scale1=20.57, wdir=pwdir, kappa=2)
+                                 W, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=2)
     
     }else{
       out <- SporeDispCpp_mh(spores_mat, S_UM=S_umca, S_OK=S_oaks, I_UM=I_umca, I_OK=I_oaks, N_LVE=N_live,
-                             W, rs=res_win, rtype='Cauchy', scale1=20.57) ##TO DO
+                             W, rs=res_win, rtype=kernelType, scale1=20.57) ##TO DO
     }  
     
     #update R matrices:
