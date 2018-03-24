@@ -67,8 +67,8 @@ function(input, output, session) {
   
   ## Set up GUI maps to be flexible
   observeEvent(input$initialInfection, {
-    inInitialInfection <- input$initialInfection
-    rastInitialInfection <<- raster(inInitialInfection$datapath)
+    validate(need(extension(input$initialInfection$datapath) == ".img", "Please use a .img file"))
+    rastInitialInfection <<- raster(input$initialInfection$datapath)
     pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastInitialInfection), na.color = "transparent")
     olg <<- c(olg, "Initial Infection")
     proxy <- proxy %>%
