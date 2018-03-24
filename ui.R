@@ -9,12 +9,13 @@ suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(shinyjs))
 suppressPackageStartupMessages(library(shinyalert))
 suppressPackageStartupMessages(library(shinyBS))
-#suppressPackageStartupMessages(library(extrafont))
 suppressPackageStartupMessages(library(ggplot2))
 source("helpers.R")
 source("Generalizablepestandpathogenmodel.R")
 source("infoLabelInput.R")
+source("getUnit.R")
 dataForPlot <<- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
+rUnit <<- ''
 
 fluidPage(theme = "shiny.css",
   useShinyjs(),

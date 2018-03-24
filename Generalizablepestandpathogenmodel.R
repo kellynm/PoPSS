@@ -12,7 +12,7 @@ suppressPackageStartupMessages(library(ncdf4))     # work with NetCDF datasets
 suppressPackageStartupMessages(library(dismo))     # Regression for ecological datasets
 suppressPackageStartupMessages(library(sp))        # Classes and methods for spatial data
 
-pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, kernelType ='Cauchy'){
+pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, precipData, kernelType ='Cauchy'){
   
 ## Define the main working directory based on the current script path
 #setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
@@ -95,7 +95,7 @@ formatting_str = paste("%0", floor( log10( length(tstep) ) ) + 1, "d", sep='')
 ## weather coefficients
 #mcf.array <- ncvar_get(nc_open('./layers/weather/weatherCoeff_2000_2014.nc'),  varid = "Mcoef") #M = moisture;
 #ccf.array <- ncvar_get(nc_open('./layers/weather/weatherCoeff_2000_2014.nc'),  varid = "Ccoef") #C = temperature;
-mcf.array <- ncvar_get(nc_open(tempData),  varid = "Mcoef") #M = moisture;
+mcf.array <- ncvar_get(nc_open(precipData),  varid = "Mcoef") #M = moisture;
 ccf.array <- ncvar_get(nc_open(tempData),  varid = "Ccoef") #C = temperature;
 
 ## Seasonality: Do you want the spread to be limited to certain months?
@@ -203,9 +203,9 @@ for (tt in tstep){
       yearTracker = yearTracker+1
       I_oaks_rast2 <- stack(I_oaks_rast, I_oaks_rast2)
       I_umca_rast2 <- stack(I_umca_rast, I_umca_rast2)
-      dataForOutput$infectedHost1Individuals[yearTracker] <- sum(na.omit(I_umca_rast@data@values))
+      dataForOutput$infectedHost1Individuals[yearTracker] <- sum(na.omit(I_umca_rast@data@values))/1000
       dataForOutput$infectedHost1Area[yearTracker] <- ncell(na.omit(I_umca_rast@data@values))*res(I_umca_rast)[2]*res(I_umca_rast)[1]
-      dataForOutput$infectedHost2Individuals[yearTracker] <- sum(na.omit(I_oaks_rast@data@values))
+      dataForOutput$infectedHost2Individuals[yearTracker] <- sum(na.omit(I_oaks_rast@data@values))/1000
       dataForOutput$infectedHost2Area[yearTracker] <- ncell(na.omit(I_oaks_rast@data@values))*res(I_oaks_rast)[2]*res(I_oaks_rast)[1]
       
       ## WRITE TO FILE:

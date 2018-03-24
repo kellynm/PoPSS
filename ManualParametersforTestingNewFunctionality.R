@@ -60,6 +60,8 @@ leaflet(usStates) %>%
   addMiniMap(usCounties, position = "topright")
 
 
+
+
 # 
 # %>%   
 #   addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,

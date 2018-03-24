@@ -16,17 +16,19 @@ function(input, output, session) {
     years = seq(input$start, input$end, 1)
                            withBusyIndicatorServer("run",{dataList <- pest(rastHostDataM1,rastHostDataM2,rastTotalSpeciesData, rastInitialInfection,
                                  input$start, input$end, input$seasonQ, input$seasonMonths[1],input$seasonMonths[2], 
-                                 input$sporeRate, input$windQ, input$windDir, './layers/weather/weatherCoeff_2000_2014.nc', input$kernelType)}) 
+                                 input$sporeRate, input$windQ, input$windDir, input$tempData$datapath, input$precipData$datapath, input$kernelType)}) 
+                           # './layers/weather/weatherCoeff_2000_2014.nc'
                              proxy <- leafletProxy("mapData")
                              modelRastOut <<- dataList[[2]]
                              dataReturn <<- dataList[[1]]
                              make1 <- dataReturn[,1:3]
                              make2 <- dataReturn[,c(1,4:5)]
-                             names(make1) <- c('Year','Area','Count')
-                             names(make2) <- c('Year','Area','Count')
+                             names(make1) <- c('Year','Count','Area')
+                             names(make2) <- c('Year','Count','Area')
                              make1$Host <- 'Tanoak'
                              make2$Host <- 'Oaks'
                              dataForPlot <<- rbind(make1,make2) 
+                             rUnit <<- getUnit(rastHostDataM1, dataForPlot)
                            if (nlayers(modelRastOut)>1) {
                              for (i in 1:(nlayers(modelRastOut)-1)){
                               pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(modelRastOut[[i]]), na.color = "transparent")
@@ -139,9 +141,9 @@ function(input, output, session) {
   output$plotData <- renderPlot({
     data <- data.frame(Year = dataForPlot$Year, Variable = dataForPlot[[input$plotDataSelect]], Host = dataForPlot$Host)
     if (input$plotDataSelect == "Area"){
-      yName <- expression("Infected Area "*~(m^2))
+      yName <- expression("Infected Area "*~(ha))
     } else {
-      yName <- expression("Number of Infected Trees")
+      yName <- expression("Number of Infected Trees (in thousands)")
     }
     if(!is.null(input$pest)){
       title = input$pest
