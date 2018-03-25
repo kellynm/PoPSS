@@ -37,6 +37,7 @@ function(input, output, session) {
                                addRasterImage(modelRastOut[[i]], opacity= 0.8, group = paste("year", (years[i]))) %>%
                                addLayersControl(
                                  overlayGroups = olg,
+                                 baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
                                  options = layersControlOptions(collapsed = FALSE, opacity =0.6))
                            }}
                            })
@@ -74,7 +75,8 @@ function(input, output, session) {
       addRasterImage({rastInitialInfection}, opacity=0.5, colors = pal, group = "Initial Infection") %>%
       addLayersControl(
         overlayGroups = olg,
-        options = layersControlOptions(collapsed = FALSE, opacity =0.6))
+        baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
+        options = layersControlOptions(collapsed = TRUE, opacity =0.6))
       # addLegend("bottomright", pal = pal, values = values(rastInitialInfection),
       #           title = "Host species",
       #           opacity = 1)
@@ -88,7 +90,8 @@ function(input, output, session) {
         addRasterImage({rastTotalSpeciesData}, opacity=0.5, colors = pal, group = "All Trees") %>%
         addLayersControl(
           overlayGroups = olg,
-          options = layersControlOptions(collapsed = FALSE, opacity =0.6))
+          baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
+          options = layersControlOptions(collapsed = TRUE, opacity =0.6))
         # addLegend("bottomright", pal = pal, values = values(rastTotalSpeciesData),
         #           title = "Host species",
         #           opacity = 1)
@@ -102,7 +105,8 @@ function(input, output, session) {
       addRasterImage({rastHostDataM1}, opacity=0.5, colors = pal, group = "Host 1") %>%
       addLayersControl(
         overlayGroups = olg,
-        options = layersControlOptions(collapsed = FALSE, opacity =0.6))
+        baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
+        options = layersControlOptions(collapsed = TRUE, opacity =0.6))
       # addLegend("bottomright", pal = pal, values = values(rastHostDataM1),
       #           title = "Host species",
       #           opacity = 1)
@@ -116,7 +120,8 @@ function(input, output, session) {
       addRasterImage({rastHostDataM2}, opacity=0.5, colors = pal, group = "Host 2") %>%
       addLayersControl(
         overlayGroups = olg,
-        options = layersControlOptions(collapsed = FALSE, opacity =0.6))
+        baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
+        options = layersControlOptions(collapsed = TRUE, opacity =0.6))
       # addLegend("bottomright", pal = pal, values = values(rastHostDataM2),
       #           title = "Host species",
       #           opacity = 1)
@@ -124,8 +129,17 @@ function(input, output, session) {
   
   output$mapData <- renderLeaflet({
       leaflet(height = "300px") %>%
-        addProviderTiles("Esri.WorldImagery", group="background 1") %>%
-        addRasterImage(r, opacity=0.0)
+        addProviderTiles("Esri.WorldImagery", group = "Imagery") %>%
+        addProviderTiles("Stamen.TonerLite", group = "Toner Lite") %>%
+        addProviderTiles("Stamen.Toner", group = "Toner") %>%
+        addProviderTiles("Stamen.Terrain", group = "Terrain") %>%
+        addProviderTiles("CartoDB.Positron", group = "Carto") %>%
+        addProviderTiles("CartoDB.DarkMatterNoLabels", group = "Carto Dark") %>%
+        addRasterImage(r, opacity=0.0) %>%
+        addLayersControl(
+          baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
+          options = layersControlOptions(collapsed = TRUE)
+        )
   })
   proxy <- leafletProxy("mapData")
   
