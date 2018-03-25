@@ -12,10 +12,13 @@ sporeRate =4.4
 windQ ='YES'
 windDir = 'NE'
 tempData = './layers/weather/weatherCoeff_2000_2014.nc'
+precipData = tempData
+
+
 
 #setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
 I_oaks_rast2 <- pest(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData)
-dataList <- pest(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData)
+dataList <- pest(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, precipData)
 
 dataReturn <- dataList[[1]]
 I_oaks_rast2 <- dataList[[2]]
@@ -51,8 +54,6 @@ zipped.csv <- function(df, zippedfile) {
   unlink(temp)
 }
 
-
-
 leaflet(usStates) %>%
   addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
               opacity = 1.0, fillOpacity = 0.5,
@@ -60,10 +61,3 @@ leaflet(usStates) %>%
   addMiniMap(usCounties, position = "topright")
 
 
-
-
-# 
-# %>%   
-#   addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
-#                                                                  opacity = 1.0, fillOpacity = 0.5,
-#                                                                  highlightOptions = highlightOptions(color = "white", weight = 2, bringToFront = TRUE))

@@ -219,7 +219,10 @@ for (tt in tstep){
   }
   
 }
-
+I_oaks_rast2 <- subset(I_oaks_rast2, order(seq(nlayers(I_oaks_rast2)-1, 1, -1)))
+I_umca_rast2 <- subset(I_umca_rast2, order(seq(nlayers(I_umca_rast2)-1, 1, -1)))
+names(I_oaks_rast2) <- years
+names(I_umca_rast2) <- years
 data <- list(dataForOutput, I_oaks_rast2)
 return(data)
 }

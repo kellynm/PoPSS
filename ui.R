@@ -142,6 +142,8 @@ fluidPage(theme = "shiny.css",
            #textOutput("extentMatch")
            # Create a download link for the user Manual
            downloadLink("pdf", "Download User Manual ", icon("cloud-download"), style = "color: green"),
+           #sliderInput(inputId = 'yearSlider', label = 'Year', value = "input.start", step = 1, min = 2000, max = 2010, sep = "", animate = TRUE),
+           uiOutput("rSlider"),
            leafletOutput("mapData", height = "600px"),
            br(),
            tabsetPanel(id = "tabsPanel",

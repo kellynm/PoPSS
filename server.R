@@ -14,7 +14,7 @@ function(input, output, session) {
   
   observeEvent(input$run, {
     years = seq(input$start, input$end, 1)
-                           withBusyIndicatorServer("run",{dataList <- pest(rastHostDataM1,rastHostDataM2,rastTotalSpeciesData, rastInitialInfection,
+                           withBusyIndicatorServer("run",{dataList <<- pest(rastHostDataM1,rastHostDataM2,rastTotalSpeciesData, rastInitialInfection,
                                  input$start, input$end, input$seasonQ, input$seasonMonths[1],input$seasonMonths[2], 
                                  input$sporeRate, input$windQ, input$windDir, input$tempData$datapath, input$precipData$datapath, input$kernelType)}) 
                            # './layers/weather/weatherCoeff_2000_2014.nc'
@@ -30,11 +30,11 @@ function(input, output, session) {
                              dataForPlot <<- rbind(make1,make2) 
                              rUnit <<- getUnit(rastHostDataM1, dataForPlot)
                            if (nlayers(modelRastOut)>1) {
-                             for (i in 1:(nlayers(modelRastOut)-1)){
+                             for (i in 1:(nlayers(modelRastOut))){
                               pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(modelRastOut[[i]]), na.color = "transparent")
-                              olg <<- c(olg, paste("year", (years[nlayers(modelRastOut)-i])))
+                              olg <<- c(olg, paste("year", (years[i])))
                               proxy <- proxy %>% 
-                               addRasterImage(modelRastOut[[i]], opacity= 0.8, group = paste("year", (years[nlayers(modelRastOut)-i]))) %>%
+                               addRasterImage(modelRastOut[[i]], opacity= 0.8, group = paste("year", (years[i]))) %>%
                                addLayersControl(
                                  overlayGroups = olg,
                                  options = layersControlOptions(collapsed = FALSE, opacity =0.6))
@@ -157,6 +157,20 @@ function(input, output, session) {
       ggtitle(title)+theme(text = element_text(family = "sans"))+
       scale_x_continuous(name="Year", breaks=seq(input$start, input$end, 2))+
       scale_y_continuous(name=yName)+guides(col=guide_legend(ncol=3),shape=guide_legend(ncol = 1))
+  })
+  
+  ## Create reactive raster for slider object to update and allow for animation
+  # output$rSlider <- renderUI({sliderInput(inputId = 'yearSlider', label = 'Year', value = 1, step = 1, min = 1, max = 11, sep = "")})
+  # host1Years <- reactive({subset(modelRastOut, input$yearSlider)})
+  # ras_vals <- reactive({values(host1Years())})
+  # pal2 <- reactive({colorNumeric(c("#0C2C84", "#41B6C4", "#FFFFCC"), ras_vals(), na.color="transparent")})
+
+  observe({
+    # host1Years <- subset(modelRastOut, input$yearSlider)
+    # ras_vals <- values(host1Years)
+    # pal2 <- colorNumeric(c("#0C2C84", "#41B6C4", "#FFFFCC"), ras_vals, na.color="transparent")
+    #proxy <<- proxy %>% addRasterImage(host1Years(), colors=pal2(), opacity=0.8, layerId = "hostIMG")
+    #proxy <<- proxy %>% removeImage(layerID = "hostIMG") %>% addRasterImage(host1Years, colors=pal2, opacity=0.8, layerId = "hostIMG")
   })
   
   # Allows for the downloading of the user manual when the download link is pressed
