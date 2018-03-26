@@ -14,7 +14,7 @@ suppressPackageStartupMessages(library(sp))        # Classes and methods for spa
 
 pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, precipData, kernelType ='Cauchy'){
   
-## Define the main working directory based on the current script path
+## Define the main working directory based on the current script path (un commment next line if used outside of shiny framework)
 #setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
 
 ## Use an external source file w/ all modules (functions) used within this script. 
@@ -56,6 +56,7 @@ S_umca <- S_umca - I_umca
 I_umca_rast <- I_oaks_rast
 I_umca_rast[] <- I_umca
 I_umca_rast2 <- I_umca_rast
+
 ##define matrix for immune live trees
 N_live <- as.matrix(lvtree_rast)
 
@@ -107,12 +108,12 @@ wind <- windQ #'YES' or 'NO'
 pwdir <- windDir
 spore_rate <- sporeRate
 
-#plot background image
+## plot background image
 #plot(bkr_img, xaxs = "i", yaxs = "i")
 
-#plot coordinates for plotting text:
-xpos <- (bbox(umca_rast)[1,2] + bbox(umca_rast)[1,1]) / 2
-ypos <- bbox(umca_rast)[2,2] - 150
+## plot coordinates for plotting text:
+#xpos <- (bbox(umca_rast)[1,2] + bbox(umca_rast)[1,1]) / 2
+#ypos <- bbox(umca_rast)[2,2] - 150
 
 #time counter to access pos index in weather raster stacks
 cnt <- 1 
