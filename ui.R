@@ -108,15 +108,16 @@ fluidPage(theme = "shiny.css",
                      # Create box asking if wind affects spread and if wind data is available
                      selectInput(inputId = "windQ", label = infoLabelInputUI(id = "WindQ", label = "Does wind affect spread?", title = "Select yes if you have wind data for your study area and wind affects the spread of your pest/pathogen."), choices = c("NO","YES")),
                      conditionalPanel(
-                       condition = "input.windQ == 'YES'", selectInput("windType",label = infoLabelInputUI(id = "windType", label = "Wind data type:", title = "Do you have detailed raster wind data or only predominate wind direction?"), choices = c("Raster","Direction"))
+                       condition = "input.windQ == 'YES'", selectInput("windType",label = infoLabelInputUI(id = "windType", label = "Wind data type:", title = "Do you have detailed raster wind data or only predominate wind direction?"), choices = c("Direction","Raster"))
                        ),
                      # add a data input box if yes is selected
-                     conditionalPanel(
-                       condition = "input.windQ == 'YES' && input.windType == 'Raster'", fileInput("windData", label = infoLabelInputUI(id = "windData", label = "Wind data:", title = "Select wind wind data raster or netcdf file"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img"))
-                       ),
+                     conditionalPanel(condition = "input.windQ == 'YES' && input.windType == 'Raster'", 
+                                      fileInput("windData", label = infoLabelInputUI(id = "windData", label = "Wind data:", title = "Select wind wind data raster or netcdf file"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img"))
+                                      ),
                      # add a data type option for wind in case detailed wind data isn't available but predominate wind direction
-                     conditionalPanel(
-                       condition = "input.windQ == 'YES' && input.windType == 'Direction'", selectInput("windDir", label = infoLabelInputUI(id = "windDir", label = "Predominate wind direction:", title = "Select the predominate wind direction for your study area."), choices = c("NE","E","SE","S","SW","W","NW","N"))
+                     conditionalPanel(condition = "input.windQ == 'YES' && input.windType == 'Direction'", 
+                       selectInput("windDir", label = infoLabelInputUI(id = "windDir", label = "Predominate wind direction:", title = "Select the predominate wind direction for your study area."), choices = c("NE","E","SE","S","SW","W","NW","N")),
+                       numericInput("kappa", label = infoLabelInputUI(id = "kappa", label = "Kappa:", title = "Kappa controls the dispersal direction dominance (i.e. kappa = 0 all directions equally likely, kappa = 8 much more likely to disperse in predominate direction)"), value = 2, min = 0, max = 100)
                        ),
                      # Create box asking if temperature affects spread and if Temperature data is available
                      selectInput(inputId = "temp", label = infoLabelInputUI(id = "temp", label = "Does temperature affect spread?", title = "Select yes if you have temperature data for your study area and temperature affects the ability of your species to disperse."), choices = c("NO","YES")),

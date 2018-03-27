@@ -12,7 +12,7 @@ suppressPackageStartupMessages(library(ncdf4))     # work with NetCDF datasets
 suppressPackageStartupMessages(library(dismo))     # Regression for ecological datasets
 suppressPackageStartupMessages(library(sp))        # Classes and methods for spatial data
 
-pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, precipData, kernelType ='Cauchy'){
+pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, precipData, kernelType ='Cauchy', kappa = 2){
   
 ## Define the main working directory based on the current script path (un commment next line if used outside of shiny framework)
 #setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
@@ -22,8 +22,8 @@ pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2,
 source('./scripts/myfunctions_SOD.r')
 sourceCpp("./scripts/myCppFunctions.cpp") # for C++ custom functions
 
-##Input rasters: abundance (tree density per hectare)
-#----> UMCA
+## Input rasters: abundance (tree density per hectare)
+#----> Host 2
 umca_rast <- host1
 #----> ALL SOD-affected oaks
 oaks_rast <- host2
@@ -33,6 +33,8 @@ mx <- cellStats(oaks_rast, stat='max')
 lvtree_rast <- allTrees
 #raster resolution
 res_win <- res(umca_rast)[1]
+nCols <- as.numeric(ncol(umca_rast))
+nRows <- as.numeric(nrow(umca_rast))
 
 ### INFECTED AND SUSCEPTIBLES ####
 
@@ -43,7 +45,7 @@ I_oaks_rast2 <- I_oaks_rast
 #define matrices for infected and susceptible species of interest
 I_oaks <- as.matrix(I_oaks_rast)
 S_oaks <- as.matrix(oaks_rast - I_oaks_rast)
-I_umca <- matrix(0, nrow=res_win, ncol=res_win)
+I_umca <- matrix(0, nrow=nRows, ncol=nCols)
 S_umca <- as.matrix(umca_rast)
 
 ##Initialize infected trees for each species (!!NEEDED UNLESS EMPIRICAL INFO IS AVAILABLE!!)
@@ -170,18 +172,18 @@ for (tt in tstep){
       #Check if predominant wind direction has been specified correctly:
       if (!(pwdir %in% c('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'))) stop('A predominant wind direction must be specified: N, NE, E, SE, S, SW, W, NW')
       out <- SporeDispCppWind_mh(spores_mat, S_UM=S_umca, S_OK=S_oaks, I_UM=I_umca, I_OK=I_oaks, N_LVE=N_live, 
-                                 W, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=2)
+                                 W, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=kappa)
     
     }else{
       out <- SporeDispCpp_mh(spores_mat, S_UM=S_umca, S_OK=S_oaks, I_UM=I_umca, I_OK=I_oaks, N_LVE=N_live,
                              W, rs=res_win, rtype=kernelType, scale1=20.57) ##TO DO
     }  
     
-    #update R matrices:
-    #UMCA
+    ## update R matrices:
+    # Host 1
     S_umca <- out$S_UM 
     I_umca <- out$I_UM 
-    #oaks
+    # Host 2
     S_oaks <- out$S_OK 
     I_oaks <- out$I_OK
     

@@ -16,8 +16,7 @@ function(input, output, session) {
     years = seq(input$start, input$end, 1)
                            withBusyIndicatorServer("run",{dataList <<- pest(rastHostDataM1,rastHostDataM2,rastTotalSpeciesData, rastInitialInfection,
                                  input$start, input$end, input$seasonQ, input$seasonMonths[1],input$seasonMonths[2], 
-                                 input$sporeRate, input$windQ, input$windDir, input$tempData$datapath, input$precipData$datapath, input$kernelType)}) 
-                           # './layers/weather/weatherCoeff_2000_2014.nc'
+                                 input$sporeRate, input$windQ, input$windDir, input$tempData$datapath, input$precipData$datapath, input$kernelType, input$kappa)}) 
                              proxy <- leafletProxy("mapData")
                              modelRastOut <<- dataList[[2]]
                              dataReturn <<- dataList[[1]]
