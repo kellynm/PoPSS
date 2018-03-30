@@ -19,8 +19,8 @@ pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2,
 
 ## Use an external source file w/ all modules (functions) used within this script. 
 ## Use FULL PATH if source file is not in the same folder w/ this script
-source('./scripts/myfunctions_SOD.r')
-sourceCpp("./scripts/myCppFunctions.cpp") # for C++ custom functions
+source('./scripts/myfunctions_SOD.r') # loads custom functions for dispersal using R
+sourceCpp("./scripts/myCppFunctions.cpp") # load custom functions dispersal that use C++ (Faster)
 
 ## Input rasters: abundance (tree density per hectare)
 #----> Host 2

@@ -66,19 +66,23 @@ function(input, output, session) {
   
   ## Set up GUI maps to be flexible
   observeEvent(input$initialInfection, {
-    validate(need(extension(input$initialInfection$datapath) == ".img", "Please use a .img file"))
-    rastInitialInfection <<- raster(input$initialInfection$datapath)
-    pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastInitialInfection), na.color = "transparent")
-    olg <<- c(olg, "Initial Infection")
-    proxy <- proxy %>%
-      addRasterImage({rastInitialInfection}, opacity=0.5, colors = pal, group = "Initial Infection") %>%
-      addLayersControl(
-        overlayGroups = olg,
-        baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
-        options = layersControlOptions(collapsed = TRUE, opacity =0.6))
+    if (extension(input$initialInfection$datapath) %in% c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")) {
+      rastInitialInfection <<- raster(input$initialInfection$datapath)
+      pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastInitialInfection), na.color = "transparent")
+      olg <<- c(olg, "Initial Infection")
+      proxy <- proxy %>%
+        addRasterImage({rastInitialInfection}, opacity=0.5, colors = pal, group = "Initial Infection") %>%
+        addLayersControl(
+          overlayGroups = olg,
+          baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
+          options = layersControlOptions(collapsed = TRUE, opacity =0.6))
       # addLegend("bottomright", pal = pal, values = values(rastInitialInfection),
       #           title = "Host species",
       #           opacity = 1)
+    } else {
+      createAlert(session, "initialInfectionID", content = "Please")
+    }
+   
   })
   observeEvent(input$totalSpeciesData, {
     inTotalSpeciesData <- input$totalSpeciesData

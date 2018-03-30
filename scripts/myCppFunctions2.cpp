@@ -1,5 +1,7 @@
 #include <Rcpp.h>
+#include <omp.h>
 using namespace Rcpp;
+// [[Rcpp::plugins(openmp)]]
 
 // Below is a simple example of exporting a C++ function to R. You can
 // source this function into an R session using the Rcpp::sourceCpp 
@@ -21,6 +23,7 @@ IntegerMatrix SporeGenCpp(IntegerMatrix I, NumericMatrix W, double rate){
   RNGScope scope;
   
   // LOOP THROUGH EACH INFECTED CELL AND GENERATE AMOUNT OF SPORES
+  //#pragma omp parallel for
   for (int row = 0; row < nrow; row++) {
     for (int col = 0; col < ncol; col++){
       
