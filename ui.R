@@ -138,8 +138,6 @@ fluidPage(theme = "shiny.css",
              actionButton("run", " Run Model", icon = icon("play")))
            ),
     column(width = 8,
-           # Create a text file with all input values 
-           #textOutput("model"),
            # Let the user know if their extents match
            #textOutput("extentMatch")
            # Create a download link for the user Manual

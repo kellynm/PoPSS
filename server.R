@@ -75,7 +75,8 @@ function(input, output, session) {
         addLayersControl(
           overlayGroups = olg,
           baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
-          options = layersControlOptions(collapsed = TRUE, opacity =0.6))
+          options = layersControlOptions(collapsed = TRUE, opacity =0.6)) #%>%
+        #fitBounds(extent(rastInitialInfection))
       # addLegend("bottomright", pal = pal, values = values(rastInitialInfection),
       #           title = "Host species",
       #           opacity = 1)
