@@ -23,35 +23,61 @@ source('./scripts/myfunctions_SOD.r') # loads custom functions for dispersal usi
 sourceCpp("./scripts/myCppFunctions.cpp") # load custom functions dispersal that use C++ (Faster)
 
 ## Input rasters: abundance (tree density per hectare)
-#----> Host 2
+# Host 1
 umca_rast <- host1
-#----> ALL SOD-affected oaks
+host1_score <- host1_score
+# Host 2
 oaks_rast <- host2
-#max
-mx <- cellStats(oaks_rast, stat='max') 
-#----> All live trees
-lvtree_rast <- allTrees
-#raster resolution
+host2_score <- host2_score
+# Host 3
+host3_rast <- host3_rast
+host3_score <- host3_score
+# Host 4
+host4_rast <- host4_rast
+host4_score <- host4_score
+# Host 5
+host5_rast <- host5_rast
+host5_score <- host5_score
+# Host 6
+host6_rast <- host6_rast
+host6_score <- host6_score
+# Host 7
+host7_rast <- host7_rast
+host7_score <- host7_score
+# Host 8
+host8_rast <- host8_rast
+host8_score <- host8_score
+# Host 9
+host9_rast <- host9_rast
+host9_score <- host9_score
+# Host 10
+host10_rast <- host10_rast
+host10_score <- host10_score
+ 
+#----> All live trees (for calculating the proportion of infected)
+all_trees_rast <- allTrees
+
+## raster resolution
 res_win <- res(umca_rast)[1]
-nCols <- as.numeric(ncol(umca_rast))
-nRows <- as.numeric(nrow(umca_rast))
+n_cols <- as.numeric(ncol(umca_rast))
+n_rows <- as.numeric(nrow(umca_rast))
 
 ### INFECTED AND SUSCEPTIBLES ####
 
-##Initial infection (OAKS):
+## Initial infection (OAKS):
 I_oaks_rast <- initialPopulation
 I_oaks_rast2 <- I_oaks_rast
 
-#define matrices for infected and susceptible species of interest
+## define matrices for infected and susceptible species of interest
 I_oaks <- as.matrix(I_oaks_rast)
 S_oaks <- as.matrix(oaks_rast - I_oaks_rast)
-I_umca <- matrix(0, nrow=nRows, ncol=nCols)
+I_umca <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_umca <- as.matrix(umca_rast)
 
-##Initialize infected trees for each species (!!NEEDED UNLESS EMPIRICAL INFO IS AVAILABLE!!)
+## Initialize infected trees for each species (!!NEEDED UNLESS EMPIRICAL INFO IS AVAILABLE!!)
 if(any(S_umca[I_oaks > 0] > 0)) I_umca[I_oaks > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), 
                                                              S_umca[I_oaks > 0], I_oaks[I_oaks > 0]) 
-##update susceptible matrices by subtracting the initialized infections 
+## update susceptible matrices by subtracting the initialized infections 
 S_umca <- S_umca - I_umca 
 
 ## Update Infected host rasters for output
@@ -59,13 +85,12 @@ I_umca_rast <- I_oaks_rast
 I_umca_rast[] <- I_umca
 I_umca_rast2 <- I_umca_rast
 
-##define matrix for immune live trees
-N_live <- as.matrix(lvtree_rast)
+## define matrix for all live trees (for calculating the percentage of infected)
+all_trees <- as.matrix(all_trees_rast)
 
 ## Start-End date:
 start = start
 end = end
-
 if (start > end) stop('start date must precede end date!!')
 
 ## build time series for simulation steps:
