@@ -12,7 +12,9 @@ suppressPackageStartupMessages(library(ncdf4))     # work with NetCDF datasets
 suppressPackageStartupMessages(library(dismo))     # Regression for ecological datasets
 suppressPackageStartupMessages(library(sp))        # Classes and methods for spatial data
 
-pest <- function(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, precipData, kernelType ='Cauchy', kappa = 2){
+pest <- function(host1_rast,host1_score = NULL, host2_rast=NULL,host2_score=NULL,host3_rast=NULL,host3_score=NULL, host4_rast=NULL,host4_score=NULL,host5_rast=NULL,host5_score=NULL,
+                 host6_rast=NULL,host6_score=NULL,host7_rast=NULL,host7_score=NULL,host8_rast=NULL,host8_score=NULL,host9_rast=NULL,host9_score=NULL,host10_rast=NULL,host10_score=NULL,
+                 allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, precipData, kernelType ='Cauchy', kappa = 2){
   
 ## Define the main working directory based on the current script path (un commment next line if used outside of shiny framework)
 #setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
@@ -24,10 +26,10 @@ sourceCpp("./scripts/myCppFunctions.cpp") # load custom functions dispersal that
 
 ## Input rasters: abundance (tree density per hectare)
 # Host 1
-umca_rast <- host1
+umca_rast <- host1_rast
 host1_score <- host1_score
 # Host 2
-oaks_rast <- host2
+oaks_rast <- host2_rast
 host2_score <- host2_score
 # Host 3
 host3_rast <- host3_rast
@@ -135,13 +137,6 @@ wind <- windQ #'YES' or 'NO'
 pwdir <- windDir
 spore_rate <- sporeRate
 
-## plot background image
-#plot(bkr_img, xaxs = "i", yaxs = "i")
-
-## plot coordinates for plotting text:
-#xpos <- (bbox(umca_rast)[1,2] + bbox(umca_rast)[1,1]) / 2
-#ypos <- bbox(umca_rast)[2,2] - 150
-
 #time counter to access pos index in weather raster stacks
 cnt <- 1 
 
@@ -196,11 +191,11 @@ for (tt in tstep){
       
       #Check if predominant wind direction has been specified correctly:
       if (!(pwdir %in% c('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'))) stop('A predominant wind direction must be specified: N, NE, E, SE, S, SW, W, NW')
-      out <- SporeDispCppWind_mh(spores_mat, S_UM=S_umca, S_OK=S_oaks, I_UM=I_umca, I_OK=I_oaks, N_LVE=N_live, 
+      out <- SporeDispCppWind_mh(spores_mat, S_UM=S_umca, S_OK=S_oaks, I_UM=I_umca, I_OK=I_oaks, N_LVE=all_trees, 
                                  W, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=kappa)
     
     }else{
-      out <- SporeDispCpp_mh(spores_mat, S_UM=S_umca, S_OK=S_oaks, I_UM=I_umca, I_OK=I_oaks, N_LVE=N_live,
+      out <- SporeDispCpp_mh(spores_mat, S_UM=S_umca, S_OK=S_oaks, I_UM=I_umca, I_OK=I_oaks, N_LVE=all_trees,
                              W, rs=res_win, rtype=kernelType, scale1=20.57) ##TO DO
     }  
     

@@ -18,7 +18,7 @@ precipData = tempData
 
 #setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
 I_oaks_rast2 <- pest(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData)
-dataList <- pest(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, precipData)
+dataList <- pest(host1_rast =host1,host2_rast=host2,allTrees= allTrees,initialPopulation= initialPopulation, start =start, end=end, SS=SS, s1=s1, s2=s2, sporeRate=sporeRate, windQ=windQ, windDir=windDir, tempData=tempData, precipData=precipData)
 
 dataReturn <- dataList[[1]]
 I_oaks_rast2 <- dataList[[2]]
