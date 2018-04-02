@@ -22,7 +22,7 @@ pest <- function(host1_rast,host1_score = NULL, host2_rast=NULL,host2_score=NULL
 ## Use an external source file w/ all modules (functions) used within this script. 
 ## Use FULL PATH if source file is not in the same folder w/ this script
 source('./scripts/myfunctions_SOD.r') # loads custom functions for dispersal using R
-sourceCpp("./scripts/myCppFunctions.cpp") # load custom functions dispersal that use C++ (Faster)
+sourceCpp("./scripts/myCppFunctions2.cpp") # load custom functions dispersal that use C++ (Faster)
 
 ## Input rasters: abundance (tree density per hectare)
 # Host 1
@@ -66,19 +66,19 @@ n_rows <- as.numeric(nrow(host1_rast))
 
 ### INFECTED AND SUSCEPTIBLES ####
 
-## Initial infection (OAKS):
+## Initial infection (host2):
 I_host2_rast <- initialPopulation
 I_host2_stack <- I_host2_rast
 
 ## define matrices for infected and susceptible species of interest
-I_oaks <- as.matrix(I_host2_rast)
-S_oaks <- as.matrix(host2_rast - I_host2_rast)
+I_host2 <- as.matrix(I_host2_rast)
+S_host2 <- as.matrix(host2_rast - I_host2_rast)
 I_host1 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host1 <- as.matrix(host1_rast)
 
 ## Initialize infected trees for each species (!!NEEDED UNLESS EMPIRICAL INFO IS AVAILABLE!!)
-if(any(S_host1[I_oaks > 0] > 0)) I_host1[I_oaks > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), 
-                                                             S_host1[I_oaks > 0], I_oaks[I_oaks > 0]) 
+if(any(S_host1[I_host2 > 0] > 0)) I_host1[I_host2 > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), 
+                                                             S_host1[I_host2 > 0], I_host2[I_host2 > 0]) 
 ## update susceptible matrices by subtracting the initialized infections 
 S_host1 <- S_host1 - I_host1 
 
@@ -143,12 +143,12 @@ cnt <- 1
 ## ----> MAIN SIMULATION LOOP (weekly time steps) <------
 for (tt in tstep){
   
-  #split date string for raster time stamp
+  ## split date string for raster time stamp
   split_date = unlist(strsplit(tt, '-'))
   
   if (tt == tstep[1]) {
     
-    if(!any(S_oaks > 0)) stop('Simulation ended. All oaks are infected!')
+    if(!any(S_host2 > 0)) stop('Simulation ended. All host2 are infected!')
     
     ##CALCULATE OUTPUT TO PLOT: 
     # 1) values as % infected
@@ -168,10 +168,10 @@ for (tt in tstep){
     
   }else{
     
-    #check if there are any susceptible oaks left on the landscape (IF NOT continue LOOP till the end)
-    if(!any(S_oaks > 0)) break
+    ## check if there are any susceptible host2 left on the landscape (IF NOT continue LOOP till the end)
+    if(!any(S_host2 > 0)) break
     
-    #update week counter
+    ## update week counter
     cnt <- cnt + 1
     
     ## is current week time step within a spread month (as defined by input parameters)?
@@ -180,10 +180,9 @@ for (tt in tstep){
     ## Total weather suitability:
     W <- mcf.array[,,cnt] * ccf.array[,,cnt]
     
-    #GENERATE SPORES:  
-    #integer matrix
+    ## GENERATE SPORES:  
     set.seed(42)
-    spores_mat <- SporeGenCpp(I_host1, W, rate = spore_rate) #rate: spores/week for each infected host (4.4 default)
+    spores_mat <- SporeGenCpp(I_host1, W, rate = spore_rate) # rate spores/week
     
     ##SPORE DISPERSAL:  
     #'List'
@@ -191,11 +190,11 @@ for (tt in tstep){
       
       #Check if predominant wind direction has been specified correctly:
       if (!(pwdir %in% c('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'))) stop('A predominant wind direction must be specified: N, NE, E, SE, S, SW, W, NW')
-      out <- SporeDispCppWind_mh(spores_mat, S_UM=S_host1, S_OK=S_oaks, I_UM=I_host1, I_OK=I_oaks, N_LVE=all_trees, 
+      out <- SporeDispCppWind_mh(spores_mat, S_UM=S_host1, S_OK=S_host2, I_UM=I_host1, I_OK=I_host2, N_LVE=all_trees, 
                                  W, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=kappa)
     
     }else{
-      out <- SporeDispCpp_mh(spores_mat, S_UM=S_host1, S_OK=S_oaks, I_UM=I_host1, I_OK=I_oaks, N_LVE=all_trees,
+      out <- SporeDispCpp_mh(spores_mat, S_UM=S_host1, S_OK=S_host2, I_UM=I_host1, I_OK=I_host2, N_LVE=all_trees,
                              W, rs=res_win, rtype=kernelType, scale1=20.57) ##TO DO
     }  
     
@@ -204,11 +203,11 @@ for (tt in tstep){
     S_host1 <- out$S_UM 
     I_host1 <- out$I_UM 
     # Host 2
-    S_oaks <- out$S_OK 
-    I_oaks <- out$I_OK
+    S_host2 <- out$S_OK 
+    I_host2 <- out$I_OK
     
     ##CALCULATE OUTPUT TO PLOT:
-    I_host2_rast[] <- I_oaks
+    I_host2_rast[] <- I_host2
     I_host1_rast[] <- I_host1
     
     # 1) values as % infected

@@ -3,21 +3,17 @@
 using namespace Rcpp;
 // [[Rcpp::plugins(openmp)]]
 
-// Below is a simple example of exporting a C++ function to R. You can
-// source this function into an R session using the Rcpp::sourceCpp 
-// function (or via the Source button on the editor toolbar)
-
 //Within each infected cell (I > 0) draw random number of infections ~Poisson(lambda=rate of spore production) for each infected host. 
 //Take SUM for total infections produced by each cell. 
 
 // [[Rcpp::export]]
-IntegerMatrix SporeGenCpp(IntegerMatrix I, NumericMatrix W, double rate){
+IntegerMatrix SporeGenCpp(IntegerMatrix infected, NumericMatrix weather_suitability, double rate){
   
   // internal variables
-  int nrow = I.nrow(); 
-  int ncol = I.ncol();
+  int nrow = infected.nrow(); 
+  int ncol = infected.ncol();
   
-  IntegerMatrix SP = clone<IntegerMatrix>(I);
+  IntegerMatrix SP = clone<IntegerMatrix>(infected);
   //Function rpois("rpois");
   
   RNGScope scope;
@@ -27,10 +23,10 @@ IntegerMatrix SporeGenCpp(IntegerMatrix I, NumericMatrix W, double rate){
   for (int row = 0; row < nrow; row++) {
     for (int col = 0; col < ncol; col++){
       
-      if (I(row, col) > 0){  //if infected > 0, generate spores proportional to production rate * weather suitability
+      if (infected(row, col) > 0){  //if infected > 0, generate spores proportional to production rate * weather suitability
 
-        double lambda = rate * W(row, col);
-        NumericVector inf = rpois(I(row, col), lambda);
+        double lambda = rate * weather_suitability(row, col);
+        NumericVector inf = rpois(infected(row, col), lambda);
         int s = sum(inf);
         SP(row, col) = s;
 
@@ -46,7 +42,7 @@ IntegerMatrix SporeGenCpp(IntegerMatrix I, NumericMatrix W, double rate){
 
 // [[Rcpp::export]]
 List SporeDispCpp_mh(IntegerMatrix x, IntegerMatrix S_UM, IntegerMatrix S_OK, IntegerMatrix I_UM, IntegerMatrix I_OK, 
-                     IntegerMatrix N_LVE, NumericMatrix W,   //use different name than the functions in myfunctions_SOD.r
+                     IntegerMatrix N_LVE, NumericMatrix weather_suitability,   //use different name than the functions in myfunctions_SOD.r
                 double rs, String rtype, double scale1,
                 double scale2=NA_REAL,  //default values
                 double gamma=NA_REAL){  //default values
@@ -110,7 +106,7 @@ List SporeDispCpp_mh(IntegerMatrix x, IntegerMatrix S_UM, IntegerMatrix S_OK, In
               PropS = double(S_UM(row0, col0) + S_OK(row0, col0)) / N_LVE(row0, col0);            
               
               double U = R::runif(0,1);
-              double Prob = PropS * W(row0, col0); //weather suitability affects prob success!
+              double Prob = PropS * weather_suitability(row0, col0); //weather suitability affects prob success!
 
               //if U < Prob then one host will become infected
               if (U < Prob){
@@ -138,7 +134,7 @@ List SporeDispCpp_mh(IntegerMatrix x, IntegerMatrix S_UM, IntegerMatrix S_OK, In
             if(S_UM(row0, col0) > 0){
               double PropS_UM = double(S_UM(row0, col0)) / N_LVE(row0, col0); //fractions of given host in cell
               double U = R::runif(0,1);
-              double Prob = PropS_UM * W(row0, col0); //weather suitability affects prob success!
+              double Prob = PropS_UM * weather_suitability(row0, col0); //weather suitability affects prob success!
               //if U < Prob then one host will become infected
               if (U < Prob){
                 I_UM(row0, col0) = I_UM(row0, col0) + 1; //update infected UMCA
@@ -168,7 +164,7 @@ List SporeDispCpp_mh(IntegerMatrix x, IntegerMatrix S_UM, IntegerMatrix S_OK, In
 
 // [[Rcpp::export]]
 List SporeDispCppWind_mh(IntegerMatrix x, IntegerMatrix S_UM, IntegerMatrix S_OK, IntegerMatrix I_UM, IntegerMatrix I_OK, 
-                         IntegerMatrix N_LVE, NumericMatrix W,   //use different name than the functions in myfunctions_SOD.r
+                         IntegerMatrix N_LVE, NumericMatrix weather_suitability,   //use different name than the functions in myfunctions_SOD.r
                 double rs, String rtype, double scale1, 
                 String wdir, int kappa,
                 double scale2=NA_REAL,  //default values
@@ -253,7 +249,7 @@ List SporeDispCppWind_mh(IntegerMatrix x, IntegerMatrix S_UM, IntegerMatrix S_OK
               PropS = double(S_UM(row0, col0) + S_OK(row0, col0)) / N_LVE(row0, col0);;              
               
               double U = R::runif(0,1);
-              double Prob = PropS * W(row0, col0); //weather suitability affects prob success!
+              double Prob = PropS * weather_suitability(row0, col0); //weather suitability affects prob success!
 
               //if U < Prob then one host will become infected
               if (U < Prob){
@@ -281,7 +277,7 @@ List SporeDispCppWind_mh(IntegerMatrix x, IntegerMatrix S_UM, IntegerMatrix S_OK
             if(S_UM(row0, col0) > 0){
               double PropS_UM = double(S_UM(row0, col0)) / N_LVE(row0, col0); //fractions of given host in cell
               double U = R::runif(0,1);
-              double Prob = PropS_UM * W(row0, col0); //weather suitability affects prob success!
+              double Prob = PropS_UM * weather_suitability(row0, col0); //weather suitability affects prob success!
               //if U < Prob then one host will become infected
               if (U < Prob){
                 I_UM(row0, col0) = I_UM(row0, col0) + 1; //update infected UMCA
