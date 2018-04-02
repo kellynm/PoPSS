@@ -26,10 +26,10 @@ sourceCpp("./scripts/myCppFunctions.cpp") # load custom functions dispersal that
 
 ## Input rasters: abundance (tree density per hectare)
 # Host 1
-umca_rast <- host1_rast
+host1_rast <- host1_rast
 host1_score <- host1_score
 # Host 2
-oaks_rast <- host2_rast
+host2_rast <- host2_rast
 host2_score <- host2_score
 # Host 3
 host3_rast <- host3_rast
@@ -60,32 +60,32 @@ host10_score <- host10_score
 all_trees_rast <- allTrees
 
 ## raster resolution
-res_win <- res(umca_rast)[1]
-n_cols <- as.numeric(ncol(umca_rast))
-n_rows <- as.numeric(nrow(umca_rast))
+res_win <- res(host1_rast)[1]
+n_cols <- as.numeric(ncol(host1_rast))
+n_rows <- as.numeric(nrow(host1_rast))
 
 ### INFECTED AND SUSCEPTIBLES ####
 
 ## Initial infection (OAKS):
-I_oaks_rast <- initialPopulation
-I_oaks_rast2 <- I_oaks_rast
+I_host2_rast <- initialPopulation
+I_host2_stack <- I_host2_rast
 
 ## define matrices for infected and susceptible species of interest
-I_oaks <- as.matrix(I_oaks_rast)
-S_oaks <- as.matrix(oaks_rast - I_oaks_rast)
-I_umca <- matrix(0, nrow=n_rows, ncol=n_cols)
-S_umca <- as.matrix(umca_rast)
+I_oaks <- as.matrix(I_host2_rast)
+S_oaks <- as.matrix(host2_rast - I_host2_rast)
+I_host1 <- matrix(0, nrow=n_rows, ncol=n_cols)
+S_host1 <- as.matrix(host1_rast)
 
 ## Initialize infected trees for each species (!!NEEDED UNLESS EMPIRICAL INFO IS AVAILABLE!!)
-if(any(S_umca[I_oaks > 0] > 0)) I_umca[I_oaks > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), 
-                                                             S_umca[I_oaks > 0], I_oaks[I_oaks > 0]) 
+if(any(S_host1[I_oaks > 0] > 0)) I_host1[I_oaks > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), 
+                                                             S_host1[I_oaks > 0], I_oaks[I_oaks > 0]) 
 ## update susceptible matrices by subtracting the initialized infections 
-S_umca <- S_umca - I_umca 
+S_host1 <- S_host1 - I_host1 
 
 ## Update Infected host rasters for output
-I_umca_rast <- I_oaks_rast
-I_umca_rast[] <- I_umca
-I_umca_rast2 <- I_umca_rast
+I_host1_rast <- I_host2_rast
+I_host1_rast[] <- I_host1
+I_host1_stack <- I_host1_rast
 
 ## define matrix for all live trees (for calculating the percentage of infected)
 all_trees <- as.matrix(all_trees_rast)
@@ -152,19 +152,19 @@ for (tt in tstep){
     
     ##CALCULATE OUTPUT TO PLOT: 
     # 1) values as % infected
-    #I_oaks_rast[] <- ifelse(I_oaks_rast[] == 0, NA, I_oaks_rast[]/oaks_rast[])
+    #I_host2_rast[] <- ifelse(I_host2_rast[] == 0, NA, I_host2_rast[]/host2_rast[])
     
     # 2) values as number of infected per cell
-    I_oaks_rast[] <- ifelse(I_oaks_rast[] == 0, NA, I_oaks_rast[])
+    I_host2_rast[] <- ifelse(I_host2_rast[] == 0, NA, I_host2_rast[])
     
     # 3) values as 0 (non infected) and 1 (infected) cell
-    #I_oaks_rast[] <- ifelse(I_oaks_rast[] > 0, 1, 0) 
-    #I_oaks_rast[] <- ifelse(I_oaks_rast[] > 0, 1, NA) 
+    #I_host2_rast[] <- ifelse(I_host2_rast[] > 0, 1, 0) 
+    #I_host2_rast[] <- ifelse(I_host2_rast[] > 0, 1, NA) 
     
     #WRITE TO FILE:
-    #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
-    #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output
-    #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='LOG1S', overwrite=TRUE)  # 0=non infected 1=infected output
+    #writeRaster(I_host2_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
+    #writeRaster(I_host2_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output
+    #writeRaster(I_host2_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='LOG1S', overwrite=TRUE)  # 0=non infected 1=infected output
     
   }else{
     
@@ -183,7 +183,7 @@ for (tt in tstep){
     #GENERATE SPORES:  
     #integer matrix
     set.seed(42)
-    spores_mat <- SporeGenCpp(I_umca, W, rate = spore_rate) #rate: spores/week for each infected host (4.4 default)
+    spores_mat <- SporeGenCpp(I_host1, W, rate = spore_rate) #rate: spores/week for each infected host (4.4 default)
     
     ##SPORE DISPERSAL:  
     #'List'
@@ -191,62 +191,64 @@ for (tt in tstep){
       
       #Check if predominant wind direction has been specified correctly:
       if (!(pwdir %in% c('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'))) stop('A predominant wind direction must be specified: N, NE, E, SE, S, SW, W, NW')
-      out <- SporeDispCppWind_mh(spores_mat, S_UM=S_umca, S_OK=S_oaks, I_UM=I_umca, I_OK=I_oaks, N_LVE=all_trees, 
+      out <- SporeDispCppWind_mh(spores_mat, S_UM=S_host1, S_OK=S_oaks, I_UM=I_host1, I_OK=I_oaks, N_LVE=all_trees, 
                                  W, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=kappa)
     
     }else{
-      out <- SporeDispCpp_mh(spores_mat, S_UM=S_umca, S_OK=S_oaks, I_UM=I_umca, I_OK=I_oaks, N_LVE=all_trees,
+      out <- SporeDispCpp_mh(spores_mat, S_UM=S_host1, S_OK=S_oaks, I_UM=I_host1, I_OK=I_oaks, N_LVE=all_trees,
                              W, rs=res_win, rtype=kernelType, scale1=20.57) ##TO DO
     }  
     
     ## update R matrices:
     # Host 1
-    S_umca <- out$S_UM 
-    I_umca <- out$I_UM 
+    S_host1 <- out$S_UM 
+    I_host1 <- out$I_UM 
     # Host 2
     S_oaks <- out$S_OK 
     I_oaks <- out$I_OK
     
     ##CALCULATE OUTPUT TO PLOT:
-    I_oaks_rast[] <- I_oaks
-    I_umca_rast[] <- I_umca
+    I_host2_rast[] <- I_oaks
+    I_host1_rast[] <- I_host1
     
     # 1) values as % infected
-    #I_oaks_rast[] <- ifelse(I_oaks_rast[] == 0, NA, I_oaks_rast[]/oaks_rast[])
+    #I_host2_rast[] <- ifelse(I_host2_rast[] == 0, NA, I_host2_rast[]/host2_rast[])
     
     # 2) values as number of infected per cell
-    I_oaks_rast[] <- ifelse(I_oaks_rast[] == 0, NA, I_oaks_rast[])
-    I_umca_rast[] <- ifelse(I_umca_rast[] == 0, NA, I_umca_rast[])
+    I_host2_rast[] <- ifelse(I_host2_rast[] == 0, NA, I_host2_rast[])
+    I_host1_rast[] <- ifelse(I_host1_rast[] == 0, NA, I_host1_rast[])
     
     # 3) values as 0 (non infected) and 1 (infected) cell
-    #I_oaks_rast[] <- ifelse(I_oaks_rast[] > 0, 1, 0) 
-    #I_oaks_rast[] <- ifelse(I_oaks_rast[] > 0, 1, NA) 
+    #I_host2_rast[] <- ifelse(I_host2_rast[] > 0, 1, 0) 
+    #I_host2_rast[] <- ifelse(I_host2_rast[] > 0, 1, NA) 
         
     if (cnt %in% yearlyoutputlist){
       yearTracker = yearTracker+1
-      I_oaks_rast2 <- stack(I_oaks_rast, I_oaks_rast2)
-      I_umca_rast2 <- stack(I_umca_rast, I_umca_rast2)
-      dataForOutput$infectedHost1Individuals[yearTracker] <- sum(na.omit(I_umca_rast@data@values))/1000
-      dataForOutput$infectedHost1Area[yearTracker] <- ncell(na.omit(I_umca_rast@data@values))*res(I_umca_rast)[2]*res(I_umca_rast)[1]
-      dataForOutput$infectedHost2Individuals[yearTracker] <- sum(na.omit(I_oaks_rast@data@values))/1000
-      dataForOutput$infectedHost2Area[yearTracker] <- ncell(na.omit(I_oaks_rast@data@values))*res(I_oaks_rast)[2]*res(I_oaks_rast)[1]
+      I_host2_stack <- stack(I_host2_rast, I_host2_stack)
+      I_host1_stack <- stack(I_host1_rast, I_host1_stack)
+      dataForOutput$infectedHost1Individuals[yearTracker] <- sum(na.omit(I_host1_rast@data@values))/1000
+      dataForOutput$infectedHost1Area[yearTracker] <- ncell(na.omit(I_host1_rast@data@values))*res(I_host1_rast)[2]*res(I_host1_rast)[1]
+      dataForOutput$infectedHost2Individuals[yearTracker] <- sum(na.omit(I_host2_rast@data@values))/1000
+      dataForOutput$infectedHost2Area[yearTracker] <- ncell(na.omit(I_host2_rast@data@values))*res(I_host2_rast)[2]*res(I_host2_rast)[1]
       
       ## WRITE TO FILE:
-      #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
-      #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output
-      #writeRaster(I_oaks_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='LOG1S', overwrite=TRUE)  # 0=non infected 1=infected output
-      #return(I_oaks_rast)
+      #writeRaster(I_host2_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
+      #writeRaster(I_host2_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output
+      #writeRaster(I_host2_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='LOG1S', overwrite=TRUE)  # 0=non infected 1=infected output
+      #return(I_host2_rast)
       
     }
     
   }
   
 }
-I_oaks_rast2 <- subset(I_oaks_rast2, order(seq(nlayers(I_oaks_rast2)-1, 1, -1)))
-I_umca_rast2 <- subset(I_umca_rast2, order(seq(nlayers(I_umca_rast2)-1, 1, -1)))
-names(I_oaks_rast2) <- years
-names(I_umca_rast2) <- years
-data <- list(dataForOutput, I_oaks_rast2)
+
+I_host2_stack <- subset(I_host2_stack, order(seq(nlayers(I_host2_stack)-1, 1, -1)))
+I_host1_stack <- subset(I_host1_stack, order(seq(nlayers(I_host1_stack)-1, 1, -1)))
+names(I_host2_stack) <- years
+names(I_host1_stack) <- years
+data <- list(dataForOutput, I_host2_stack)
+
 return(data)
 }
 
