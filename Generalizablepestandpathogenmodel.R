@@ -14,7 +14,7 @@ suppressPackageStartupMessages(library(sp))        # Classes and methods for spa
 
 pest <- function(host1_rast,host1_score = NULL, host2_rast=NULL,host2_score=NULL,host3_rast=NULL,host3_score=NULL, host4_rast=NULL,host4_score=NULL,host5_rast=NULL,host5_score=NULL,
                  host6_rast=NULL,host6_score=NULL,host7_rast=NULL,host7_score=NULL,host8_rast=NULL,host8_score=NULL,host9_rast=NULL,host9_score=NULL,host10_rast=NULL,host10_score=NULL,
-                 allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData, precipData, kernelType ='Cauchy', kappa = 2){
+                 allTrees,initialPopulation, start, end, SS = 'NO', s1 = 1 , s2 = 12, sporeRate, windQ, windDir, tempData, precipData, kernelType ='Cauchy', kappa = 2){
   
 ## Define the main working directory based on the current script path (un commment next line if used outside of shiny framework)
 #setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
