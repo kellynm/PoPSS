@@ -118,10 +118,47 @@ S_host8 <- S_host8 - I_host8
 S_host9 <- S_host9 - I_host9 
 S_host10 <- S_host10 - I_host10 
 
-## Create Infected host rasters for output
+## Create Infected host rasters and raster stacks for output
+# host 1
 I_host1_rast <- initialPopulation
 I_host1_rast[] <- I_host1
 I_host1_stack <- I_host1_rast
+# host 2
+I_host2_rast <- initialPopulation
+I_host2_rast[] <- I_host2
+I_host2_stack <- I_host2_rast
+# host 3
+I_host3_rast <- initialPopulation
+I_host3_rast[] <- I_host3
+I_host3_stack <- I_host3_rast
+# host 4
+I_host4_rast <- initialPopulation
+I_host4_rast[] <- I_host4
+I_host4_stack <- I_host4_rast
+# host 5
+I_host5_rast <- initialPopulation
+I_host5_rast[] <- I_host5
+I_host5_stack <- I_host5_rast
+# host 6
+I_host6_rast <- initialPopulation
+I_host6_rast[] <- I_host6
+I_host6_stack <- I_host6_rast
+# host 7
+I_host7_rast <- initialPopulation
+I_host7_rast[] <- I_host7
+I_host7_stack <- I_host7_rast
+# host 8
+I_host8_rast <- initialPopulation
+I_host8_rast[] <- I_host8
+I_host8_stack <- I_host8_rast
+# host 9
+I_host9_rast <- initialPopulation
+I_host9_rast[] <- I_host9
+I_host9_stack <- I_host9_rast
+# host 10
+I_host10_rast <- initialPopulation
+I_host10_rast[] <- I_host10
+I_host10_stack <- I_host10_rast
 
 ## define matrix for all live trees (for calculating the percentage of infected)
 all_trees <- as.matrix(all_trees_rast)
