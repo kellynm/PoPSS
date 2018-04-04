@@ -14,7 +14,7 @@ suppressPackageStartupMessages(library(sp))        # Classes and methods for spa
 
 pest <- function(host1_rast,host1_score = NULL, host2_rast=NULL,host2_score=NULL,host3_rast=NULL,host3_score=NULL, host4_rast=NULL,host4_score=NULL,host5_rast=NULL,host5_score=NULL,
                  host6_rast=NULL,host6_score=NULL,host7_rast=NULL,host7_score=NULL,host8_rast=NULL,host8_score=NULL,host9_rast=NULL,host9_score=NULL,host10_rast=NULL,host10_score=NULL,
-                 allTrees,initialPopulation, start, end, SS = 'NO', s1 = 1 , s2 = 12, sporeRate, windQ, windDir, tempData, precipData, kernelType ='Cauchy', kappa = 2){
+                 allTrees,initialPopulation, start, end, seasonality = 'NO', s1 = 1 , s2 = 12, sporeRate, windQ, windDir, tempData, precipData, kernelType ='Cauchy', kappa = 2){
   
 ## Define the main working directory based on the current script path (un commment next line if used outside of shiny framework)
 #setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
@@ -24,7 +24,7 @@ pest <- function(host1_rast,host1_score = NULL, host2_rast=NULL,host2_score=NULL
 source('./scripts/myfunctions_SOD.r') # loads custom functions for dispersal using R
 sourceCpp("./scripts/myCppFunctions2.cpp") # load custom functions dispersal that use C++ (Faster)
 
-## Input rasters: abundance (tree density per hectare)
+## Input rasters: individual species abundance (tree density per hectare) (if host score = 0 don't count in spread calculations)
 # Host 1
 host1_rast <- host1_rast
 host1_score <- host1_score
@@ -56,7 +56,7 @@ host9_score <- host9_score
 host10_rast <- host10_rast
 host10_score <- host10_score
  
-#----> All live trees (for calculating the proportion of infected)
+## All live trees (for calculating the proportion of infected) (tree density per hectare)
 all_trees_rast <- allTrees
 
 ## raster resolution
@@ -129,8 +129,8 @@ mcf.array <- ncvar_get(nc_open(precipData),  varid = "Mcoef") #M = moisture;
 ccf.array <- ncvar_get(nc_open(tempData),  varid = "Ccoef") #C = temperature;
 
 ## Seasonality: Do you want the spread to be limited to certain months?
-ss <- SS   #'YES' or 'NO'
-if (ss == 'YES') months_msk <- paste('0', s1:s2, sep='') #1=January 9=September (Default to 1-12)
+seasonality <- seasonality   #'YES' or 'NO'
+if (seasonality == 'YES') months_msk <- paste('0', s1:s2, sep='') #1=January 9=September (Default to 1-12)
 
 ##Wind: Do you want the spread to be affected by wind?
 wind <- windQ #'YES' or 'NO'
@@ -175,7 +175,7 @@ for (tt in tstep){
     cnt <- cnt + 1
     
     ## is current week time step within a spread month (as defined by input parameters)?
-    if (ss == 'YES' & !any(substr(tt,6,7) %in% months_msk)) next
+    if (seasonality == 'YES' & !any(substr(tt,6,7) %in% months_msk)) next
     
     ## Total weather suitability:
     W <- mcf.array[,,cnt] * ccf.array[,,cnt]
@@ -246,7 +246,7 @@ I_host2_stack <- subset(I_host2_stack, order(seq(nlayers(I_host2_stack)-1, 1, -1
 I_host1_stack <- subset(I_host1_stack, order(seq(nlayers(I_host1_stack)-1, 1, -1)))
 names(I_host2_stack) <- years
 names(I_host1_stack) <- years
-data <- list(dataForOutput, I_host2_stack)
+data <- list(dataForOutput, I_host2_stack, I_host1_stack)
 
 return(data)
 }

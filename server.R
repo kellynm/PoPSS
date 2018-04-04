@@ -15,7 +15,7 @@ function(input, output, session) {
   observeEvent(input$run, {
     years = seq(input$start, input$end, 1)
                            withBusyIndicatorServer("run",{dataList <<- pest(host1_rast = rastHostDataM1, host2_rast = rastHostDataM2,allTrees = rastTotalSpeciesData, initialPopulation = rastInitialInfection,
-                                 start = input$start, end = input$end, SS= input$seasonQ, s1 = input$seasonMonths[1],s2 = input$seasonMonths[2], 
+                                 start = input$start, end = input$end, seasonality = input$seasonQ, s1 = input$seasonMonths[1],s2 = input$seasonMonths[2], 
                                  sporeRate = input$sporeRate, windQ= input$windQ, windDir=input$windDir, tempData = input$tempData$datapath, precipData = input$precipData$datapath, kernelType = input$kernelType, kappa = input$kappa)}) 
                              proxy <- leafletProxy("mapData")
                              modelRastOut <<- dataList[[2]]
