@@ -55,8 +55,7 @@ host9_score <- host9_score
 # Host 10
 host10_rast <- host10_rast
 host10_score <- host10_score
- 
-## All live trees (for calculating the proportion of infected) (tree density per hectare)
+# All live trees (for calculating the proportion of infected) (tree density per hectare)
 all_trees_rast <- allTrees
 
 ## raster resolution
