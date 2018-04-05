@@ -52,9 +52,6 @@ IntegerMatrix SporeGenCpp(IntegerMatrix I, NumericMatrix W, double rate){
 IntegerMatrix SporeGenCpp_MH(IntegerMatrix I_UM, IntegerMatrix I_LD, List HW, NumericMatrix W, double rate){
   
   
-  
-  
-  
   // internal variables
   int nrow = I_UM.nrow(); 
   int ncol = I_UM.ncol();
@@ -63,12 +60,7 @@ IntegerMatrix SporeGenCpp_MH(IntegerMatrix I_UM, IntegerMatrix I_LD, List HW, Nu
   NumericVector hw_um_v = as<NumericVector>(HW["UMCA"]);
   NumericVector hw_ld_v = as<NumericVector>(HW["LIDE3"]);
 
-  
-  
-  
-  
 
-  
   // initialize a new matrix of zeroes by cloning one of the infected matrices
   IntegerMatrix SP = clone<IntegerMatrix>(I_UM);
   

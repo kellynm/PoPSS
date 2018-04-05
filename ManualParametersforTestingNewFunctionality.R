@@ -24,6 +24,14 @@ stack_list <- list(I_host1_stack)
 stack_list <- list(stack_list, I_host2_stack)
 stack_list[[1]] <- stack(I_host1_rast, stack_list[[1]])
 
+ck <- c(host1_rast =host1_rast,host2_rast=host2_rast,allTrees= allTrees,initialPopulation= initialPopulation, seasonality=SS, s1=s1, s2=s2, sporeRate=sporeRate, windQ=windQ, windDir=windDir, tempData=tempData, precipData=precipData, number_of_hosts = number_of_hosts)
+ck <- c(ck, start=start)
+ck <- c(ck, end = end)
+ck <- c(ck, start = end)
+ck <- c(host1_rast =host1_rast,host2_rast=host2_rast,allTrees= allTrees,initialPopulation= initialPopulation, start =start, end=end, seasonality=SS, s1=s1, s2=s2, sporeRate=sporeRate, windQ=windQ, windDir=windDir, tempData=tempData, precipData=precipData, number_of_hosts = number_of_hosts)
+ck$start = end
+do.call(pest,ck)
+
 
 dataReturn <- dataList[[1]]
 I_oaks_rast2 <- dataList[[2]]

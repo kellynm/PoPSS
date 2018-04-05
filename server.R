@@ -4,19 +4,25 @@ pal <<- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "tr
 usCounties <<- readOGR("./layers/usLower48Counties.shp")
 usStates <<- readOGR("./layers/usLower48States.shp")
 
+pest_vars <<- list(host1_rast = NULL,host1_score = NULL, host2_rast=NULL,host2_score=NULL,host3_rast=NULL,host3_score=NULL, host4_rast=NULL,host4_score=NULL,host5_rast=NULL,host5_score=NULL,
+                  host6_rast=NULL,host6_score=NULL,host7_rast=NULL,host7_score=NULL,host8_rast=NULL,host8_score=NULL,host9_rast=NULL,host9_score=NULL,host10_rast=NULL,host10_score=NULL,
+                  allTrees=NULL,initialPopulation=NULL, start=2000, end=2010, seasonality = 'NO', s1 = 1 , s2 = 12, sporeRate = 4.4, windQ ='NO', windDir=NULL, tempData=NULL, precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1)
+
 function(input, output, session) {
   options(shiny.maxRequestSize=70000*1024^2) 
-  # Creates the text file that is downloaded upon model completion
+  ## Creates the text file that is downloaded upon model completion
   
-  # Create Raster Stack for holding output from model run
+  ## Create Raster Stack for holding output from model run
   modelRastOut <- r
   olg <- c()
-  
+  ## create list of all variables for pest function with defaults assigned exactly the same as defaults in function with mandatory variables assigned to null
+
   observeEvent(input$run, {
     years = seq(input$start, input$end, 1)
-                           withBusyIndicatorServer("run",{dataList <<- pest(host1_rast = rastHostDataM1, host2_rast = rastHostDataM2,allTrees = rastTotalSpeciesData, initialPopulation = rastInitialInfection,
-                                 start = input$start, end = input$end, seasonality = input$seasonQ, s1 = input$seasonMonths[1],s2 = input$seasonMonths[2], 
-                                 sporeRate = input$sporeRate, windQ= input$windQ, windDir=input$windDir, tempData = input$tempData$datapath, precipData = input$precipData$datapath, kernelType = input$kernelType, kappa = input$kappa, number_of_hosts = input$hostMulti)}) 
+                           withBusyIndicatorServer("run",{dataList <<- do.call(pest, pest_vars)})
+                             # pest(host1_rast = rastHostDataM1, host2_rast = rastHostDataM2,allTrees = rastTotalSpeciesData, initialPopulation = rastInitialInfection,
+                             #     start = input$start, end = input$end, seasonality = input$seasonQ, s1 = input$seasonMonths[1],s2 = input$seasonMonths[2], 
+                             #     sporeRate = input$sporeRate, windQ= input$windQ, windDir=input$windDir, tempData = input$tempData$datapath, precipData = input$precipData$datapath, kernelType = input$kernelType, kappa = input$kappa, number_of_hosts = input$hostMulti)}) 
                              proxy <- leafletProxy("mapData")
                              modelRastOut <<- dataList[[2]]
                              dataReturn <<- dataList[[1]]
@@ -64,10 +70,38 @@ function(input, output, session) {
                                                       bringToFront = TRUE))
   })
   
+  ## Add/change parameter values when the inputs change in the GUI to pest_vars parameter list
+  observeEvent(input$start, {pest_vars$start <<- input$start})
+  observeEvent(input$end, {pest_vars$end <<- input$end})
+  observeEvent(input$seasonQ, {pest_vars$seasonality <<- input$seasonQ})
+  observeEvent(input$seasonMonths, {pest_vars$s1 <<- input$seasonMonths[1]
+  pest_vars$s2 <<- input$seasonMonths[2]})
+  observeEvent(input$sporeRate, {pest_vars$sporeRate <<- input$sporeRate})
+  observeEvent(input$kernelType, {pest_vars$kernelType <<- input$kernelType})
+  observeEvent(input$hostMulti, {pest_vars$number_of_hosts <<- input$hostMulti})
+  observeEvent(input$windQ, {pest_vars$windQ = input$windQ})
+  observeEvent(input$windDir, {pest_vars$windDir <<- input$windDir})
+  observeEvent(input$kappa, {pest_vars$kappa <<- input$kappa})
+  observeEvent(input$tempData, {tempData <- input$tempData$datapath
+    pest_vars$tempData <<- tempData})
+  observeEvent(input$precipData, {precipData <- input$precipData$datapath
+    pest_vars$precipData <<- precipData})
+  observeEvent(input$hostIndexScore1, {pest_vars$host1_score <<- input$hostIndexScore1})
+  observeEvent(input$hostIndexScore2, {pest_vars$host2_score <<- input$hostIndexScore2})
+  observeEvent(input$hostIndexScore3, {pest_vars$host3_score <<- input$hostIndexScore3})
+  observeEvent(input$hostIndexScore4, {pest_vars$host4_score <<- input$hostIndexScore4})
+  observeEvent(input$hostIndexScore5, {pest_vars$host5_score <<- input$hostIndexScore5})
+  observeEvent(input$hostIndexScore6, {pest_vars$host6_score <<- input$hostIndexScore6})
+  observeEvent(input$hostIndexScore7, {pest_vars$host7_score <<- input$hostIndexScore7})
+  observeEvent(input$hostIndexScore8, {pest_vars$host8_score <<- input$hostIndexScore8})
+  observeEvent(input$hostIndexScore9, {pest_vars$host9_score <<- input$hostIndexScore9})
+  observeEvent(input$hostIndexScore10, {pest_vars$host10_score <<- input$hostIndexScore10})
+  
   ## Set up GUI maps to be flexible
   observeEvent(input$initialInfection, {
     if (extension(input$initialInfection$datapath) %in% c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")) {
       rastInitialInfection <<- raster(input$initialInfection$datapath)
+      pest_vars$initialPopulation <<- rastInitialInfection
       pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastInitialInfection), na.color = "transparent")
       olg <<- c(olg, "Initial Infection")
       proxy <- proxy %>%
@@ -75,7 +109,7 @@ function(input, output, session) {
         addLayersControl(
           overlayGroups = olg,
           baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
-          options = layersControlOptions(collapsed = TRUE, opacity =0.6)) #%>%
+          options = layersControlOptions(collapsed = TRUE, opacity =0.6)) 
         #fitBounds(extent(rastInitialInfection))
       # addLegend("bottomright", pal = pal, values = values(rastInitialInfection),
       #           title = "Host species",
@@ -83,11 +117,11 @@ function(input, output, session) {
     } else {
       createAlert(session, "initialInfectionID", content = "Please")
     }
-   
   })
   observeEvent(input$totalSpeciesData, {
     inTotalSpeciesData <- input$totalSpeciesData
     rastTotalSpeciesData <<- raster(inTotalSpeciesData$datapath)
+    pest_vars$allTrees <<- rastTotalSpeciesData
     pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastTotalSpeciesData), na.color = "transparent")
     olg <<- c(olg, "All Trees")
     proxy <- proxy %>%
@@ -103,6 +137,7 @@ function(input, output, session) {
   observeEvent(input$hostDataM1, {
     inHostDataM1 <- input$hostDataM1
     rastHostDataM1 <<- raster(inHostDataM1$datapath)
+    pest_vars$host1_rast <<- rastHostDataM1
     pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataM1), na.color = "transparent")
     olg <<- c(olg, "Host 1")
     proxy <- proxy %>%
@@ -118,6 +153,7 @@ function(input, output, session) {
   observeEvent(input$hostDataM2, {
     inHostDataM2 <- input$hostDataM2
     rastHostDataM2 <<- raster(inHostDataM2$datapath)
+    pest_vars$host2_rast <<- rastHostDataM2
     pal <- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(rastHostDataM2), na.color = "transparent")
     olg <<- c(olg, "Host 2")
     proxy <- proxy %>%

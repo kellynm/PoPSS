@@ -75,7 +75,7 @@ if(any(S_host1[initial_infection > 0] > 0)) I_host1[initial_infection > 0] <- ma
 S_host1 <- S_host1 - I_host1 
 I_host1_rast <- initialPopulation
 I_host1_rast[] <- I_host1
-I_host1_stack <- I_host1_rast
+I_host1_stack <- stack(I_host1_rast)
 
 if (number_of_hosts>1) {I_host2 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host2 <- as.matrix(host2_rast)
@@ -83,7 +83,7 @@ if(any(S_host2[initial_infection > 0] > 0)) I_host2[initial_infection > 0] <- ma
 S_host2 <- S_host2 - I_host2 
 I_host2_rast <- initialPopulation
 I_host2_rast[] <- I_host2
-I_host2_stack <- I_host2_rast
+I_host2_stack <- stack(I_host2_rast)
 
 if (number_of_hosts>2) {I_host3 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host3 <- as.matrix(host3_rast)
@@ -91,7 +91,7 @@ if(any(S_host3[initial_infection > 0] > 0)) I_host3[initial_infection > 0] <- ma
 S_host3 <- S_host3 - I_host3 
 I_host3_rast <- initialPopulation
 I_host3_rast[] <- I_host3
-I_host3_stack <- I_host3_rast
+I_host3_stack <- stack(I_host3_rast)
 
 if (number_of_hosts>3) {I_host4 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host4 <- as.matrix(host4_rast)
@@ -99,7 +99,7 @@ if(any(S_host4[initial_infection > 0] > 0)) I_host4[initial_infection > 0] <- ma
 S_host4 <- S_host4 - I_host4 
 I_host4_rast <- initialPopulation
 I_host4_rast[] <- I_host4
-I_host4_stack <- I_host4_rast
+I_host4_stack <- stack(I_host4_rast)
 
 if (number_of_hosts>4) {I_host5 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host5 <- as.matrix(host5_rast)
@@ -107,7 +107,7 @@ if(any(S_host5[initial_infection > 0] > 0)) I_host5[initial_infection > 0] <- ma
 S_host5 <- S_host5 - I_host5 
 I_host5_rast <- initialPopulation
 I_host5_rast[] <- I_host5
-I_host5_stack <- I_host5_rast
+I_host5_stack <- stack(I_host5_rast)
 
 if (number_of_hosts>5) {I_host6 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host6 <- as.matrix(host6_rast)
@@ -115,7 +115,7 @@ if(any(S_host6[initial_infection > 0] > 0)) I_host6[initial_infection > 0] <- ma
 S_host6 <- S_host6 - I_host6 
 I_host6_rast <- initialPopulation
 I_host6_rast[] <- I_host6
-I_host6_stack <- I_host6_rast
+I_host6_stack <- stack(I_host6_rast)
 
 if (number_of_hosts>6) {I_host7 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host7 <- as.matrix(host7_rast)
@@ -123,7 +123,7 @@ if(any(S_host7[initial_infection > 0] > 0)) I_host7[initial_infection > 0] <- ma
 S_host7 <- S_host7 - I_host7 
 I_host7_rast <- initialPopulation
 I_host7_rast[] <- I_host7
-I_host7_stack <- I_host7_rast
+I_host7_stack <- stack(I_host7_rast)
 
 if (number_of_hosts>7) {I_host8 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host8 <- as.matrix(host8_rast)
@@ -131,7 +131,7 @@ if(any(S_host8[initial_infection > 0] > 0)) I_host8[initial_infection > 0] <- ma
 S_host8 <- S_host8 - I_host8 
 I_host8_rast <- initialPopulation
 I_host8_rast[] <- I_host8
-I_host8_stack <- I_host8_rast
+I_host8_stack <- stack(I_host8_rast)
 
 if (number_of_hosts>8) {I_host9 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host9 <- as.matrix(host9_rast)
@@ -139,7 +139,7 @@ if(any(S_host9[initial_infection > 0] > 0)) I_host9[initial_infection > 0] <- ma
 S_host9 <- S_host9 - I_host9 
 I_host9_rast <- initialPopulation
 I_host9_rast[] <- I_host9
-I_host9_stack <- I_host9_rast
+I_host9_stack <- stack(I_host9_rast)
 
 if (number_of_hosts>9) {I_host10 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host10 <- as.matrix(host10_rast)
@@ -147,7 +147,7 @@ if(any(S_host10[initial_infection > 0] > 0)) I_host10[initial_infection > 0] <- 
 S_host10 <- S_host10 - I_host10
 I_host10_rast <- initialPopulation
 I_host10_rast[] <- I_host10
-I_host10_stack <- I_host10_rast
+I_host10_stack <- stack(I_host10_rast)
 }}}}}}}}}} 
 
 ## define matrix for all live trees (for calculating the percentage of infected)
@@ -208,7 +208,7 @@ for (tt in tstep){
   
   if (tt == tstep[1]) {
     
-    if(!any(S_host2 > 0)) stop('Simulation ended. All host2 are infected!')
+    if(!any(S_host1 > 0)) stop('Simulation ended. All host1 are infected!')
     
     ##CALCULATE OUTPUT TO PLOT: 
     # 1) values as % infected
@@ -283,8 +283,8 @@ for (tt in tstep){
         
     if (cnt %in% yearlyoutputlist){
       yearTracker = yearTracker+1
-      I_host2_stack <- stack(I_host2_rast, I_host2_stack)
       I_host1_stack <- stack(I_host1_rast, I_host1_stack)
+      I_host2_stack <- stack(I_host2_rast, I_host2_stack)
       dataForOutput$infectedHost1Individuals[yearTracker] <- sum(na.omit(I_host1_rast@data@values))/1000
       dataForOutput$infectedHost1Area[yearTracker] <- ncell(na.omit(I_host1_rast@data@values))*res(I_host1_rast)[2]*res(I_host1_rast)[1]
       dataForOutput$infectedHost2Individuals[yearTracker] <- sum(na.omit(I_host2_rast@data@values))/1000
