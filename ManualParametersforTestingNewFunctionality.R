@@ -14,23 +14,20 @@ windDir = 'NE'
 tempData = './layers/weather/weatherCoeff_2000_2014.nc'
 precipData = tempData
 number_of_hosts = 2
+host1_score = 10
+host2_score = 0
+host3_score = 5
+host4_score = NULL
+host5_score = NULL
+host6_score = NULL
+host7_score = NULL
+host8_score = NULL
+host9_score = NULL
+host10_score = NULL
 
 #setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
 I_oaks_rast2 <- pest(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData)
-dataList <- pest(host1_rast =host1_rast,host2_rast=host2_rast,allTrees= allTrees,initialPopulation= initialPopulation, start =start, end=end, seasonality=SS, s1=s1, s2=s2, sporeRate=sporeRate, windQ=windQ, windDir=windDir, tempData=tempData, precipData=precipData, number_of_hosts = number_of_hosts)
-
-stack_list <- c()
-stack_list <- list(I_host1_stack)
-stack_list <- list(stack_list, I_host2_stack)
-stack_list[[1]] <- stack(I_host1_rast, stack_list[[1]])
-
-ck <- c(host1_rast =host1_rast,host2_rast=host2_rast,allTrees= allTrees,initialPopulation= initialPopulation, seasonality=SS, s1=s1, s2=s2, sporeRate=sporeRate, windQ=windQ, windDir=windDir, tempData=tempData, precipData=precipData, number_of_hosts = number_of_hosts)
-ck <- c(ck, start=start)
-ck <- c(ck, end = end)
-ck <- c(ck, start = end)
-ck <- c(host1_rast =host1_rast,host2_rast=host2_rast,allTrees= allTrees,initialPopulation= initialPopulation, start =start, end=end, seasonality=SS, s1=s1, s2=s2, sporeRate=sporeRate, windQ=windQ, windDir=windDir, tempData=tempData, precipData=precipData, number_of_hosts = number_of_hosts)
-ck$start = end
-do.call(pest,ck)
+dataList <- pest(host1_rast =host1_rast,host2_rast=host2_rast,host3_rast = host3_rast, allTrees= allTrees,initialPopulation= initialPopulation, start =start, end=end, seasonality=SS, s1=s1, s2=s2, sporeRate=sporeRate, windQ=windQ, windDir=windDir, tempData=tempData, precipData=precipData, number_of_hosts = number_of_hosts, host1_score = host1_score, host2_score = host2_score, host3_score = host3_score)
 
 
 dataReturn <- dataList[[1]]

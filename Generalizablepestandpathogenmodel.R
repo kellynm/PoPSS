@@ -55,6 +55,7 @@ host9_score <- host9_score
 # Host 10
 host10_rast <- host10_rast
 host10_score <- host10_score
+host_score_list <- list(host1_score, host2_score, host3_score, host4_score, host5_score, host6_score, host7_score, host8_score, host9_score, host10_score)
 # All live trees (for calculating the proportion of infected) (tree density per hectare)
 all_trees_rast <- allTrees
 
@@ -76,6 +77,9 @@ S_host1 <- S_host1 - I_host1
 I_host1_rast <- initialPopulation
 I_host1_rast[] <- I_host1
 I_host1_stack <- stack(I_host1_rast)
+stack_list <- list(I_host1_stack)
+S_matrix_list <- list(S_host1)
+I_matrix_list <- list(I_host1)
 
 if (number_of_hosts>1) {I_host2 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host2 <- as.matrix(host2_rast)
@@ -84,6 +88,9 @@ S_host2 <- S_host2 - I_host2
 I_host2_rast <- initialPopulation
 I_host2_rast[] <- I_host2
 I_host2_stack <- stack(I_host2_rast)
+stack_list <- c(stack_list,I_host2_stack)
+S_matrix_list[[2]] <- S_host2
+I_matrix_list[[2]] <- I_host2
 
 if (number_of_hosts>2) {I_host3 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host3 <- as.matrix(host3_rast)
@@ -92,6 +99,9 @@ S_host3 <- S_host3 - I_host3
 I_host3_rast <- initialPopulation
 I_host3_rast[] <- I_host3
 I_host3_stack <- stack(I_host3_rast)
+stack_list <- c(stack_list,I_host3_stack)
+S_matrix_list[[3]] <- S_host3
+I_matrix_list[[3]] <- I_host3
 
 if (number_of_hosts>3) {I_host4 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host4 <- as.matrix(host4_rast)
@@ -100,6 +110,9 @@ S_host4 <- S_host4 - I_host4
 I_host4_rast <- initialPopulation
 I_host4_rast[] <- I_host4
 I_host4_stack <- stack(I_host4_rast)
+stack_list <- c(stack_list,I_host4_stack)
+S_matrix_list[[4]] <- S_host4
+I_matrix_list[[4]] <- I_host4
 
 if (number_of_hosts>4) {I_host5 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host5 <- as.matrix(host5_rast)
@@ -108,6 +121,9 @@ S_host5 <- S_host5 - I_host5
 I_host5_rast <- initialPopulation
 I_host5_rast[] <- I_host5
 I_host5_stack <- stack(I_host5_rast)
+stack_list <- c(stack_list,I_host5_stack)
+S_matrix_list[[5]] <- S_host5
+I_matrix_list[[5]] <- I_host5
 
 if (number_of_hosts>5) {I_host6 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host6 <- as.matrix(host6_rast)
@@ -116,6 +132,9 @@ S_host6 <- S_host6 - I_host6
 I_host6_rast <- initialPopulation
 I_host6_rast[] <- I_host6
 I_host6_stack <- stack(I_host6_rast)
+stack_list <- c(stack_list,I_host6_stack)
+S_matrix_list[[6]] <- S_host6
+I_matrix_list[[6]] <- I_host6
 
 if (number_of_hosts>6) {I_host7 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host7 <- as.matrix(host7_rast)
@@ -124,6 +143,9 @@ S_host7 <- S_host7 - I_host7
 I_host7_rast <- initialPopulation
 I_host7_rast[] <- I_host7
 I_host7_stack <- stack(I_host7_rast)
+stack_list <- c(stack_list,I_host7_stack)
+S_matrix_list[[7]] <- S_host7
+I_matrix_list[[7]] <- I_host7
 
 if (number_of_hosts>7) {I_host8 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host8 <- as.matrix(host8_rast)
@@ -132,6 +154,9 @@ S_host8 <- S_host8 - I_host8
 I_host8_rast <- initialPopulation
 I_host8_rast[] <- I_host8
 I_host8_stack <- stack(I_host8_rast)
+stack_list <- c(stack_list,I_host8_stack)
+S_matrix_list[[8]] <- S_host8
+I_matrix_list[[8]] <- I_host8
 
 if (number_of_hosts>8) {I_host9 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host9 <- as.matrix(host9_rast)
@@ -140,6 +165,9 @@ S_host9 <- S_host9 - I_host9
 I_host9_rast <- initialPopulation
 I_host9_rast[] <- I_host9
 I_host9_stack <- stack(I_host9_rast)
+stack_list <- c(stack_list,I_host9_stack)
+S_matrix_list[[9]] <- S_host9
+I_matrix_list[[9]] <- I_host9
 
 if (number_of_hosts>9) {I_host10 <- matrix(0, nrow=n_rows, ncol=n_cols)
 S_host10 <- as.matrix(host10_rast)
@@ -148,6 +176,9 @@ S_host10 <- S_host10 - I_host10
 I_host10_rast <- initialPopulation
 I_host10_rast[] <- I_host10
 I_host10_stack <- stack(I_host10_rast)
+stack_list <- c(stack_list,I_host10_stack)
+S_matrix_list[[10]] <- S_host10
+I_matrix_list[[10]] <- I_host10
 }}}}}}}}}} 
 
 ## define matrix for all live trees (for calculating the percentage of infected)
@@ -220,12 +251,7 @@ for (tt in tstep){
     # 3) values as 0 (non infected) and 1 (infected) cell
     #I_host2_rast[] <- ifelse(I_host2_rast[] > 0, 1, 0) 
     #I_host2_rast[] <- ifelse(I_host2_rast[] > 0, 1, NA) 
-    
-    #WRITE TO FILE:
-    #writeRaster(I_host2_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
-    #writeRaster(I_host2_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output
-    #writeRaster(I_host2_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='LOG1S', overwrite=TRUE)  # 0=non infected 1=infected output
-    
+
   }else{
     
     ## check if there are any susceptible host2 left on the landscape (IF NOT continue LOOP till the end)
@@ -238,11 +264,15 @@ for (tt in tstep){
     if (seasonality == 'YES' & !any(substr(tt,6,7) %in% months_msk)) next
     
     ## Total weather suitability:
-    W <- mcf.array[,,cnt] * ccf.array[,,cnt]
+    weather_suitability <- mcf.array[,,cnt] * ccf.array[,,cnt]
     
     ## GENERATE SPORES:  
     set.seed(42)
-    spores_mat <- SporeGenCpp(I_host1, W, rate = spore_rate) # rate spores/week
+    infected_matrix <- matrix(0, nrow=res_win, ncol=res_win)
+    for (i in 1:number_of_hosts){
+      infected_matrix <- infected_matrix + (I_matrix_list[[i]]*(host_score_list[[i]]/10))
+    }
+    spores_mat <- SporeGenCpp(infected_matrix, weather_suitability, rate = spore_rate) # rate spores/week
     
     ##SPORE DISPERSAL:  
     #'List'
@@ -250,25 +280,29 @@ for (tt in tstep){
       
       #Check if predominant wind direction has been specified correctly:
       if (!(pwdir %in% c('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'))) stop('A predominant wind direction must be specified: N, NE, E, SE, S, SW, W, NW')
-      out <- SporeDispCppWind_mh(spores_mat, S_UM=S_host1, S_OK=S_host2, I_UM=I_host1, I_OK=I_host2, N_LVE=all_trees, 
-                                 W, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=kappa)
+      out <- SporeDispCppWind_mh(spores_mat, S_UM=S_matrix_list[[1]], S_OK=S_matrix_list[[2]], I_UM=I_matrix_list[[1]], I_OK=I_matrix_list[[2]], N_LVE=all_trees, 
+                                 weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=kappa)
     
     }else{
-      out <- SporeDispCpp_mh(spores_mat, S_UM=S_host1, S_OK=S_host2, I_UM=I_host1, I_OK=I_host2, N_LVE=all_trees,
-                             W, rs=res_win, rtype=kernelType, scale1=20.57) ##TO DO
+      out <- SporeDispCpp_mh(spores_mat, S_UM=S_matrix_list[[1]], S_OK=S_matrix_list[[2]], I_UM=I_matrix_list[[1]], I_OK=I_matrix_list[[2]], N_LVE=all_trees,
+                             weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57) ##TO DO
     }  
     
     ## update R matrices:
-    # Host 1
-    S_host1 <- out$S_UM 
-    I_host1 <- out$I_UM 
-    # Host 2
-    S_host2 <- out$S_OK 
-    I_host2 <- out$I_OK
+    S_matrix_list[[1]] <- out$S_UM
+    I_matrix_list[[1]] <- out$I_UM
+    S_matrix_list[[2]] <- out$S_OK
+    I_matrix_list[[2]] <- out$I_OK
+    # # Host 1
+    # S_host1 <- out$S_UM 
+    # I_host1 <- out$I_UM 
+    # # Host 2
+    # S_host2 <- out$S_OK 
+    # I_host2 <- out$I_OK
     
     ##CALCULATE OUTPUT TO PLOT:
-    I_host2_rast[] <- I_host2
-    I_host1_rast[] <- I_host1
+    I_host2_rast[] <- I_matrix_list[[2]]
+    I_host1_rast[] <- I_matrix_list[[1]]
     
     # 1) values as % infected
     #I_host2_rast[] <- ifelse(I_host2_rast[] == 0, NA, I_host2_rast[]/host2_rast[])
@@ -289,13 +323,6 @@ for (tt in tstep){
       dataForOutput$infectedHost1Area[yearTracker] <- ncell(na.omit(I_host1_rast@data@values))*res(I_host1_rast)[2]*res(I_host1_rast)[1]
       dataForOutput$infectedHost2Individuals[yearTracker] <- sum(na.omit(I_host2_rast@data@values))/1000
       dataForOutput$infectedHost2Area[yearTracker] <- ncell(na.omit(I_host2_rast@data@values))*res(I_host2_rast)[2]*res(I_host2_rast)[1]
-      
-      ## WRITE TO FILE:
-      #writeRaster(I_host2_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='FLT4S', overwrite=TRUE) # % infected as output
-      #writeRaster(I_host2_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='INT1U', overwrite=TRUE) # nbr. infected hosts as output
-      #writeRaster(I_host2_rast, filename=paste('./', fOutput, '/', opt$output, '_', sprintf(formatting_str, cnt), sep=''), format='HFA', datatype='LOG1S', overwrite=TRUE)  # 0=non infected 1=infected output
-      #return(I_host2_rast)
-      
     }
     
   }

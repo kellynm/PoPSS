@@ -3,10 +3,10 @@ r <<- raster("./layers/UMCA_den_100m.img")
 pal <<- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "transparent")
 usCounties <<- readOGR("./layers/usLower48Counties.shp")
 usStates <<- readOGR("./layers/usLower48States.shp")
-
+dataList <<- c()
 pest_vars <<- list(host1_rast = NULL,host1_score = NULL, host2_rast=NULL,host2_score=NULL,host3_rast=NULL,host3_score=NULL, host4_rast=NULL,host4_score=NULL,host5_rast=NULL,host5_score=NULL,
                   host6_rast=NULL,host6_score=NULL,host7_rast=NULL,host7_score=NULL,host8_rast=NULL,host8_score=NULL,host9_rast=NULL,host9_score=NULL,host10_rast=NULL,host10_score=NULL,
-                  allTrees=NULL,initialPopulation=NULL, start=2000, end=2010, seasonality = 'NO', s1 = 1 , s2 = 12, sporeRate = 4.4, windQ ='NO', windDir=NULL, tempData=NULL, precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1)
+                  allTrees=NULL,initialPopulation=NULL, start=2000, end=2010, seasonality = 'NO', s1 = 1 , s2 = 12, sporeRate = 4.4, windQ =NULL, windDir=NULL, tempData=NULL, precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1)
 
 function(input, output, session) {
   options(shiny.maxRequestSize=70000*1024^2) 
@@ -76,7 +76,7 @@ function(input, output, session) {
   observeEvent(input$sporeRate, {pest_vars$sporeRate <<- input$sporeRate})
   observeEvent(input$kernelType, {pest_vars$kernelType <<- input$kernelType})
   observeEvent(input$hostMulti, {pest_vars$number_of_hosts <<- input$hostMulti})
-  observeEvent(input$windQ, {pest_vars$windQ = input$windQ})
+  observeEvent(input$windQ, {pest_vars$windQ <<- input$windQ})
   observeEvent(input$windDir, {pest_vars$windDir <<- input$windDir})
   observeEvent(input$kappa, {pest_vars$kappa <<- input$kappa})
   observeEvent(input$tempData, {tempData <- input$tempData$datapath

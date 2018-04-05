@@ -24,19 +24,14 @@ IntegerMatrix SporeGenCpp(IntegerMatrix infected, NumericMatrix weather_suitabil
     for (int col = 0; col < ncol; col++){
       
       if (infected(row, col) > 0){  //if infected > 0, generate spores proportional to production rate * weather suitability
-
         double lambda = rate * weather_suitability(row, col);
         NumericVector inf = rpois(infected(row, col), lambda);
         int s = sum(inf);
         SP(row, col) = s;
-
       }
-   
     }
   }
-  
   return SP;
-
 }
 
 
