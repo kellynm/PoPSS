@@ -280,25 +280,25 @@ for (tt in tstep){
       
       #Check if predominant wind direction has been specified correctly:
       if (!(pwdir %in% c('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'))) stop('A predominant wind direction must be specified: N, NE, E, SE, S, SW, W, NW')
-      out <- SporeDispCppWind_mh(spores_mat, S_UM=S_matrix_list[[1]], S_OK=S_matrix_list[[2]], I_UM=I_matrix_list[[1]], I_OK=I_matrix_list[[2]], N_LVE=all_trees, 
+      out <- SporeDispCppWind_mh(spores_mat, S_host1_mat=S_matrix_list[[1]], S_host2_mat=S_matrix_list[[2]], I_host1_mat=I_matrix_list[[1]], I_host2_mat=I_matrix_list[[2]], N_LVE=all_trees, 
                                  weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=kappa)
     
     }else{
-      out <- SporeDispCpp_mh(spores_mat, S_UM=S_matrix_list[[1]], S_OK=S_matrix_list[[2]], I_UM=I_matrix_list[[1]], I_OK=I_matrix_list[[2]], N_LVE=all_trees,
+      out <- SporeDispCpp_mh(spores_mat, S_host1_mat=S_matrix_list[[1]], S_host2_mat=S_matrix_list[[2]], I_host1_mat=I_matrix_list[[1]], I_host2_mat=I_matrix_list[[2]], N_LVE=all_trees,
                              weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57) ##TO DO
     }  
     
     ## update R matrices:
-    S_matrix_list[[1]] <- out$S_UM
-    I_matrix_list[[1]] <- out$I_UM
-    S_matrix_list[[2]] <- out$S_OK
-    I_matrix_list[[2]] <- out$I_OK
+    S_matrix_list[[1]] <- out$S_host1_mat
+    I_matrix_list[[1]] <- out$I_host1_mat
+    S_matrix_list[[2]] <- out$S_host2_mat
+    I_matrix_list[[2]] <- out$I_host2_mat
     # # Host 1
-    # S_host1 <- out$S_UM 
-    # I_host1 <- out$I_UM 
+    # S_host1 <- out$S_host1_mat 
+    # I_host1 <- out$I_host1_mat 
     # # Host 2
-    # S_host2 <- out$S_OK 
-    # I_host2 <- out$I_OK
+    # S_host2 <- out$S_host2_mat 
+    # I_host2 <- out$I_host2_mat
     
     ##CALCULATE OUTPUT TO PLOT:
     I_host2_rast[] <- I_matrix_list[[2]]
