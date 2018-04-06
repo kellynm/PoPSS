@@ -36,15 +36,15 @@ IntegerMatrix SporeGenCpp(IntegerMatrix infected, NumericMatrix weather_suitabil
 
 
 // [[Rcpp::export]]
-List SporeDispCpp_mh(IntegerMatrix x, IntegerMatrix S_UM, IntegerMatrix S_OK, IntegerMatrix I_UM, IntegerMatrix I_OK, 
+List SporeDispCpp_mh(IntegerMatrix spore_matrix, IntegerMatrix S_UM, IntegerMatrix S_OK, IntegerMatrix I_UM, IntegerMatrix I_OK, 
                      IntegerMatrix N_LVE, NumericMatrix weather_suitability,   //use different name than the functions in myfunctions_SOD.r
                 double rs, String rtype, double scale1,
                 double scale2=NA_REAL,  //default values
                 double gamma=NA_REAL){  //default values
 
   // internal variables //
-  int nrow = x.nrow(); 
-  int ncol = x.ncol();
+  int nrow = spore_matrix.nrow(); 
+  int ncol = spore_matrix.ncol();
   int row0;
   int col0;
 
@@ -58,13 +58,13 @@ List SporeDispCpp_mh(IntegerMatrix x, IntegerMatrix S_UM, IntegerMatrix S_OK, In
   Function sample("sample");
   //Function rcauchy("rcauchy");  
 
-  //LOOP THROUGH EACH CELL of the input matrix 'x' (this should be the study area)
+  //LOOP THROUGH EACH CELL of the input matrix 'spore_matrix' (this should be the study area)
   for (int row = 0; row < nrow; row++) {
     for (int col = 0; col < ncol; col++){
       
-      if(x(row,col) > 0){  //if spores in cell (row,col) > 0, disperse
+      if(spore_matrix(row,col) > 0){  //if spores in cell (row,col) > 0, disperse
         
-        for(int sp = 1; (sp <= x(row,col)); sp++){
+        for(int sp = 1; (sp <= spore_matrix(row,col)); sp++){
           
           //GENERATE DISTANCES:
           if (rtype == "Cauchy") 
@@ -158,7 +158,7 @@ List SporeDispCpp_mh(IntegerMatrix x, IntegerMatrix S_UM, IntegerMatrix S_OK, In
 }
 
 // [[Rcpp::export]]
-List SporeDispCppWind_mh(IntegerMatrix x, IntegerMatrix S_UM, IntegerMatrix S_OK, IntegerMatrix I_UM, IntegerMatrix I_OK, 
+List SporeDispCppWind_mh(IntegerMatrix spore_matrix, IntegerMatrix S_UM, IntegerMatrix S_OK, IntegerMatrix I_UM, IntegerMatrix I_OK, 
                          IntegerMatrix N_LVE, NumericMatrix weather_suitability,   //use different name than the functions in myfunctions_SOD.r
                 double rs, String rtype, double scale1, 
                 String wdir, int kappa,
@@ -166,8 +166,8 @@ List SporeDispCppWind_mh(IntegerMatrix x, IntegerMatrix S_UM, IntegerMatrix S_OK
                 double gamma=NA_REAL){  //default values
 
   // internal variables //
-  int nrow = x.nrow(); 
-  int ncol = x.ncol();
+  int nrow = spore_matrix.nrow(); 
+  int ncol = spore_matrix.ncol();
   int row0;
   int col0;
 
@@ -182,13 +182,13 @@ List SporeDispCppWind_mh(IntegerMatrix x, IntegerMatrix S_UM, IntegerMatrix S_OK
   Function rvm("rvm");
   Function sample("sample");
 
-  //LOOP THROUGH EACH CELL of the input matrix 'x' (this should be the study area)
+  //LOOP THROUGH EACH CELL of the input matrix 'spore_matrix' (this should be the study area)
   for (int row = 0; row < nrow; row++) {
     for (int col = 0; col < ncol; col++){
       
-      if(x(row,col) > 0){  //if spores in cell (row,col) > 0, disperse
+      if(spore_matrix(row,col) > 0){  //if spores in cell (row,col) > 0, disperse
         
-        for(int sp = 1; (sp <= x(row,col)); sp++){
+        for(int sp = 1; (sp <= spore_matrix(row,col)); sp++){
           
           //GENERATE DISTANCES:
           if (rtype == "Cauchy") 
@@ -336,214 +336,15 @@ IntegerMatrix SporeGenCpp_MH(IntegerMatrix I_UM, IntegerMatrix I_LD, List HW, Nu
         s = s + sum(inf);
       }
       
-      
       SP(row, col) = s;
-      
+
     }
   }//END OF LOOP
-  
-  
   return SP;
-  
-  
 }
 
 // [[Rcpp::export]]
-List SporeDispCpp(IntegerMatrix x, IntegerMatrix S, IntegerMatrix I, NumericMatrix W,   //use different name than the functions in myfunctions_SOD.r
-                  double rs, String rtype, double scale1,
-                  double scale2=NA_REAL,  //default values
-                  double gamma=NA_REAL){  //default values
-  
-  // internal variables //
-  int nrow = x.nrow(); 
-  int ncol = x.ncol();
-  int row0;
-  int col0;
-  
-  double dist;
-  double theta;
-  double PropS;
-  
-  //for Rcpp random numbers
-  RNGScope scope;
-  
-  Function sample("sample");
-  //Function rcauchy("rcauchy");  
-  
-  //LOOP THROUGH EACH CELL of the input matrix 'x' (this should be the study area)
-  for (int row = 0; row < nrow; row++) {
-    for (int col = 0; col < ncol; col++){
-      
-      if(x(row,col) > 0){  //if spores in cell (row,col) > 0, disperse
-        
-        for(int sp = 1; (sp <= x(row,col)); sp++){
-          
-          //GENERATE DISTANCES:
-          if (rtype == "Cauchy") 
-            dist = abs(R::rcauchy(0, scale1));
-          else if (rtype == "Cauchy Mixture"){
-            if (gamma >= 1 || gamma <= 0) stop("The parameter gamma must range between (0-1)");
-            NumericVector fv = sample(Range(1, 2), 1, false, NumericVector::create(gamma, 1-gamma));
-            int f = fv[0];
-            if(f == 1) 
-              dist = abs(R::rcauchy(0, scale1));
-            else
-              dist = abs(R::rcauchy(0, scale2));
-          }
-          else 
-            stop("The parameter rtype must be set to either 'Cauchy' or 'Cauchy Mixture'");
-          
-          //GENERATE ANGLES (using Uniform distribution):
-          theta = R::runif(-PI, PI);
-          
-          //calculate new row and col position for the dispersed spore unit (using dist and theta)
-          row0 = row - round((dist * cos(theta)) / rs);
-          col0 = col + round((dist * sin(theta)) / rs);
-          
-          
-          if (row0 < 0 || row0 >= nrow) continue;     //outside the region
-          if (col0 < 0 || col0 >= ncol) continue;     //outside the region
-          
-          //if susceptibles are present in current cell, calculate prob of infection
-          if(S(row0, col0) > 0){  
-            PropS = double(S(row0, col0)) / (S(row0, col0) + I(row0, col0));
-            double U = R::runif(0,1);
-            double Prob = PropS * W(row0, col0); //weather suitability affects prob success! 
-            
-            //if U < Prob then one unit becomes infected
-            if (U < Prob){    
-              I(row0, col0) = I(row0, col0) + 1; //update infected
-              S(row0, col0) = S(row0, col0) - 1; //update susceptible
-            } 
-          }//ENF IF
-          
-          
-        }//END LOOP OVER ALL SPORES IN CURRENT CELL GRID
-        
-        
-      }//END IF  
-      
-    }   
-  }//END LOOP OVER ALL GRID CELLS
-  
-  //return List::create(Named("I")=I, Named("S")=S);
-  return List::create(
-    _["S"] = S, 
-    _["I"] = I
-  );
-  
-}
-
-// [[Rcpp::export]]
-List SporeDispCppWind(IntegerMatrix x, IntegerMatrix S, IntegerMatrix I, NumericMatrix W,   //use different name than the functions in myfunctions_SOD.r
-                      double rs, String rtype, double scale1, 
-                      String wdir, int kappa,
-                      double scale2=NA_REAL,  //default values
-                      double gamma=NA_REAL){  //default values
-  
-  // internal variables //
-  int nrow = x.nrow(); 
-  int ncol = x.ncol();
-  int row0;
-  int col0;
-  
-  double dist;
-  double theta;
-  double PropS;
-  
-  //for Rcpp random numbers
-  RNGScope scope;
-  
-  //Function rcauchy("rcauchy");
-  Function rvm("rvm");
-  Function sample("sample");
-  
-  //LOOP THROUGH EACH CELL of the input matrix 'x' (this should be the study area)
-  for (int row = 0; row < nrow; row++) {
-    for (int col = 0; col < ncol; col++){
-      
-      if(x(row,col) > 0){  //if spores in cell (row,col) > 0, disperse
-        
-        for(int sp = 1; (sp <= x(row,col)); sp++){
-          
-          //GENERATE DISTANCES:
-          if (rtype == "Cauchy") 
-            dist = abs(R::rcauchy(0, scale1));
-          else if (rtype == "Cauchy Mixture"){
-            if (gamma >= 1 || gamma <= 0) stop("The parameter gamma must range between (0-1)");
-            NumericVector fv = sample(Range(1, 2), 1, false, NumericVector::create(gamma, 1-gamma));
-            int f = fv[0];
-            if(f == 1) 
-              dist = abs(R::rcauchy(0, scale1));
-            else 
-              dist = abs(R::rcauchy(0, scale2));
-          }
-          else 
-            stop("The parameter rtype must be set to either 'Cauchy' or 'Cauchy Mixture'");
-          
-          //GENERATE ANGLES (using Von Mises distribution):
-          if(kappa <= 0)  // kappa=concentration
-            stop("kappa must be greater than zero!");
-          
-          //predominant wind dir
-          if (wdir == "N") 
-            theta = as<double>(rvm(1, 0 * (PI/180), kappa));  
-          else if (wdir == "NE")
-            theta = as<double>(rvm(1, 45 * (PI/180), kappa));  
-          else if(wdir == "E")
-            theta = as<double>(rvm(1, 90 * (PI/180), kappa));  
-          else if(wdir == "SE")
-            theta = as<double>(rvm(1, 135 * (PI/180), kappa));  
-          else if(wdir == "S")
-            theta = as<double>(rvm(1, 180 * (PI/180), kappa));  
-          else if(wdir == "SW")
-            theta = as<double>(rvm(1, 225 * (PI/180), kappa));  
-          else if(wdir == "W")
-            theta = as<double>(rvm(1, 270 * (PI/180), kappa));  
-          else
-            theta = as<double>(rvm(1, 315 * (PI/180), kappa));
-          
-          
-          //calculate new row and col position for the dispersed spore unit (using dist and theta)
-          row0 = row - round((dist * cos(theta)) / rs);
-          col0 = col + round((dist * sin(theta)) / rs);
-          
-          
-          if (row0 < 0 || row0 >= nrow) continue;     //outside the region
-          if (col0 < 0 || col0 >= ncol) continue;     //outside the region
-          
-          //if susceptibles are present in current cell, calculate prob of infection
-          if(S(row0, col0) > 0){  
-            PropS = double(S(row0, col0)) / (S(row0, col0) + I(row0, col0));
-            double U = R::runif(0,1);
-            double Prob = PropS * W(row0, col0); //weather suitability affects prob success! 
-            
-            //if U < Prob then one unit becomes infected
-            if (U < Prob){    
-              I(row0, col0) = I(row0, col0) + 1; //update infected
-              S(row0, col0) = S(row0, col0) - 1; //update susceptible
-            } 
-          }//ENF IF
-          
-          
-        }//END LOOP OVER ALL SPORES IN CURRENT CELL GRID
-        
-        
-      }//END IF 
-      
-    }   
-  }//END LOOP OVER ALL GRID CELLS
-  
-  //return List::create(Named("I")=I, Named("S")=S);
-  return List::create(
-    _["S"] = S, 
-    _["I"] = I
-  );
-  
-}
-
-// [[Rcpp::export]]
-List SporeDispCpp_MH(IntegerMatrix x, 
+List SporeDispCpp_MH(IntegerMatrix spore_matrix, 
                      IntegerMatrix S_UM, IntegerMatrix S_LD, IntegerMatrix S_OK, 
                      IntegerMatrix I_UM, IntegerMatrix I_LD, IntegerMatrix I_OK, 
                      IntegerMatrix N_LVE,
@@ -554,8 +355,8 @@ List SporeDispCpp_MH(IntegerMatrix x,
 {  
   
   // internal variables //
-  int nrow = x.nrow(); 
-  int ncol = x.ncol();
+  int nrow = spore_matrix.nrow(); 
+  int ncol = spore_matrix.ncol();
   int row0;
   int col0;
   
@@ -569,13 +370,13 @@ List SporeDispCpp_MH(IntegerMatrix x,
   Function sample("sample");
   //Function rcauchy("rcauchy");  
   
-  //LOOP THROUGH EACH CELL of the input matrix 'x' (this should be the study area)
+  //LOOP THROUGH EACH CELL of the input matrix 'spore_matrix' (this should be the study area)
   for (int row = 0; row < nrow; row++) {
     for (int col = 0; col < ncol; col++){
       
-      if(x(row,col) > 0){  //if spores in cell (row,col) > 0, disperse
+      if(spore_matrix(row,col) > 0){  //if spores in cell (row,col) > 0, disperse
         
-        for(int sp = 1; (sp <= x(row,col)); sp++){
+        for(int sp = 1; (sp <= spore_matrix(row,col)); sp++){
           
           //GENERATE DISTANCES:
           if (rtype == "Cauchy") 
@@ -710,7 +511,7 @@ List SporeDispCpp_MH(IntegerMatrix x,
 } //END OF FUNCTION				  
 
 // [[Rcpp::export]]
-List SporeDispCppWind_MH(IntegerMatrix x, 
+List SporeDispCppWind_MH(IntegerMatrix spore_matrix, 
                          IntegerMatrix S_UM, IntegerMatrix S_LD, IntegerMatrix S_OK, 
                          IntegerMatrix I_UM, IntegerMatrix I_LD, IntegerMatrix I_OK, 
                          IntegerMatrix N_LVE,
@@ -722,8 +523,8 @@ List SporeDispCppWind_MH(IntegerMatrix x,
 { 
   
   // internal variables //
-  int nrow = x.nrow(); 
-  int ncol = x.ncol();
+  int nrow = spore_matrix.nrow(); 
+  int ncol = spore_matrix.ncol();
   int row0;
   int col0;
   
@@ -738,13 +539,13 @@ List SporeDispCppWind_MH(IntegerMatrix x,
   Function rvm("rvm");
   Function sample("sample");
   
-  //LOOP THROUGH EACH CELL of the input matrix 'x' (this should be the study area)
+  //LOOP THROUGH EACH CELL of the input matrix 'spore_matrix' (this should be the study area)
   for (int row = 0; row < nrow; row++) {
     for (int col = 0; col < ncol; col++){
       
-      if(x(row,col) > 0){  //if spores in cell (row,col) > 0, disperse
+      if(spore_matrix(row,col) > 0){  //if spores in cell (row,col) > 0, disperse
         
-        for(int sp = 1; (sp <= x(row,col)); sp++){
+        for(int sp = 1; (sp <= spore_matrix(row,col)); sp++){
           
           //GENERATE DISTANCES:
           if (rtype == "Cauchy") 
