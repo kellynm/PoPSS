@@ -40,14 +40,14 @@ List SporeDispCpp_mh(IntegerMatrix spore_matrix,
                      IntegerMatrix I_host1_mat, IntegerMatrix I_host2_mat, 
                      IntegerMatrix N_LVE, NumericMatrix weather_suitability,   //use different name than the functions in myfunctions_SOD.r
                 double rs, String rtype, double scale1,
-                IntegerMatrix S_host3_mat=R_NilValue, IntegerMatrix I_host3_mat=R_NilValue,
-                IntegerMatrix S_host4_mat=R_NilValue, IntegerMatrix I_host4_mat=R_NilValue,
-                IntegerMatrix S_host5_mat=R_NilValue, IntegerMatrix I_host5_mat=R_NilValue,
-                IntegerMatrix S_host6_mat=R_NilValue, IntegerMatrix I_host6_mat=R_NilValue,
-                IntegerMatrix S_host7_mat=R_NilValue, IntegerMatrix I_host7_mat=R_NilValue,
-                IntegerMatrix S_host8_mat=R_NilValue, IntegerMatrix I_host8_mat=R_NilValue,
-                IntegerMatrix S_host9_mat=R_NilValue, IntegerMatrix I_host9_mat=R_NilValue,
-                IntegerMatrix S_host10_mat=R_NilValue, IntegerMatrix I_host10_mat=R_NilValue,
+                IntegerMatrix S_host3_mat, IntegerMatrix I_host3_mat,
+                IntegerMatrix S_host4_mat, IntegerMatrix I_host4_mat,
+                IntegerMatrix S_host5_mat, IntegerMatrix I_host5_mat,
+                IntegerMatrix S_host6_mat, IntegerMatrix I_host6_mat,
+                IntegerMatrix S_host7_mat, IntegerMatrix I_host7_mat,
+                IntegerMatrix S_host8_mat, IntegerMatrix I_host8_mat,
+                IntegerMatrix S_host9_mat, IntegerMatrix I_host9_mat,
+                IntegerMatrix S_host10_mat, IntegerMatrix I_host10_mat,
                 double scale2=NA_REAL,  //default values
                 double gamma=NA_REAL){  //default values
 
@@ -115,11 +115,11 @@ List SporeDispCpp_mh(IntegerMatrix spore_matrix,
               //if U < Prob then one host will become infected
               if (U < Prob){
                 
-                double PropS_UM = double(S_host1_mat(row0, col0)) / (S_host1_mat(row0, col0) + S_host2_mat(row0, col0)); //fractions of susceptible host in cell
-                double PropS_OK = double(S_host2_mat(row0, col0)) / (S_host1_mat(row0, col0) + S_host2_mat(row0, col0));
+                double prop_S_host1 = double(S_host1_mat(row0, col0)) / (S_host1_mat(row0, col0) + S_host2_mat(row0, col0)); //fractions of susceptible host in cell
+                double prop_S_host2 = double(S_host2_mat(row0, col0)) / (S_host1_mat(row0, col0) + S_host2_mat(row0, col0));
                 
                 //sample which of the three hosts will be infected
-                NumericVector sv = sample(NumericVector::create(1, 2), 1, false, NumericVector::create(PropS_UM, PropS_OK));
+                NumericVector sv = sample(NumericVector::create(1, 2), 1, false, NumericVector::create(prop_S_host1, prop_S_host2));
                 int s = sv[0];
                 if (s == 1){
                   I_host1_mat(row0, col0) = I_host1_mat(row0, col0) + 1; //update infected UMCA
@@ -136,9 +136,9 @@ List SporeDispCpp_mh(IntegerMatrix spore_matrix,
 
             //if UMCA-only susceptibles are present in cell, calculate prob of infection
             if(S_host1_mat(row0, col0) > 0){
-              double PropS_UM = double(S_host1_mat(row0, col0)) / N_LVE(row0, col0); //fractions of given host in cell
+              double prop_S_host1 = double(S_host1_mat(row0, col0)) / N_LVE(row0, col0); //fractions of given host in cell
               double U = R::runif(0,1);
-              double Prob = PropS_UM * weather_suitability(row0, col0); //weather suitability affects prob success!
+              double Prob = prop_S_host1 * weather_suitability(row0, col0); //weather suitability affects prob success!
               //if U < Prob then one host will become infected
               if (U < Prob){
                 I_host1_mat(row0, col0) = I_host1_mat(row0, col0) + 1; //update infected UMCA
@@ -193,6 +193,7 @@ List SporeDispCppWind_mh(IntegerMatrix spore_matrix,
   double dist;
   double theta;
   double PropS;
+  double total_hosts;
   
   //for Rcpp random numbers
   RNGScope scope;
@@ -251,16 +252,19 @@ List SporeDispCppWind_mh(IntegerMatrix spore_matrix,
           row0 = row - round((dist * cos(theta)) / rs);
           col0 = col + round((dist * sin(theta)) / rs);
           
-          if (row0 < 0 || row0 >= nrow) continue;     //outside the region
-          if (col0 < 0 || col0 >= ncol) continue;     //outside the region
+          if (row0 < 0 || row0 >= nrow) continue;     //outside of the study area
+          if (col0 < 0 || col0 >= ncol) continue;     //outside of the study area
           
-          //if distance is within same pixel challenge all SOD hosts, otherwise challenge UMCA only
+          //if distance is within same pixel challenge all hosts, otherwise challenge only hosts with score above 0
           if (row0 == row && col0 == col){
             
             //if susceptible hosts are present in cell, calculate prob of infection
-            if(S_host1_mat(row0, col0) > 0 || S_host2_mat(row0, col0) > 0){
+            if(S_host1_mat(row0, col0) > 0 || S_host2_mat(row0, col0) > 0 || S_host3_mat(row0, col0) > 0 || S_host4_mat(row0, col0) > 0 || S_host5_mat(row0, col0) > 0 ||
+               S_host6_mat(row0, col0) > 0 || S_host7_mat(row0, col0) > 0 || S_host8_mat(row0, col0) > 0 || S_host9_mat(row0, col0) > 0 || S_host10_mat(row0, col0) > 0 ){
     	        
-              PropS = double(S_host1_mat(row0, col0) + S_host2_mat(row0, col0)) / N_LVE(row0, col0);;              
+    	        total_hosts = double(S_host1_mat(row0, col0) + S_host2_mat(row0, col0) + S_host3_mat(row0, col0) + S_host4_mat(row0, col0) + S_host5_mat(row0, col0) +
+    	          S_host6_mat(row0, col0) + S_host7_mat(row0, col0) + S_host8_mat(row0, col0) + S_host9_mat(row0, col0) + S_host10_mat(row0, col0));
+              PropS = total_hosts / N_LVE(row0, col0);;              
               
               double U = R::runif(0,1);
               double Prob = PropS * weather_suitability(row0, col0); //weather suitability affects prob success!
@@ -268,11 +272,19 @@ List SporeDispCppWind_mh(IntegerMatrix spore_matrix,
               //if U < Prob then one host will become infected
               if (U < Prob){
                 
-                double PropS_UM = double(S_host1_mat(row0, col0)) / (S_host1_mat(row0, col0) + S_host2_mat(row0, col0)); //fractions of susceptible host in cell
-                double PropS_OK = double(S_host2_mat(row0, col0)) / (S_host1_mat(row0, col0) + S_host2_mat(row0, col0));
+                double prop_S_host1 = double(S_host1_mat(row0, col0)) / total_hosts; //fractions of susceptible host in cell
+                double prop_S_host2 = double(S_host2_mat(row0, col0)) / total_hosts;
+                double prop_S_host3 = double(S_host3_mat(row0, col0)) / total_hosts;
+                double prop_S_host4 = double(S_host4_mat(row0, col0)) / total_hosts;
+                double prop_S_host5 = double(S_host5_mat(row0, col0)) / total_hosts;
+                double prop_S_host6 = double(S_host6_mat(row0, col0)) / total_hosts;
+                double prop_S_host7 = double(S_host7_mat(row0, col0)) / total_hosts;
+                double prop_S_host8 = double(S_host8_mat(row0, col0)) / total_hosts;
+                double prop_S_host9 = double(S_host9_mat(row0, col0)) / total_hosts;
+                double prop_S_host10 = double(S_host10_mat(row0, col0)) / total_hosts;
                 
-                //sample which of the three hosts will be infected
-                NumericVector sv = sample(NumericVector::create(1, 2), 1, false, NumericVector::create(PropS_UM, PropS_OK));
+                //sample which host will be infected
+                NumericVector sv = sample(NumericVector::create(1, 10), 1, false, NumericVector::create(prop_S_host1, prop_S_host2));
                 int s = sv[0];
                 if (s == 1){
                   I_host1_mat(row0, col0) = I_host1_mat(row0, col0) + 1; //update infected UMCA
@@ -289,9 +301,9 @@ List SporeDispCppWind_mh(IntegerMatrix spore_matrix,
 
             //if UMCA-only susceptibles are present in cell, calculate prob of infection
             if(S_host1_mat(row0, col0) > 0){
-              double PropS_UM = double(S_host1_mat(row0, col0)) / N_LVE(row0, col0); //fractions of given host in cell
+              double prop_S_host1 = double(S_host1_mat(row0, col0)) / N_LVE(row0, col0); //fractions of given host in cell
               double U = R::runif(0,1);
-              double Prob = PropS_UM * weather_suitability(row0, col0); //weather suitability affects prob success!
+              double Prob = prop_S_host1 * weather_suitability(row0, col0); //weather suitability affects prob success!
               //if U < Prob then one host will become infected
               if (U < Prob){
                 I_host1_mat(row0, col0) = I_host1_mat(row0, col0) + 1; //update infected UMCA
