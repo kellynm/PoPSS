@@ -181,6 +181,12 @@ S_matrix_list[[10]] <- S_host10
 I_matrix_list[[10]] <- I_host10
 }}}}}}}}}} 
 
+for (i in (number_of_hosts+1):10){
+  S_matrix_list[[i]] <- matrix(0, nrow=n_rows, ncol=n_cols)
+  I_matrix_list[[i]] <- matrix(0, nrow=n_rows, ncol=n_cols)
+}
+
+
 ## define matrix for all live trees (for calculating the percentage of infected)
 all_trees <- as.matrix(all_trees_rast)
 
@@ -280,12 +286,20 @@ for (tt in tstep){
       
       #Check if predominant wind direction has been specified correctly:
       if (!(pwdir %in% c('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'))) stop('A predominant wind direction must be specified: N, NE, E, SE, S, SW, W, NW')
-      out <- SporeDispCppWind_mh(spores_mat, S_host1_mat=S_matrix_list[[1]], S_host2_mat=S_matrix_list[[2]], I_host1_mat=I_matrix_list[[1]], I_host2_mat=I_matrix_list[[2]], N_LVE=all_trees, 
-                                 weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=kappa)
+      out <- SporeDispCppWind_mh(spores_mat, 
+                                 S_host1_mat=S_matrix_list[[1]],S_host2_mat=S_matrix_list[[2]],S_host3_mat=S_matrix_list[[3]],S_host4_mat=S_matrix_list[[4]],S_host5_mat=S_matrix_list[[5]],
+                                 S_host6_mat=S_matrix_list[[6]],S_host7_mat=S_matrix_list[[7]],S_host8_mat=S_matrix_list[[8]],S_host9_mat=S_matrix_list[[9]],S_host10_mat=S_matrix_list[[10]],
+                                 I_host1_mat=I_matrix_list[[1]],I_host2_mat=I_matrix_list[[2]],I_host3_mat=I_matrix_list[[3]],I_host4_mat=I_matrix_list[[4]],I_host5_mat=I_matrix_list[[5]],
+                                 I_host6_mat=I_matrix_list[[6]],I_host7_mat=I_matrix_list[[7]],I_host8_mat=I_matrix_list[[8]],I_host9_mat=I_matrix_list[[9]],I_host10_mat=I_matrix_list[[10]],
+                                 N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=kappa)
     
     }else{
-      out <- SporeDispCpp_mh(spores_mat, S_host1_mat=S_matrix_list[[1]], S_host2_mat=S_matrix_list[[2]], I_host1_mat=I_matrix_list[[1]], I_host2_mat=I_matrix_list[[2]], N_LVE=all_trees,
-                             weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57) ##TO DO
+      out <- SporeDispCpp_mh(spores_mat, 
+                             S_host1_mat=S_matrix_list[[1]],S_host2_mat=S_matrix_list[[2]],S_host3_mat=S_matrix_list[[3]],S_host4_mat=S_matrix_list[[4]],S_host5_mat=S_matrix_list[[5]],
+                             S_host6_mat=S_matrix_list[[6]],S_host7_mat=S_matrix_list[[7]],S_host8_mat=S_matrix_list[[8]],S_host9_mat=S_matrix_list[[9]],S_host10_mat=S_matrix_list[[10]],
+                             I_host1_mat=I_matrix_list[[1]],I_host2_mat=I_matrix_list[[2]],I_host3_mat=I_matrix_list[[3]],I_host4_mat=I_matrix_list[[4]],I_host5_mat=I_matrix_list[[5]],
+                             I_host6_mat=I_matrix_list[[6]],I_host7_mat=I_matrix_list[[7]],I_host8_mat=I_matrix_list[[8]],I_host9_mat=I_matrix_list[[9]],I_host10_mat=I_matrix_list[[10]],
+                             N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57) ##TO DO
     }  
     
     ## update R matrices:

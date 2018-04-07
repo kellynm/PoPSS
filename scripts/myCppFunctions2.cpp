@@ -35,9 +35,19 @@ IntegerMatrix SporeGenCpp(IntegerMatrix infected, NumericMatrix weather_suitabil
 }
 
 // [[Rcpp::export]]
-List SporeDispCpp_mh(IntegerMatrix spore_matrix, IntegerMatrix S_host1_mat, IntegerMatrix S_host2_mat, IntegerMatrix I_host1_mat, IntegerMatrix I_host2_mat, 
+List SporeDispCpp_mh(IntegerMatrix spore_matrix,
+                     IntegerMatrix S_host1_mat, IntegerMatrix S_host2_mat,
+                     IntegerMatrix I_host1_mat, IntegerMatrix I_host2_mat, 
                      IntegerMatrix N_LVE, NumericMatrix weather_suitability,   //use different name than the functions in myfunctions_SOD.r
                 double rs, String rtype, double scale1,
+                IntegerMatrix S_host3_mat=R_NilValue, IntegerMatrix I_host3_mat=R_NilValue,
+                IntegerMatrix S_host4_mat=R_NilValue, IntegerMatrix I_host4_mat=R_NilValue,
+                IntegerMatrix S_host5_mat=R_NilValue, IntegerMatrix I_host5_mat=R_NilValue,
+                IntegerMatrix S_host6_mat=R_NilValue, IntegerMatrix I_host6_mat=R_NilValue,
+                IntegerMatrix S_host7_mat=R_NilValue, IntegerMatrix I_host7_mat=R_NilValue,
+                IntegerMatrix S_host8_mat=R_NilValue, IntegerMatrix I_host8_mat=R_NilValue,
+                IntegerMatrix S_host9_mat=R_NilValue, IntegerMatrix I_host9_mat=R_NilValue,
+                IntegerMatrix S_host10_mat=R_NilValue, IntegerMatrix I_host10_mat=R_NilValue,
                 double scale2=NA_REAL,  //default values
                 double gamma=NA_REAL){  //default values
 
@@ -157,10 +167,20 @@ List SporeDispCpp_mh(IntegerMatrix spore_matrix, IntegerMatrix S_host1_mat, Inte
 }
 
 // [[Rcpp::export]]
-List SporeDispCppWind_mh(IntegerMatrix spore_matrix, IntegerMatrix S_host1_mat, IntegerMatrix S_host2_mat, IntegerMatrix I_host1_mat, IntegerMatrix I_host2_mat, 
+List SporeDispCppWind_mh(IntegerMatrix spore_matrix, 
+                         IntegerMatrix S_host1_mat, IntegerMatrix S_host2_mat,
+                         IntegerMatrix I_host1_mat, IntegerMatrix I_host2_mat, 
                          IntegerMatrix N_LVE, NumericMatrix weather_suitability,   //use different name than the functions in myfunctions_SOD.r
                 double rs, String rtype, double scale1, 
                 String wdir, int kappa,
+                IntegerMatrix S_host3_mat, IntegerMatrix I_host3_mat,
+                IntegerMatrix S_host4_mat, IntegerMatrix I_host4_mat,
+                IntegerMatrix S_host5_mat, IntegerMatrix I_host5_mat,
+                IntegerMatrix S_host6_mat, IntegerMatrix I_host6_mat,
+                IntegerMatrix S_host7_mat, IntegerMatrix I_host7_mat,
+                IntegerMatrix S_host8_mat, IntegerMatrix I_host8_mat,
+                IntegerMatrix S_host9_mat, IntegerMatrix I_host9_mat,
+                IntegerMatrix S_host10_mat, IntegerMatrix I_host10_mat,
                 double scale2=NA_REAL,  //default values
                 double gamma=NA_REAL){  //default values
 
@@ -173,7 +193,7 @@ List SporeDispCppWind_mh(IntegerMatrix spore_matrix, IntegerMatrix S_host1_mat, 
   double dist;
   double theta;
   double PropS;
-
+  
   //for Rcpp random numbers
   RNGScope scope;
   
