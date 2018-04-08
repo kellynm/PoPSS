@@ -284,7 +284,7 @@ List SporeDispCppWind_mh(IntegerMatrix spore_matrix,
                 double prop_S_host10 = double(S_host10_mat(row0, col0)) / total_hosts;
                 
                 //sample which host will be infected
-                NumericVector sv = sample(NumericVector::create(1, 10), 1, false, NumericVector::create(prop_S_host1, prop_S_host2,prop_S_host3, prop_S_host4, prop_S_host5,prop_S_host6,prop_S_host7,prop_S_host8,prop_S_host9,prop_S_host10));
+                NumericVector sv = sample(seq_len(10), 1, false, NumericVector::create(prop_S_host1, prop_S_host2,prop_S_host3, prop_S_host4, prop_S_host5,prop_S_host6,prop_S_host7,prop_S_host8,prop_S_host9,prop_S_host10));
                 int s = sv[0];
                 if (s == 1){
                   I_host1_mat(row0, col0) = I_host1_mat(row0, col0) + 1; //update infected host 1
@@ -323,18 +323,67 @@ List SporeDispCppWind_mh(IntegerMatrix spore_matrix,
           
           }else{
 
-            //if UMCA-only susceptibles are present in cell, calculate prob of infection
-            if(S_host1_mat(row0, col0) > 0){
-              double prop_S_host1 = double(S_host1_mat(row0, col0)) / N_LVE(row0, col0); //fractions of given host in cell
+            //if Placeholder for challengign only host above 0
+            if(S_host1_mat(row0, col0) > 0 || S_host2_mat(row0, col0) > 0 || S_host3_mat(row0, col0) > 0 || S_host4_mat(row0, col0) > 0 || S_host5_mat(row0, col0) > 0 ||
+               S_host6_mat(row0, col0) > 0 || S_host7_mat(row0, col0) > 0 || S_host8_mat(row0, col0) > 0 || S_host9_mat(row0, col0) > 0 || S_host10_mat(row0, col0) > 0 ){
+              
+              total_hosts = double(S_host1_mat(row0, col0) + S_host2_mat(row0, col0) + S_host3_mat(row0, col0) + S_host4_mat(row0, col0) + S_host5_mat(row0, col0) +
+                S_host6_mat(row0, col0) + S_host7_mat(row0, col0) + S_host8_mat(row0, col0) + S_host9_mat(row0, col0) + S_host10_mat(row0, col0));
+              PropS = total_hosts / N_LVE(row0, col0);;              
+              
               double U = R::runif(0,1);
-              double Prob = prop_S_host1 * weather_suitability(row0, col0); //weather suitability affects prob success!
+              double Prob = PropS * weather_suitability(row0, col0); //weather suitability affects prob success!
+              
               //if U < Prob then one host will become infected
               if (U < Prob){
-                I_host1_mat(row0, col0) = I_host1_mat(row0, col0) + 1; //update infected UMCA
-                S_host1_mat(row0, col0) = S_host1_mat(row0, col0) - 1; //update susceptible UMCA             
-              }  
+                double prop_S_host1 = double(S_host1_mat(row0, col0)) / total_hosts; //fractions of susceptible host in cell
+                double prop_S_host2 = double(S_host2_mat(row0, col0)) / total_hosts;
+                double prop_S_host3 = double(S_host3_mat(row0, col0)) / total_hosts;
+                double prop_S_host4 = double(S_host4_mat(row0, col0)) / total_hosts;
+                double prop_S_host5 = double(S_host5_mat(row0, col0)) / total_hosts;
+                double prop_S_host6 = double(S_host6_mat(row0, col0)) / total_hosts;
+                double prop_S_host7 = double(S_host7_mat(row0, col0)) / total_hosts;
+                double prop_S_host8 = double(S_host8_mat(row0, col0)) / total_hosts;
+                double prop_S_host9 = double(S_host9_mat(row0, col0)) / total_hosts;
+                double prop_S_host10 = double(S_host10_mat(row0, col0)) / total_hosts;
+                
+                //sample which host will be infected
+                NumericVector sv = sample(seq_len(10), 1, false, NumericVector::create(prop_S_host1, prop_S_host2,prop_S_host3, prop_S_host4, prop_S_host5,prop_S_host6,prop_S_host7,prop_S_host8,prop_S_host9,prop_S_host10));
+                int s = sv[0];
+                if (s == 1){
+                  I_host1_mat(row0, col0) = I_host1_mat(row0, col0) + 1; //update infected host 1
+                  S_host1_mat(row0, col0) = S_host1_mat(row0, col0) - 1; //update susceptible host 1                                    
+                }else if (s == 2){
+                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 2
+                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 2
+                }else if (s == 3){
+                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 3
+                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 3
+                }else if (s == 4){
+                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 4
+                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 4
+                }else if (s == 5){
+                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 5
+                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 5
+                }else if (s == 6){
+                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 6
+                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 6
+                }else if (s == 7){
+                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 7
+                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 7
+                }else if (s == 8){
+                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 8
+                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 8
+                }else if (s == 9){
+                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 9
+                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 9
+                }else if (s == 10){
+                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 10
+                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 0
+                }  
             }//END IF
-          }//ENF IF DISTANCE CHECK  
+            }
+          }//END IF DISTANCE CHECK  
         
         }//END LOOP OVER ALL SPORES IN CURRENT CELL GRID
        
