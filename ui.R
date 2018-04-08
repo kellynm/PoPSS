@@ -7,7 +7,7 @@ suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(raster))
 suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(shinyjs))
-suppressPackageStartupMessages(library(shinyalert))
+#suppressPackageStartupMessages(library(shinyalert))
 suppressPackageStartupMessages(library(shinyBS))
 suppressPackageStartupMessages(library(ggplot2))
 source("helpers.R")
@@ -19,7 +19,7 @@ rUnit <<- ''
 
 fluidPage(theme = "shiny.css",
   useShinyjs(),
-  useShinyalert(),
+  #useShinyalert(),
   tags$head(tags$style(type="text/css","a{color: green;}")),
   ## Add Title to App
   h1("Generalizable Pest and Pathogen Model", icon("envira"), style = "color: green;"),
