@@ -67,7 +67,7 @@ function(input, output, session) {
                                                       bringToFront = TRUE))
   })
   
-  ## Add/change parameter values when the inputs change in the GUI to pest_vars parameter list
+  ## Add/change parameter values when the inputs change in the GUI to pest_vars parameter list. This list is used to pass most recent parameter values to the model when the run button is pressed.
   observeEvent(input$start, {pest_vars$start <<- input$start})
   observeEvent(input$end, {pest_vars$end <<- input$end})
   observeEvent(input$seasonQ, {pest_vars$seasonality <<- input$seasonQ})
@@ -106,13 +106,14 @@ function(input, output, session) {
         addLayersControl(
           overlayGroups = olg,
           baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
-          options = layersControlOptions(collapsed = TRUE, opacity =0.6)) 
+          options = layersControlOptions(collapsed = TRUE, opacity =0.6)) %>%
+        mapoptions(zoomToLimits = "always")
         #fitBounds(extent(rastInitialInfection))
       # addLegend("bottomright", pal = pal, values = values(rastInitialInfection),
       #           title = "Host species",
       #           opacity = 1)
     } else {
-      createAlert(session, "initialInfectionID", content = "Please")
+      createAlert(session, "initialInfectionID", content = "Incorrect file type. Please select a raster file type.")
     }
   })
   observeEvent(input$totalSpeciesData, {
