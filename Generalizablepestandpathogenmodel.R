@@ -56,6 +56,9 @@ host9_score <- host9_score
 host10_rast <- host10_rast
 host10_score <- host10_score
 host_score_list <- list(host1_score, host2_score, host3_score, host4_score, host5_score, host6_score, host7_score, host8_score, host9_score, host10_score)
+host_score <- c(host1_score, host2_score, host3_score, host4_score, host5_score, host6_score, host7_score, host8_score, host9_score, host10_score)
+host_score[(number_of_hosts+1):10] <-0
+host_score <- host_score/10
 # All live trees (for calculating the proportion of infected) (tree density per hectare)
 all_trees_rast <- allTrees
 
@@ -276,7 +279,7 @@ for (tt in tstep){
     set.seed(42)
     infected_matrix <- matrix(0, nrow=res_win, ncol=res_win)
     for (i in 1:number_of_hosts){
-      infected_matrix <- infected_matrix + (I_matrix_list[[i]]*(host_score_list[[i]]/10))
+      infected_matrix <- infected_matrix + (I_matrix_list[[i]]*(host_score[i]))
     }
     spores_mat <- SporeGenCpp(infected_matrix, weather_suitability, rate = spore_rate) # rate spores/week
     
@@ -291,7 +294,7 @@ for (tt in tstep){
                                  S_host6_mat=S_matrix_list[[6]],S_host7_mat=S_matrix_list[[7]],S_host8_mat=S_matrix_list[[8]],S_host9_mat=S_matrix_list[[9]],S_host10_mat=S_matrix_list[[10]],
                                  I_host1_mat=I_matrix_list[[1]],I_host2_mat=I_matrix_list[[2]],I_host3_mat=I_matrix_list[[3]],I_host4_mat=I_matrix_list[[4]],I_host5_mat=I_matrix_list[[5]],
                                  I_host6_mat=I_matrix_list[[6]],I_host7_mat=I_matrix_list[[7]],I_host8_mat=I_matrix_list[[8]],I_host9_mat=I_matrix_list[[9]],I_host10_mat=I_matrix_list[[10]],
-                                 N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=kappa)
+                                 N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=kappa, host_score = host_score)
     
     }else{
       out <- SporeDispCpp_mh(spores_mat, 
@@ -299,24 +302,44 @@ for (tt in tstep){
                              S_host6_mat=S_matrix_list[[6]],S_host7_mat=S_matrix_list[[7]],S_host8_mat=S_matrix_list[[8]],S_host9_mat=S_matrix_list[[9]],S_host10_mat=S_matrix_list[[10]],
                              I_host1_mat=I_matrix_list[[1]],I_host2_mat=I_matrix_list[[2]],I_host3_mat=I_matrix_list[[3]],I_host4_mat=I_matrix_list[[4]],I_host5_mat=I_matrix_list[[5]],
                              I_host6_mat=I_matrix_list[[6]],I_host7_mat=I_matrix_list[[7]],I_host8_mat=I_matrix_list[[8]],I_host9_mat=I_matrix_list[[9]],I_host10_mat=I_matrix_list[[10]],
-                             N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57) ##TO DO
+                             N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57, host_score = host_score) ##TO DO
     }  
     
     ## update R matrices:
+    # Host 1
     S_matrix_list[[1]] <- out$S_host1_mat
     I_matrix_list[[1]] <- out$I_host1_mat
+    # Host 2
     S_matrix_list[[2]] <- out$S_host2_mat
     I_matrix_list[[2]] <- out$I_host2_mat
-    # # Host 1
-    # S_host1 <- out$S_host1_mat 
-    # I_host1 <- out$I_host1_mat 
-    # # Host 2
-    # S_host2 <- out$S_host2_mat 
-    # I_host2 <- out$I_host2_mat
+    # # Host 3
+    # S_matrix_list[[3]] <- out$S_host3_mat
+    # I_matrix_list[[3]] <- out$I_host3_mat
+    # # Host 4
+    # S_matrix_list[[4]] <- out$S_host4_mat
+    # I_matrix_list[[4]] <- out$I_host4_mat
+    # # Host 5
+    # S_matrix_list[[5]] <- out$S_host5_mat
+    # I_matrix_list[[5]] <- out$I_host5_mat
+    # # Host 6
+    # S_matrix_list[[6]] <- out$S_host6_mat
+    # I_matrix_list[[6]] <- out$I_host6_mat
+    # # Host 7
+    # S_matrix_list[[7]] <- out$S_host7_mat
+    # I_matrix_list[[7]] <- out$I_host7_mat
+    # # Host 8
+    # S_matrix_list[[8]] <- out$S_host8_mat
+    # I_matrix_list[[8]] <- out$I_host8_mat
+    # # Host 9
+    # S_matrix_list[[9]] <- out$S_host9_mat
+    # I_matrix_list[[9]] <- out$I_host9_mat
+    # # Host 10
+    # S_matrix_list[[10]] <- out$S_host10_mat
+    # I_matrix_list[[10]] <- out$I_host10_mat
     
-    ##CALCULATE OUTPUT TO PLOT:
-    I_host2_rast[] <- I_matrix_list[[2]]
+    ## CALCULATE OUTPUT TO PLOT:
     I_host1_rast[] <- I_matrix_list[[1]]
+    I_host2_rast[] <- I_matrix_list[[2]]
     
     # 1) values as % infected
     #I_host2_rast[] <- ifelse(I_host2_rast[] == 0, NA, I_host2_rast[]/host2_rast[])

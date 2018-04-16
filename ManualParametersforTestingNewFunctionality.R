@@ -13,7 +13,7 @@ windQ ='YES'
 windDir = 'NE'
 tempData = './layers/weather/weatherCoeff_2000_2014.nc'
 precipData = tempData
-number_of_hosts = 2
+number_of_hosts = 3
 host1_score = 10
 host2_score = 0
 host3_score = 5
@@ -70,4 +70,14 @@ leaflet(usStates) %>%
               highlightOptions = highlightOptions(color = "white", weight = 2, bringToFront = TRUE)) %>% 
   addMiniMap(usCounties, position = "topright")
 
-
+prop_S_host1 =.1
+prop_S_host2 =.1
+prop_S_host3 =.3
+prop_S_host4 =.05
+prop_S_host5 =.05
+prop_S_host6 =.05
+prop_S_host7 =.05
+prop_S_host8 =.2
+prop_S_host9 =0
+prop_S_host10 =.1
+sample(seq_len(10), 1, replace = FALSE, prob = c(prop_S_host1, prop_S_host2,prop_S_host3, prop_S_host4, prop_S_host5,prop_S_host6,prop_S_host7,prop_S_host8,prop_S_host9,prop_S_host10))

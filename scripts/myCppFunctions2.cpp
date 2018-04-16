@@ -172,7 +172,7 @@ List SporeDispCppWind_mh(IntegerMatrix spore_matrix,
                          IntegerMatrix I_host1_mat, IntegerMatrix I_host2_mat, 
                          IntegerMatrix N_LVE, NumericMatrix weather_suitability,   //use different name than the functions in myfunctions_SOD.r
                 double rs, String rtype, double scale1, 
-                String wdir, int kappa,
+                String wdir, int kappa, IntegerVector host_score,
                 IntegerMatrix S_host3_mat, IntegerMatrix I_host3_mat,
                 IntegerMatrix S_host4_mat, IntegerMatrix I_host4_mat,
                 IntegerMatrix S_host5_mat, IntegerMatrix I_host5_mat,
@@ -317,35 +317,35 @@ List SporeDispCppWind_mh(IntegerMatrix spore_matrix,
                   I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 10
                   S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 0
                 }      
-              }//ENF IF INFECTION LEVEL II 
+              } //END IF check versus uniform number
               
-            }//ENF IF          
+            } //END IF no susceptible present in cell          
           
-          }else{
+          }else{ //If the distances is out of the source cell
 
             //if Placeholder for challengign only host above 0
             if(S_host1_mat(row0, col0) > 0 || S_host2_mat(row0, col0) > 0 || S_host3_mat(row0, col0) > 0 || S_host4_mat(row0, col0) > 0 || S_host5_mat(row0, col0) > 0 ||
                S_host6_mat(row0, col0) > 0 || S_host7_mat(row0, col0) > 0 || S_host8_mat(row0, col0) > 0 || S_host9_mat(row0, col0) > 0 || S_host10_mat(row0, col0) > 0 ){
               
-              total_hosts = double(S_host1_mat(row0, col0) + S_host2_mat(row0, col0) + S_host3_mat(row0, col0) + S_host4_mat(row0, col0) + S_host5_mat(row0, col0) +
-                S_host6_mat(row0, col0) + S_host7_mat(row0, col0) + S_host8_mat(row0, col0) + S_host9_mat(row0, col0) + S_host10_mat(row0, col0));
+              total_hosts = double(S_host1_mat(row0, col0) * host_score[0] + S_host2_mat(row0, col0) * host_score[1] + S_host3_mat(row0, col0) * host_score[2] + S_host4_mat(row0, col0) * host_score[3] + S_host5_mat(row0, col0) * host_score[4] +
+                S_host6_mat(row0, col0) * host_score[5] + S_host7_mat(row0, col0) * host_score[6] + S_host8_mat(row0, col0) * host_score[7] + S_host9_mat(row0, col0) * host_score[8] + S_host10_mat(row0, col0) * host_score[9]);
               PropS = total_hosts / N_LVE(row0, col0);;              
               
               double U = R::runif(0,1);
-              double Prob = PropS * weather_suitability(row0, col0); //weather suitability affects prob success!
+              double Prob = PropS * weather_suitability(row0, col0); // weather suitability affects likelihood of new infections occurring
               
               //if U < Prob then one host will become infected
               if (U < Prob){
-                double prop_S_host1 = double(S_host1_mat(row0, col0)) / total_hosts; //fractions of susceptible host in cell
-                double prop_S_host2 = double(S_host2_mat(row0, col0)) / total_hosts;
-                double prop_S_host3 = double(S_host3_mat(row0, col0)) / total_hosts;
-                double prop_S_host4 = double(S_host4_mat(row0, col0)) / total_hosts;
-                double prop_S_host5 = double(S_host5_mat(row0, col0)) / total_hosts;
-                double prop_S_host6 = double(S_host6_mat(row0, col0)) / total_hosts;
-                double prop_S_host7 = double(S_host7_mat(row0, col0)) / total_hosts;
-                double prop_S_host8 = double(S_host8_mat(row0, col0)) / total_hosts;
-                double prop_S_host9 = double(S_host9_mat(row0, col0)) / total_hosts;
-                double prop_S_host10 = double(S_host10_mat(row0, col0)) / total_hosts;
+                double prop_S_host1 = double(S_host1_mat(row0, col0) * host_score[0]) / total_hosts; // fractions of susceptible host in cell
+                double prop_S_host2 = double(S_host2_mat(row0, col0) * host_score[1]) / total_hosts;
+                double prop_S_host3 = double(S_host3_mat(row0, col0) * host_score[2]) / total_hosts;
+                double prop_S_host4 = double(S_host4_mat(row0, col0) * host_score[3]) / total_hosts;
+                double prop_S_host5 = double(S_host5_mat(row0, col0) * host_score[4]) / total_hosts;
+                double prop_S_host6 = double(S_host6_mat(row0, col0) * host_score[5]) / total_hosts;
+                double prop_S_host7 = double(S_host7_mat(row0, col0) * host_score[6]) / total_hosts;
+                double prop_S_host8 = double(S_host8_mat(row0, col0) * host_score[7]) / total_hosts;
+                double prop_S_host9 = double(S_host9_mat(row0, col0) * host_score[8]) / total_hosts;
+                double prop_S_host10 = double(S_host10_mat(row0, col0) * host_score[9]) / total_hosts;
                 
                 //sample which host will be infected
                 NumericVector sv = sample(seq_len(10), 1, false, NumericVector::create(prop_S_host1, prop_S_host2,prop_S_host3, prop_S_host4, prop_S_host5,prop_S_host6,prop_S_host7,prop_S_host8,prop_S_host9,prop_S_host10));
