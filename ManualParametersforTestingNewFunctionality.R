@@ -70,6 +70,7 @@ leaflet(usStates) %>%
               highlightOptions = highlightOptions(color = "white", weight = 2, bringToFront = TRUE)) %>% 
   addMiniMap(usCounties, position = "topright")
 
+## test sample to make sure it works as intended
 prop_S_host1 =.1
 prop_S_host2 =.1
 prop_S_host3 =.3
@@ -81,3 +82,11 @@ prop_S_host8 =.2
 prop_S_host9 =0
 prop_S_host10 =.1
 sample(seq_len(10), 1, replace = FALSE, prob = c(prop_S_host1, prop_S_host2,prop_S_host3, prop_S_host4, prop_S_host5,prop_S_host6,prop_S_host7,prop_S_host8,prop_S_host9,prop_S_host10))
+
+
+## test implementation of zip file
+dir.create("C:/Users/cmjone25/Desktop/test")
+write.csv(dataReturn, file = "C:/Users/cmjone25/Desktop/test/data.csv")
+writeRaster(dataList[[2]], file = "C:/Users/cmjone25/Desktop/test/host1.tif")
+files2zip <- dir("C:/Users/cmjone25/Desktop/test", full.names = TRUE)
+utils::zip(zipfile = "C:/Users/cmjone25/Desktop/testZip.zip", files = files2zip)

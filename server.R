@@ -224,7 +224,7 @@ function(input, output, session) {
   })
   
   # Allows for the downloading of the user manual when the download link is pressed
-  output$pdf <- downloadHandler("generalizablepestandpathogenmodel.pdf", content = function(file){
-    file.copy("C:\\Users\\Chris\\Desktop\\Generalizable Pest and Pathogen Model User.pdf",file)
+  output$pdf <- downloadHandler("user_manual.pdf", content = function(file){
+    file.copy("./Documentation\\User Manual.pdf",file)
   })
 }
