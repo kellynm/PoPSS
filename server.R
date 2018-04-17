@@ -1,8 +1,8 @@
 # Used to set the initial zoom of the map and color of the rasters
 r <<- raster("UMCA_den_100m.img")
 pal <<- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "transparent")
-#usCounties <<- readOGR("./layers/usLower48Counties.shp")
-#usStates <<- readOGR("./layers/usLower48States.shp")
+#usCounties <<- readOGR("layers/usLower48Counties.shp")
+#usStates <<- readOGR("layers/usLower48States.shp")
 dataList <<- c()
 pest_vars <<- list(host1_rast = NULL,host1_score = NULL, host2_rast=NULL,host2_score=NULL,host3_rast=NULL,host3_score=NULL, host4_rast=NULL,host4_score=NULL,host5_rast=NULL,host5_score=NULL,
                   host6_rast=NULL,host6_score=NULL,host7_rast=NULL,host7_score=NULL,host8_rast=NULL,host8_score=NULL,host9_rast=NULL,host9_score=NULL,host10_rast=NULL,host10_score=NULL,
@@ -225,6 +225,6 @@ function(input, output, session) {
   
   # Allows for the downloading of the user manual when the download link is pressed
   output$pdf <- downloadHandler("user_manual.pdf", content = function(file){
-    file.copy("./Documentation\\User Manual.pdf",file)
+    file.copy("Documentation\\User Manual.pdf",file)
   })
 }

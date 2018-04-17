@@ -21,45 +21,45 @@ pest <- function(host1_rast,host1_score = NULL, host2_rast=NULL,host2_score=NULL
 
 ## Use an external source file w/ all modules (functions) used within this script. 
 ## Use FULL PATH if source file is not in the same folder w/ this script
-source('./scripts/myfunctions_SOD.r') # loads custom functions for dispersal using R
-sourceCpp("./scripts/myCppFunctions2.cpp") # load custom functions dispersal that use C++ (Faster)
+source('scripts/myfunctions_SOD.r') # loads custom functions for dispersal using R
+sourceCpp("scripts/myCppFunctions2.cpp") # load custom functions dispersal that use C++ (Faster)
 
 ## Input rasters: individual species abundance (tree density per hectare) (if host score = 0 don't count in spread calculations)
 # Host 1
-host1_rast <- host1_rast
-host1_score <- host1_score
+#host1_rast <- host1_rast
+#host1_score <- host1_score
 # Host 2
-host2_rast <- host2_rast
-host2_score <- host2_score
+#host2_rast <- host2_rast
+#host2_score <- host2_score
 # Host 3
-host3_rast <- host3_rast
-host3_score <- host3_score
+#host3_rast <- host3_rast
+#host3_score <- host3_score
 # Host 4
-host4_rast <- host4_rast
-host4_score <- host4_score
+#host4_rast <- host4_rast
+#host4_score <- host4_score
 # Host 5
-host5_rast <- host5_rast
-host5_score <- host5_score
+#host5_rast <- host5_rast
+#host5_score <- host5_score
 # Host 6
-host6_rast <- host6_rast
-host6_score <- host6_score
+#host6_rast <- host6_rast
+#host6_score <- host6_score
 # Host 7
-host7_rast <- host7_rast
-host7_score <- host7_score
+#host7_rast <- host7_rast
+#host7_score <- host7_score
 # Host 8
-host8_rast <- host8_rast
-host8_score <- host8_score
+#host8_rast <- host8_rast
+#host8_score <- host8_score
 # Host 9
-host9_rast <- host9_rast
-host9_score <- host9_score
+#host9_rast <- host9_rast
+#host9_score <- host9_score
 # Host 10
-host10_rast <- host10_rast
-host10_score <- host10_score
-host_score_list <- list(host1_score, host2_score, host3_score, host4_score, host5_score, host6_score, host7_score, host8_score, host9_score, host10_score)
+#host10_rast <- host10_rast
+#host10_score <- host10_score
+#host_score_list <- list(host1_score, host2_score, host3_score, host4_score, host5_score, host6_score, host7_score, host8_score, host9_score, host10_score)
 host_score <- c(host1_score, host2_score, host3_score, host4_score, host5_score, host6_score, host7_score, host8_score, host9_score, host10_score)
 host_score[(number_of_hosts+1):10] <-0
 host_score <- host_score/10
-# All live trees (for calculating the proportion of infected) (tree density per hectare)
+## All live trees (for calculating the proportion of infected) (tree density per hectare)
 all_trees_rast <- allTrees
 
 ## raster resolution
