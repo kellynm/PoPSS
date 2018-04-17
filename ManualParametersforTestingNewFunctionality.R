@@ -69,11 +69,11 @@ sample(seq_len(10), 1, replace = FALSE, prob = c(prop_S_host1, prop_S_host2,prop
 
 
 ## test implementation of zip file
-dir.create("C:/Users/cmjone25/Desktop/test")
-write.csv(dataReturn, file = "C:/Users/cmjone25/Desktop/test/data.csv")
-writeRaster(dataList[[2]], file = "C:/Users/cmjone25/Desktop/test/host1.tif")
-files2zip <- dir("C:/Users/cmjone25/Desktop/test", full.names = TRUE)
-utils::zip(zipfile = "C:/Users/cmjone25/Desktop/testZip.zip", files = files2zip)
+write.csv(dataReturn, file = "output/data.csv")
+writeRaster(dataList[[2]], file = "output/host1.tif")
+files2zip <- dir("output", full.names = TRUE)
+zip(zipfile = "C:/Users/Chris/Desktop/testZip2.zip", files = files2zip)
+do.call(file.remove, list(list.files("output", full.names = TRUE)))
 
 ## move from .nc to .tif
 file.nc <- "./layers/weather/weatherCoeff_2000_2014.nc"
