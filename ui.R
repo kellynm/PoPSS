@@ -20,6 +20,7 @@ source("helpers.R")
 source("Generalizablepestandpathogenmodel.R")
 source("InfoLabelInput.R")
 source("getUnit.R")
+sourceCpp("scripts/myCppFunctions2.cpp") # load custom functions dispersal that use C++ (Faster)
 dataForPlot <<- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
 rUnit <<- ''
 

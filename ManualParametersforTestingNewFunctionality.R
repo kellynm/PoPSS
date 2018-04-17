@@ -53,22 +53,6 @@ ggplot(dataForPlot, aes(x=Year, y=Area, color=factor(Host)))+geom_line(aes(Year,
   scale_x_continuous(name="Year", breaks=seq(start, end, 2))+
   scale_y_continuous(name="yName")+guides(col=guide_legend(ncol=3),shape=guide_legend(ncol = 1))
 
-zipped.csv <- function(df, zippedfile) {
-  # init temp csv
-  temp <- tempfile(fileext=".csv")
-  # write temp csv
-  write.csv(df, file=temp)
-  # zip temp csv
-  zip(zippedfile,temp)
-  # delete temp csv
-  unlink(temp)
-}
-
-leaflet(usStates) %>%
-  addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
-              opacity = 1.0, fillOpacity = 0.5,
-              highlightOptions = highlightOptions(color = "white", weight = 2, bringToFront = TRUE)) %>% 
-  addMiniMap(usCounties, position = "topright")
 
 ## test sample to make sure it works as intended
 prop_S_host1 =.1
@@ -90,3 +74,10 @@ write.csv(dataReturn, file = "C:/Users/cmjone25/Desktop/test/data.csv")
 writeRaster(dataList[[2]], file = "C:/Users/cmjone25/Desktop/test/host1.tif")
 files2zip <- dir("C:/Users/cmjone25/Desktop/test", full.names = TRUE)
 utils::zip(zipfile = "C:/Users/cmjone25/Desktop/testZip.zip", files = files2zip)
+
+## move from .nc to .tif
+file.nc <- "./layers/weather/weatherCoeff_2000_2014.nc"
+temp <- raster(file.nc, varname = "Ccoef")
+file.tif <- 'layers/weatherCoeff_2000_2014.tif'
+precip <- raster(file.nc, varname = "Mcoef")
+ccf.array2 <- as.array(precip)

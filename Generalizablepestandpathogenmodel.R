@@ -21,7 +21,7 @@ pest <- function(host1_rast,host1_score = NULL, host2_rast=NULL,host2_score=NULL
 
 ## Use an external source file w/ all modules (functions) used within this script. 
 ## Use FULL PATH if source file is not in the same folder w/ this script
-source('scripts/myfunctions_SOD.r') # loads custom functions for dispersal using R
+# source('scripts/myfunctions_SOD.r') # loads custom functions for dispersal using R
 sourceCpp("scripts/myCppFunctions2.cpp") # load custom functions dispersal that use C++ (Faster)
 
 ## Input rasters: individual species abundance (tree density per hectare) (if host score = 0 don't count in spread calculations)
