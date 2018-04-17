@@ -7,19 +7,24 @@ suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(raster))
 suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(shinyjs))
-#suppressPackageStartupMessages(library(shinyalert))
 suppressPackageStartupMessages(library(shinyBS))
 suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(rgdal))     # Geospatial data abstraction library. Depends R (≥ 2.14.0)
+suppressPackageStartupMessages(library(lubridate)) # Make dealing with dates a little easier. Depends R (≥ 3.0.0)
+suppressPackageStartupMessages(library(CircStats)) # Circular Statistics - Von Mises distribution
+suppressPackageStartupMessages(library(Rcpp))      # Seamless R and C++ Integration. Depends R (≥ 3.0.0)
+suppressPackageStartupMessages(library(ncdf4))     # work with NetCDF datasets
+suppressPackageStartupMessages(library(dismo))     # Regression for ecological datasets
+suppressPackageStartupMessages(library(sp))        # Classes and methods for spatial data
 source("helpers.R")
 source("Generalizablepestandpathogenmodel.R")
-source("infoLabelInput.R")
+source("InfoLabelInput.R")
 source("getUnit.R")
 dataForPlot <<- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
 rUnit <<- ''
 
 fluidPage(theme = "shiny.css",
   useShinyjs(),
-  #useShinyalert(),
   tags$head(tags$style(type="text/css","a{color: green;}")),
   ## Add Title to App
   h1("Generalizable Pest and Pathogen Model", icon("envira"), style = "color: green;"),
@@ -155,9 +160,9 @@ fluidPage(theme = "shiny.css",
                       #               width = 330, height = "auto",
                       #               selectInput(inputId = "plotDataSelect", label = "Select data to display", choices = names(dataForPlot)[2:(length(names(dataForPlot))-1)])
                       # )
-                      ),
-             tabPanel(title = "State Summary", leafletOutput("stateData", height = "600px")),
-             tabPanel(title = "County Summary", leafletOutput("countyData", height = "600px"))
+                      )
+             # tabPanel(title = "State Summary", leafletOutput("stateData", height = "600px")),
+             # tabPanel(title = "County Summary", leafletOutput("countyData", height = "600px"))
            )
            )
     ))
