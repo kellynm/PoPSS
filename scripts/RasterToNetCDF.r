@@ -1,8 +1,8 @@
 library(ncdf4)
 
 #years of interest:
-start <- 2000
-end <- 2014
+start <- 1990
+end <- 2017
 
 #list of ALL weather layers
 lst <- dir('./layers/weather', pattern='\\.img$', full.names=T)

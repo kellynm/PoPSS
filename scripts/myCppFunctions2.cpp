@@ -293,29 +293,29 @@ List SporeDispCppWind_mh(IntegerMatrix spore_matrix,
                   I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 2
                   S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 2
                 }else if (s == 3){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 3
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 3
+                  I_host3_mat(row0, col0) = I_host3_mat(row0, col0) + 1; //update infected host 3
+                  S_host3_mat(row0, col0) = S_host3_mat(row0, col0) - 1; //update susceptible host 3
                 }else if (s == 4){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 4
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 4
+                  I_host4_mat(row0, col0) = I_host4_mat(row0, col0) + 1; //update infected host 4
+                  S_host4_mat(row0, col0) = S_host4_mat(row0, col0) - 1; //update susceptible host 4
                 }else if (s == 5){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 5
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 5
+                  I_host5_mat(row0, col0) = I_host5_mat(row0, col0) + 1; //update infected host 5
+                  S_host5_mat(row0, col0) = S_host5_mat(row0, col0) - 1; //update susceptible host 5
                 }else if (s == 6){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 6
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 6
+                  I_host6_mat(row0, col0) = I_host6_mat(row0, col0) + 1; //update infected host 6
+                  S_host6_mat(row0, col0) = S_host6_mat(row0, col0) - 1; //update susceptible host 6
                 }else if (s == 7){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 7
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 7
+                  I_host7_mat(row0, col0) = I_host7_mat(row0, col0) + 1; //update infected host 7
+                  S_host7_mat(row0, col0) = S_host7_mat(row0, col0) - 1; //update susceptible host 7
                 }else if (s == 8){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 8
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 8
+                  I_host8_mat(row0, col0) = I_host8_mat(row0, col0) + 1; //update infected host 8
+                  S_host8_mat(row0, col0) = S_host8_mat(row0, col0) - 1; //update susceptible host 8
                 }else if (s == 9){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 9
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 9
+                  I_host9_mat(row0, col0) = I_host9_mat(row0, col0) + 1; //update infected host 9
+                  S_host9_mat(row0, col0) = S_host9_mat(row0, col0) - 1; //update susceptible host 9
                 }else if (s == 10){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 10
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 0
+                  I_host10_mat(row0, col0) = I_host10_mat(row0, col0) + 1; //update infected host 10
+                  S_host10_mat(row0, col0) = S_host10_mat(row0, col0) - 1; //update susceptible host 0
                 }      
               } //END IF check versus uniform number
               
@@ -357,29 +357,29 @@ List SporeDispCppWind_mh(IntegerMatrix spore_matrix,
                   I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 2
                   S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 2
                 }else if (s == 3){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 3
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 3
+                  I_host3_mat(row0, col0) = I_host3_mat(row0, col0) + 1; //update infected host 3
+                  S_host3_mat(row0, col0) = S_host3_mat(row0, col0) - 1; //update susceptible host 3
                 }else if (s == 4){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 4
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 4
+                  I_host4_mat(row0, col0) = I_host4_mat(row0, col0) + 1; //update infected host 4
+                  S_host4_mat(row0, col0) = S_host4_mat(row0, col0) - 1; //update susceptible host 4
                 }else if (s == 5){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 5
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 5
+                  I_host5_mat(row0, col0) = I_host5_mat(row0, col0) + 1; //update infected host 5
+                  S_host5_mat(row0, col0) = S_host5_mat(row0, col0) - 1; //update susceptible host 5
                 }else if (s == 6){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 6
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 6
+                  I_host6_mat(row0, col0) = I_host6_mat(row0, col0) + 1; //update infected host 6
+                  S_host6_mat(row0, col0) = S_host6_mat(row0, col0) - 1; //update susceptible host 6
                 }else if (s == 7){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 7
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 7
+                  I_host7_mat(row0, col0) = I_host7_mat(row0, col0) + 1; //update infected host 7
+                  S_host7_mat(row0, col0) = S_host7_mat(row0, col0) - 1; //update susceptible host 7
                 }else if (s == 8){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 8
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 8
+                  I_host8_mat(row0, col0) = I_host8_mat(row0, col0) + 1; //update infected host 8
+                  S_host8_mat(row0, col0) = S_host8_mat(row0, col0) - 1; //update susceptible host 8
                 }else if (s == 9){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 9
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 9
+                  I_host9_mat(row0, col0) = I_host9_mat(row0, col0) + 1; //update infected host 9
+                  S_host9_mat(row0, col0) = S_host9_mat(row0, col0) - 1; //update susceptible host 9
                 }else if (s == 10){
-                  I_host2_mat(row0, col0) = I_host2_mat(row0, col0) + 1; //update infected host 10
-                  S_host2_mat(row0, col0) = S_host2_mat(row0, col0) - 1; //update susceptible host 0
+                  I_host10_mat(row0, col0) = I_host10_mat(row0, col0) + 1; //update infected host 10
+                  S_host10_mat(row0, col0) = S_host10_mat(row0, col0) - 1; //update susceptible host 0
                 }  
             }//END IF
             }
@@ -398,7 +398,9 @@ List SporeDispCppWind_mh(IntegerMatrix spore_matrix,
     _["S_host1_mat"] = S_host1_mat, 
     _["I_host1_mat"] = I_host1_mat,
     _["S_host2_mat"] = S_host2_mat, 
-    _["I_host2_mat"] = I_host2_mat   
+    _["I_host2_mat"] = I_host2_mat,
+    _["S_host3_mat"] = S_host3_mat, 
+    _["I_host3_mat"] = I_host3_mat
   );
 }
 
