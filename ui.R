@@ -20,6 +20,7 @@ source("helpers.R")
 source("Generalizablepestandpathogenmodel.R")
 source("InfoLabelInput.R")
 source("getUnit.R")
+source("zipcreator.R")
 sourceCpp("scripts/myCppFunctions2.cpp") # load custom functions dispersal that use C++ (Faster)
 dataForPlot <<- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
 rUnit <<- ''
@@ -140,14 +141,20 @@ fluidPage(theme = "shiny.css",
                        )
                          ),
            # Create an Action button that will run the model when pressed
-           withBusyIndicatorUI(
-             actionButton("run", " Run Model", icon = icon("play")))
+           fluidRow(
+             column(5, 
+             withBusyIndicatorUI(
+               actionButton("run", " Run Model", icon = icon("play")))),
+             column(5,
+             actionButton("zip", "Download Output", icon = icon("cloud-download"))
+           )
+)
            ),
     column(width = 8,
            # Let the user know if their extents match
            #textOutput("extentMatch")
            # Create a download link for the user Manual
-           downloadLink("pdf", "Download User Manual ", icon("cloud-download"), style = "color: green"),
+           downloadButton("userManual.pdf", "Download User Manual ", icon("cloud-download"), style = "color: green"),
            #sliderInput(inputId = 'yearSlider', label = 'Year', value = "input.start", step = 1, min = 2000, max = 2010, sep = "", animate = TRUE),
            uiOutput("rSlider"),
            leafletOutput("mapData", height = "600px"),

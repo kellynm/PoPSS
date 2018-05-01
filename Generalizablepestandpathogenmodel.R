@@ -64,6 +64,8 @@ all_trees_rast <- allTrees
 
 ## raster resolution
 res_win <- res(host1_rast)[1]
+res_win2 <- res(host1_rast)[2]
+res_area <- res_win*res_win2
 n_cols <- as.numeric(ncol(host1_rast))
 n_rows <- as.numeric(nrow(host1_rast))
 
@@ -306,36 +308,37 @@ for (tt in tstep){
     }  
     
     ## update R matrices:
-    # Host 1
+    if (number_of_hosts>0){
     S_matrix_list[[1]] <- out$S_host1_mat
     I_matrix_list[[1]] <- out$I_host1_mat
-    # Host 2
+    if (number_of_hosts>1){
     S_matrix_list[[2]] <- out$S_host2_mat
     I_matrix_list[[2]] <- out$I_host2_mat
-    # # Host 3
-    # S_matrix_list[[3]] <- out$S_host3_mat
-    # I_matrix_list[[3]] <- out$I_host3_mat
-    # # Host 4
-    # S_matrix_list[[4]] <- out$S_host4_mat
-    # I_matrix_list[[4]] <- out$I_host4_mat
-    # # Host 5
-    # S_matrix_list[[5]] <- out$S_host5_mat
-    # I_matrix_list[[5]] <- out$I_host5_mat
-    # # Host 6
-    # S_matrix_list[[6]] <- out$S_host6_mat
-    # I_matrix_list[[6]] <- out$I_host6_mat
-    # # Host 7
-    # S_matrix_list[[7]] <- out$S_host7_mat
-    # I_matrix_list[[7]] <- out$I_host7_mat
-    # # Host 8
-    # S_matrix_list[[8]] <- out$S_host8_mat
-    # I_matrix_list[[8]] <- out$I_host8_mat
-    # # Host 9
-    # S_matrix_list[[9]] <- out$S_host9_mat
-    # I_matrix_list[[9]] <- out$I_host9_mat
-    # # Host 10
-    # S_matrix_list[[10]] <- out$S_host10_mat
-    # I_matrix_list[[10]] <- out$I_host10_mat
+    if (number_of_hosts>2){
+    S_matrix_list[[3]] <- out$S_host3_mat
+    I_matrix_list[[3]] <- out$I_host3_mat
+    if (number_of_hosts>3){
+    S_matrix_list[[4]] <- out$S_host4_mat
+    I_matrix_list[[4]] <- out$I_host4_mat
+    if (number_of_hosts>4){
+    S_matrix_list[[5]] <- out$S_host5_mat
+    I_matrix_list[[5]] <- out$I_host5_mat
+    if (number_of_hosts>5){
+    S_matrix_list[[6]] <- out$S_host6_mat
+    I_matrix_list[[6]] <- out$I_host6_mat
+    if (number_of_hosts>6){
+    S_matrix_list[[7]] <- out$S_host7_mat
+    I_matrix_list[[7]] <- out$I_host7_mat
+    if (number_of_hosts>7){
+    S_matrix_list[[8]] <- out$S_host8_mat
+    I_matrix_list[[8]] <- out$I_host8_mat
+    if (number_of_hosts>8){
+    S_matrix_list[[9]] <- out$S_host9_mat
+    I_matrix_list[[9]] <- out$I_host9_mat
+    if (number_of_hosts>9){
+    S_matrix_list[[10]] <- out$S_host10_mat
+    I_matrix_list[[10]] <- out$I_host10_mat
+    }}}}}}}}}}
     
     ## CALCULATE OUTPUT TO PLOT:
     I_host1_rast[] <- I_matrix_list[[1]]
@@ -354,23 +357,124 @@ for (tt in tstep){
         
     if (cnt %in% yearlyoutputlist){
       yearTracker = yearTracker+1
-      I_host1_stack <- stack(I_host1_rast, I_host1_stack)
-      I_host2_stack <- stack(I_host2_rast, I_host2_stack)
-      dataForOutput$infectedHost1Individuals[yearTracker] <- sum(na.omit(I_host1_rast@data@values))/1000
-      dataForOutput$infectedHost1Area[yearTracker] <- ncell(na.omit(I_host1_rast@data@values))*res(I_host1_rast)[2]*res(I_host1_rast)[1]
-      dataForOutput$infectedHost2Individuals[yearTracker] <- sum(na.omit(I_host2_rast@data@values))/1000
-      dataForOutput$infectedHost2Area[yearTracker] <- ncell(na.omit(I_host2_rast@data@values))*res(I_host2_rast)[2]*res(I_host2_rast)[1]
+      if (number_of_hosts>0){
+        I_host1_rast[] <- I_matrix_list[[1]]
+        I_host1_rast[] <- ifelse(I_host1_rast[] == 0, NA, I_host1_rast[])
+        I_host1_stack <- stack(I_host1_rast, I_host1_stack)
+        dataForOutput$infectedHost1Individuals[yearTracker] <- sum(na.omit(I_host1_rast@data@values))/1000
+        dataForOutput$infectedHost1Area[yearTracker] <- ncell(na.omit(I_host1_rast@data@values))*res_area
+      if (number_of_hosts>1){
+        I_host2_rast[] <- I_matrix_list[[2]]
+        I_host2_rast[] <- ifelse(I_host2_rast[] == 0, NA, I_host2_rast[])
+        I_host2_stack <- stack(I_host2_rast, I_host2_stack)
+        dataForOutput$infectedHost2Individuals[yearTracker] <- sum(na.omit(I_host2_rast@data@values))/1000
+        dataForOutput$infectedHost2Area[yearTracker] <- ncell(na.omit(I_host2_rast@data@values))*res_area
+      if (number_of_hosts>2){
+        I_host3_rast[] <- I_matrix_list[[3]]
+        I_host3_rast[] <- ifelse(I_host3_rast[] == 0, NA, I_host3_rast[])
+        I_host3_stack <- stack(I_host3_rast, I_host3_stack)
+        dataForOutput$infectedHost3Individuals[yearTracker] <- sum(na.omit(I_host3_rast@data@values))/1000
+        dataForOutput$infectedHost3Area[yearTracker] <- ncell(na.omit(I_host3_rast@data@values))*res_area
+      if (number_of_hosts>3){
+        I_host4_rast[] <- I_matrix_list[[4]]
+        I_host4_rast[] <- ifelse(I_host4_rast[] == 0, NA, I_host4_rast[])
+        I_host4_stack <- stack(I_host4_rast, I_host4_stack)
+        dataForOutput$infectedHost4Individuals[yearTracker] <- sum(na.omit(I_host4_rast@data@values))/1000
+        dataForOutput$infectedHost4Area[yearTracker] <- ncell(na.omit(I_host4_rast@data@values))*res_area
+      if (number_of_hosts>4){
+        I_host5_rast[] <- I_matrix_list[[5]]
+        I_host5_rast[] <- ifelse(I_host5_rast[] == 0, NA, I_host5_rast[])
+        I_host5_stack <- stack(I_host5_rast, I_host5_stack)
+        dataForOutput$infectedHost5Individuals[yearTracker] <- sum(na.omit(I_host5_rast@data@values))/1000
+        dataForOutput$infectedHost5Area[yearTracker] <- ncell(na.omit(I_host5_rast@data@values))*res_area
+      if (number_of_hosts>5){
+        I_host6_rast[] <- I_matrix_list[[6]]
+        I_host6_rast[] <- ifelse(I_host6_rast[] == 0, NA, I_host6_rast[])
+        I_host6_stack <- stack(I_host6_rast, I_host6_stack)
+        dataForOutput$infectedHost6Individuals[yearTracker] <- sum(na.omit(I_host6_rast@data@values))/1000
+        dataForOutput$infectedHost6Area[yearTracker] <- ncell(na.omit(I_host6_rast@data@values))*res_area
+      if (number_of_hosts>6){
+        I_host7_rast[] <- I_matrix_list[[7]]
+        I_host7_rast[] <- ifelse(I_host7_rast[] == 0, NA, I_host7_rast[])
+        I_host7_stack <- stack(I_host7_rast, I_host7_stack)
+        dataForOutput$infectedHost7Individuals[yearTracker] <- sum(na.omit(I_host7_rast@data@values))/1000
+        dataForOutput$infectedHost7Area[yearTracker] <- ncell(na.omit(I_host7_rast@data@values))*res_area 
+      if (number_of_hosts>7){
+        I_host8_rast[] <- I_matrix_list[[8]]
+        I_host8_rast[] <- ifelse(I_host8_rast[] == 0, NA, I_host8_rast[])
+        I_host8_stack <- stack(I_host8_rast, I_host8_stack)
+        dataForOutput$infectedHost8Individuals[yearTracker] <- sum(na.omit(I_host8_rast@data@values))/1000
+        dataForOutput$infectedHost8Area[yearTracker] <- ncell(na.omit(I_host8_rast@data@values))*res_area 
+      if (number_of_hosts>8){
+        I_host9_rast[] <- I_matrix_list[[9]]
+        I_host9_rast[] <- ifelse(I_host9_rast[] == 0, NA, I_host9_rast[])
+        I_host9_stack <- stack(I_host9_rast, I_host9_stack)
+        dataForOutput$infectedHost9Individuals[yearTracker] <- sum(na.omit(I_host9_rast@data@values))/1000
+        dataForOutput$infectedHost9Area[yearTracker] <- ncell(na.omit(I_host9_rast@data@values))*res_area 
+      if (number_of_hosts>9){
+        I_host10_rast[] <- I_matrix_list[[10]]
+        I_host10_rast[] <- ifelse(I_host10_rast[] == 0, NA, I_host10_rast[])
+        I_host10_stack <- stack(I_host10_rast, I_host10_stack)
+        dataForOutput$infectedHost10Individuals[yearTracker] <- sum(na.omit(I_host10_rast@data@values))/1000
+        dataForOutput$infectedHost10Area[yearTracker] <- ncell(na.omit(I_host10_rast@data@values))*res_area 
+                        }}}}}}}}}}
+      # yearTracker = yearTracker+1
+      # I_host1_stack <- stack(I_host1_rast, I_host1_stack)
+      # I_host2_stack <- stack(I_host2_rast, I_host2_stack)
+      # dataForOutput$infectedHost1Individuals[yearTracker] <- sum(na.omit(I_host1_rast@data@values))/1000
+      # dataForOutput$infectedHost1Area[yearTracker] <- ncell(na.omit(I_host1_rast@data@values))*res(I_host1_rast)[2]*res(I_host1_rast)[1]
+      # dataForOutput$infectedHost2Individuals[yearTracker] <- sum(na.omit(I_host2_rast@data@values))/1000
+      # dataForOutput$infectedHost2Area[yearTracker] <- ncell(na.omit(I_host2_rast@data@values))*res(I_host2_rast)[2]*res(I_host2_rast)[1]
     }
     
   }
   
 }
 
-I_host2_stack <- subset(I_host2_stack, order(seq(nlayers(I_host2_stack)-1, 1, -1)))
-I_host1_stack <- subset(I_host1_stack, order(seq(nlayers(I_host1_stack)-1, 1, -1)))
-names(I_host2_stack) <- years
-names(I_host1_stack) <- years
-data <- list(dataForOutput, I_host2_stack, I_host1_stack)
+## switch the order so that it is from start of simulation to end and label the bands
+if (number_of_hosts>0){
+  I_host1_stack <- subset(I_host1_stack, order(seq(nlayers(I_host1_stack)-1, 1, -1)))
+  names(I_host1_stack) <- years
+  data <- list(dataForOutput, I_host1_stack)
+if (number_of_hosts>1){
+  I_host2_stack <- subset(I_host2_stack, order(seq(nlayers(I_host2_stack)-1, 1, -1)))
+  names(I_host2_stack) <- years
+  data[[3]] <- I_host2_stack
+if (number_of_hosts>2){
+  I_host3_stack <- subset(I_host3_stack, order(seq(nlayers(I_host3_stack)-1, 1, -1)))
+  names(I_host3_stack) <- years
+  data[[4]] <- I_host3_stack
+if (number_of_hosts>3){
+  I_host4_stack <- subset(I_host4_stack, order(seq(nlayers(I_host4_stack)-1, 1, -1)))
+  names(I_host4_stack) <- years
+  data[[5]] <- I_host4_stack
+if (number_of_hosts>4){
+  I_host5_stack <- subset(I_host5_stack, order(seq(nlayers(I_host5_stack)-1, 1, -1)))
+  names(I_host5_stack) <- years
+  data[[6]] <- I_host5_stack
+if (number_of_hosts>5){
+  I_host6_stack <- subset(I_host6_stack, order(seq(nlayers(I_host6_stack)-1, 1, -1)))
+  names(I_host6_stack) <- years
+  data[[7]] <- I_host6_stack
+if (number_of_hosts>6){
+  I_host7_stack <- subset(I_host7_stack, order(seq(nlayers(I_host7_stack)-1, 1, -1)))
+  names(I_host7_stack) <- years
+  data[[8]] <- I_host7_stack
+if (number_of_hosts>7){
+  I_host8_stack <- subset(I_host8_stack, order(seq(nlayers(I_host8_stack)-1, 1, -1)))
+  names(I_host8_stack) <- years
+  data[[9]] <- I_host8_stack
+if (number_of_hosts>8){
+  I_host9_stack <- subset(I_host9_stack, order(seq(nlayers(I_host9_stack)-1, 1, -1)))
+  names(I_host9_stack) <- years
+  data[[10]] <- I_host9_stack
+if (number_of_hosts>9){
+  I_host10_stack <- subset(I_host10_stack, order(seq(nlayers(I_host10_stack)-1, 1, -1)))
+  names(I_host10_stack) <- years
+  data[[11]] <- I_host10_stack
+}}}}}}}}}}
+
+# data <- list(dataForOutput, I_host2_stack, I_host1_stack, I_host3_stack)
 
 return(data)
 }

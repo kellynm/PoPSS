@@ -16,7 +16,6 @@ function(input, output, session) {
   modelRastOut <- r
   olg <- c()
   ## create list of all variables for pest function with defaults assigned exactly the same as defaults in function with mandatory variables assigned to null
-
   observeEvent(input$run, {
     years = seq(input$start, input$end, 1)
                            withBusyIndicatorServer("run",{dataList <<- do.call(pest, pest_vars)})
@@ -43,7 +42,18 @@ function(input, output, session) {
                                  options = layersControlOptions(collapsed = FALSE, opacity =0.6))
                            }}
                            })
-  
+  ## Download zip folder when download button is pressed
+  #dataModal <- modalDialog(textInput("path", "Choose download location"))
+  # observeEvent(input$zip, {
+  #   showModal(modalDialog(fileInput("path", "Choose download location"),        footer = tagList(
+  #     modalButton("Cancel"),
+  #     actionButton("ok", "OK"))))
+  #   #zipcreator(dataList = dataList, path = input$path)
+  #   })
+  observeEvent(input$zip, {
+    zippath <- paste(file.path(Sys.getenv("USERPROFILE"),"Desktop"),"/output.zip",sep = "")
+    zipcreator(dataList = dataList, path = zippath)
+    })
   ## Create information file of model input parameters
   observeEvent(input$run,{
     parameterTable <<- data.frame(Species = input$pest, Start = input$start, End = input$end, Seasonality = input$seasonQ, monthStart = input$seasonMonths[1],monthEnd = input$seasonMonths[2], ReproductionRate = input$sporeRate)
@@ -224,7 +234,7 @@ function(input, output, session) {
   })
   
   # Allows for the downloading of the user manual when the download link is pressed
-  output$pdf <- downloadHandler("user_manual.pdf", content = function(file){
+  output$userManual.pdf <- downloadHandler("user_manual.pdf", content = function(file){
     file.copy("Documentation\\User Manual.pdf",file)
-  })
+  }, contentType = "pdf")
 }
