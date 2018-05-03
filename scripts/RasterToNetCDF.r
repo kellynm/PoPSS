@@ -4,8 +4,9 @@ library(ncdf4)
 start <- 1990
 end <- 2017
 
+setwd("G:/DaymetUS/California")
 #list of ALL weather layers
-lst <- dir('./layers/weather', pattern='\\.img$', full.names=T)
+lst <- dir("G:/DaymetUS/California", pattern='.tif$', full.names=T)
 
 #sublist of weather coefficients
 Mlst <- lst[grep("_m", lst)] #M = moisture; 
