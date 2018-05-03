@@ -39,7 +39,7 @@ for (i in 1:length(precip_files)) {
   precip <- stack(precip_files[[i]], varname = "prcp")
   precip <- crop(precip, reference_area)
   precip <- mask(precip, reference_area)
-  writeRaster(x=precip, filename = paste("daymet_v3_prcp_",dates[i],"_slfarea.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+  writeRaster(x=precip, filename = paste("daymet_v3_prcp_",time_range[i],"_slfarea.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
   print(i)
 }
 
