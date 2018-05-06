@@ -57,17 +57,18 @@ m <- c(-Inf, -12, 0,
 rclmat <- matrix(m, ncol=3, byrow=TRUE)
 
 for (i in 1:length(tavg)){
-  tavg_rast <- stack(tavg[i])
+  #tavg_rast <- stack(tavg[i])
   tmin_rast <- stack(tmin[i])
-  r <- stack(tmin_files[i])
-  names(tavg_rast) <- names(r)
-  indices <- format(as.Date(names(r), format = "X%Y.%m.%d"), format = "%m")
-  indices <- as.numeric(indices)
-  tavg_monthly <- stackApply(tavg_rast, indices, fun=mean)
-  c_coef <- reclassify(tavg_monthly,rclmat)
-  crit_temp <- stackApply(tmin_rast, indices = rep(1,365), fun=min)
+  tmin_rast <- tmin_rast[[1:31]]
+  #r <- stack(tmin_files[i])
+  #names(tavg_rast) <- names(r)
+  #indices <- format(as.Date(names(r), format = "X%Y.%m.%d"), format = "%m")
+  #indices <- as.numeric(indices)
+  #tavg_monthly <- stackApply(tavg_rast, indices, fun=mean)
+  #c_coef <- reclassify(tavg_monthly,rclmat)
+  crit_temp <- stackApply(tmin_rast, indices = rep(1,31), fun=min)
   writeRaster(x=crit_temp, filename = paste("crit_temp_",time_range[i],"_slfarea.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
-  writeRaster(x=c_coef, filename = paste("c_coef_",time_range[i],"_slfarea.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+  #writeRaster(x=c_coef, filename = paste("c_coef_",time_range[i],"_slfarea.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
   print(i)
 }
 
@@ -104,3 +105,14 @@ for (i in 1:length(x2)) {
   y2[i] = slf_temp(x2[i])
 }
 y2
+
+
+
+directory <- "G:/DaymetUS/SLF_area/WeatherCoeff"
+c_coef <- list.files(directory,pattern='c_coef', full.names = TRUE)
+crit_temp <- list.files(directory,pattern='crit_temp', full.names = TRUE)
+c_coef_s <- stack(c_coef[4:6])
+crit_temp_s <- stack(crit_temp[4:6])
+writeRaster(x=crit_temp_s, filename = paste("crit_temp_2015_2017_slfarea2.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+writeRaster(x=c_coef_s, filename = paste("c_coef_2015_2017_slfarea.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+

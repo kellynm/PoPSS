@@ -81,3 +81,99 @@ temp <- raster(file.nc, varname = "Ccoef")
 file.tif <- 'layers/weatherCoeff_2000_2014.tif'
 precip <- raster(file.nc, varname = "Mcoef")
 ccf.array2 <- as.array(precip)
+
+
+pest_vars <<- list(host1_rast = NULL,host1_score = NULL, host2_rast=NULL,host2_score=NULL,host3_rast=NULL,host3_score=NULL, host4_rast=NULL,host4_score=NULL,host5_rast=NULL,host5_score=NULL,
+                   host6_rast=NULL,host6_score=NULL,host7_rast=NULL,host7_score=NULL,host8_rast=NULL,host8_score=NULL,host9_rast=NULL,host9_score=NULL,host10_rast=NULL,host10_score=NULL,
+                   allTrees=NULL,initialPopulation=NULL, start=2000, end=2010, seasonality = 'NO', s1 = 1 , s2 = 12, sporeRate = 4.4, windQ =NULL, windDir=NULL, tempQ="NO", tempData=NULL, precipQ="NO", precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1)
+pest_vars$host1_rast = raster("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/ToF.tif")
+pest_vars$allTrees = raster("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/totalhost.tif")
+pest_vars$initialPopulation = raster ("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/2014Initial.tif")
+pest_vars$start = 2015
+pest_vars$end = 2017
+pest_vars$seasonality = 'YES'
+pest_vars$s1 = 6
+pest_vars$s2 = 11
+pest_vars$sporeRate =4.4 ## spore rate default of original attempt
+pest_vars$tempData = 'G:/DaymetUS/SLF_area/WeatherCoeff/c_coef_2015_2017_slfarea.tif'
+pest_vars$host1_score = 10
+pest_vars$number_of_hosts = 1
+pest_vars$tempQ = "YES"
+pest_vars$precipQ = "NO"
+pest_vars$windQ = "NO"
+pest_vars$kernelType = "Cauchy"
+pest_vars$scale1 = 40
+data <- do.call(pest, pest_vars)
+scale = 2
+sporeRate = 2
+seed_n = 22
+i=0
+params <- data.frame(scale, sporeRate, seed_n, i)
+scales <- seq(20,80,2)
+spores <- seq(2.0, 4.4, 0.2)
+seeds <- c(42, 45, 78, 29, 57)
+for (scale in scales) {
+  for (sporeRate in spores) {
+    for (seed in seeds) {
+  i = i + 1
+  pest_vars <<- list(host1_rast = NULL,host1_score = NULL, host2_rast=NULL,host2_score=NULL,host3_rast=NULL,host3_score=NULL, host4_rast=NULL,host4_score=NULL,host5_rast=NULL,host5_score=NULL,
+                     host6_rast=NULL,host6_score=NULL,host7_rast=NULL,host7_score=NULL,host8_rast=NULL,host8_score=NULL,host9_rast=NULL,host9_score=NULL,host10_rast=NULL,host10_score=NULL,
+                     allTrees=NULL,initialPopulation=NULL, start=2000, end=2010, seasonality = 'NO', s1 = 1 , s2 = 12, sporeRate = 4.4, windQ =NULL, windDir=NULL, tempQ="NO", tempData=NULL, 
+                     precipQ="NO", precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1, seed_n =42)
+  pest_vars$host1_rast = raster("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/ToF.tif")
+  pest_vars$allTrees = raster("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/totalhost.tif")
+  pest_vars$initialPopulation = raster ("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/2014Initial.tif")
+  pest_vars$start = 2015
+  pest_vars$end = 2017
+  pest_vars$seasonality = 'YES'
+  pest_vars$s1 = 6
+  pest_vars$s2 = 11
+  pest_vars$sporeRate =sporeRate ## spore rate default of original attempt
+  pest_vars$tempData = 'G:/DaymetUS/SLF_area/WeatherCoeff/c_coef_2015_2017_slfarea.tif'
+  pest_vars$host1_score = 10
+  pest_vars$number_of_hosts = 1
+  pest_vars$tempQ = "YES"
+  pest_vars$precipQ = "NO"
+  pest_vars$windQ = "NO"
+  pest_vars$kernelType = "Cauchy"
+  pest_vars$scale1 = scale
+  pest_vars$seed_n = seed
+  data[[i]] <- do.call(pest, pest_vars)
+  params[i,1] <- scale
+  params[i,2] <- sporeRate
+  params[i,3] <- seed
+  params[i,4] <- i
+  print(i)
+}}}
+
+
+
+host1_rast = raster("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/ToF.tif")
+allTrees = raster("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/totalhost.tif")
+initialPopulation = raster ("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/2014Initial.tif")
+start = 2015
+end = 2017
+seasonality = 'YES'
+s1 = 6
+s2 = 11
+sporeRate =3 ## spore rate default of original attempt
+tempData = 'G:/DaymetUS/SLF_area/WeatherCoeff/c_coef_2015_2017_slfarea.tif'
+host1_score = 10
+number_of_hosts = 1
+tempQ = "YES"
+precipQ = "NO"
+windQ = "NO"
+kernelType = "Cauchy"
+scale1 = 50
+
+host_score <- rep(host1_score,10)
+
+writeRaster(I_host1_stack, "C:/Users/Chris/Desktop/slftest2.tif", overwrite = TRUE, format = 'GTiff')
+
+for (tt in tstep){
+  cnt <- cnt + 1
+  if (cnt %in% yearlyoutputlist){
+    print(cnt)
+  }
+}
+class(cnt)

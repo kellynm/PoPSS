@@ -49,7 +49,10 @@ for (i in 2:length(prcp)){
   print(i)
 }
 
-
-
-
-
+directory <- "G:/DaymetUS/California/WeatherCoeff"
+c_coef <- list.files(directory,pattern='c_coef', full.names = TRUE)
+m_coef <- list.files(directory,pattern='m_coef', full.names = TRUE)
+c_coef_s <- stack(c_coef)
+m_coef_s <- stack(m_coef)
+writeRaster(x=m_coef_s, filename = paste("m_coef_1990_2017_california.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+writeRaster(x=c_coef_s, filename = paste("c_coef_1990_2017_california.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
