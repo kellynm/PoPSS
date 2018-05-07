@@ -4,7 +4,7 @@
 pest_vars <<- list(host1_rast = NULL,host1_score = NULL, host2_rast=NULL,host2_score=NULL,host3_rast=NULL,host3_score=NULL, host4_rast=NULL,host4_score=NULL,host5_rast=NULL,host5_score=NULL,
                    host6_rast=NULL,host6_score=NULL,host7_rast=NULL,host7_score=NULL,host8_rast=NULL,host8_score=NULL,host9_rast=NULL,host9_score=NULL,host10_rast=NULL,host10_score=NULL,
                    allTrees=NULL,initialPopulation=NULL, start=2000, end=2010, seasonality = 'NO', s1 = 1 , s2 = 12, sporeRate = 4.4, windQ =NULL, windDir=NULL, tempQ="NO", tempData=NULL, 
-                   precipQ="NO", precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1, scale1 = 20.57, scale2 = NULL, gamma = 1, seed_n = 42, time_step = "weeks")
+                   precipQ="NO", precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1, scale1 = 20.57, seed_n = 42, scale2 = NULL, gamma = 1,  time_step = "weeks")
 pest_vars$host1_rast = raster("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/ToF.tif")
 pest_vars$allTrees = raster("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/totalhost.tif")
 pest_vars$initialPopulation = raster ("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/2014Initial.tif")
@@ -23,14 +23,14 @@ pest_vars$windQ = "NO"
 pest_vars$kernelType = "Cauchy"
 pest_vars$scale1 = 60
 pest_vars$sporeRate = 3.6
-pest_vars$seed_n = 42
+pest_vars$seed_n = 45
 pest_vars$time_step = "months"
-data3 <- do.call(pest, pest_vars)
+data3[[2]] <- do.call(pest, pest_vars)
 scale = 60
 sporeRate = 3.6
-seed_n = 22
+seed_n = 45
 i=0
-params3 <- data.frame(scale, sporeRate, seed_n, i)
+params3[2,1:4] <- data.frame(scale, sporeRate, seed_n, i)
 scales <- 60
 spores <- 3.6
 seeds <- c(45,42)
@@ -41,7 +41,7 @@ for (scale in scales) {
       pest_vars <<- list(host1_rast = NULL,host1_score = NULL, host2_rast=NULL,host2_score=NULL,host3_rast=NULL,host3_score=NULL, host4_rast=NULL,host4_score=NULL,host5_rast=NULL,host5_score=NULL,
                          host6_rast=NULL,host6_score=NULL,host7_rast=NULL,host7_score=NULL,host8_rast=NULL,host8_score=NULL,host9_rast=NULL,host9_score=NULL,host10_rast=NULL,host10_score=NULL,
                          allTrees=NULL,initialPopulation=NULL, start=2000, end=2010, seasonality = 'NO', s1 = 1 , s2 = 12, sporeRate = 4.4, windQ =NULL, windDir=NULL, tempQ="NO", tempData=NULL, 
-                         precipQ="NO", precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1, scale1 = 20.57, scale2 = NULL, gamma = 1, seed_n = 42, time_step = "weeks")
+                         precipQ="NO", precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1, scale1 = 20.57)#, scale2 = NULL, gamma = 1, seed_n = 42, time_step = "weeks")
       pest_vars$host1_rast = raster("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/ToF.tif")
       pest_vars$allTrees = raster("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/totalhost.tif")
       pest_vars$initialPopulation = raster ("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/2014Initial.tif")
@@ -58,7 +58,7 @@ for (scale in scales) {
       pest_vars$precipQ = "NO"
       pest_vars$windQ = "NO"
       pest_vars$kernelType = "Cauchy"
-      pest_vars$time_step = "months"
+      #pest_vars$time_step = "months"
       pest_vars$scale1 = scale
       pest_vars$seed_n = seed
       data3[[i]] <- do.call(pest, pest_vars)

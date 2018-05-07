@@ -248,7 +248,7 @@ if (wind == "YES"){
 spore_rate <- sporeRate
 #if (kernelType == "Exponential") { scale1 = 1/scale1}
 #time counter to access pos index in weather raster stacks
-cnt <- 1 
+cnt <- 0 
 
 ## ----> MAIN SIMULATION LOOP (weekly time steps) <------
 for (tt in tstep){
@@ -311,7 +311,7 @@ for (tt in tstep){
                                  S_host6_mat=S_matrix_list[[6]],S_host7_mat=S_matrix_list[[7]],S_host8_mat=S_matrix_list[[8]],S_host9_mat=S_matrix_list[[9]],S_host10_mat=S_matrix_list[[10]],
                                  I_host1_mat=I_matrix_list[[1]],I_host2_mat=I_matrix_list[[2]],I_host3_mat=I_matrix_list[[3]],I_host4_mat=I_matrix_list[[4]],I_host5_mat=I_matrix_list[[5]],
                                  I_host6_mat=I_matrix_list[[6]],I_host7_mat=I_matrix_list[[7]],I_host8_mat=I_matrix_list[[8]],I_host9_mat=I_matrix_list[[9]],I_host10_mat=I_matrix_list[[10]],
-                                 N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=kappa, host_score = host_score)
+                                 N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=scale1, wdir=pwdir, kappa=kappa, host_score = host_score)
     
     }else{
       out <- SporeDispCpp_mh(spores_mat, 
@@ -319,7 +319,7 @@ for (tt in tstep){
                              S_host6_mat=S_matrix_list[[6]],S_host7_mat=S_matrix_list[[7]],S_host8_mat=S_matrix_list[[8]],S_host9_mat=S_matrix_list[[9]],S_host10_mat=S_matrix_list[[10]],
                              I_host1_mat=I_matrix_list[[1]],I_host2_mat=I_matrix_list[[2]],I_host3_mat=I_matrix_list[[3]],I_host4_mat=I_matrix_list[[4]],I_host5_mat=I_matrix_list[[5]],
                              I_host6_mat=I_matrix_list[[6]],I_host7_mat=I_matrix_list[[7]],I_host8_mat=I_matrix_list[[8]],I_host9_mat=I_matrix_list[[9]],I_host10_mat=I_matrix_list[[10]],
-                             N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57, host_score = host_score) ##TO DO
+                             N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=scale1, host_score = host_score) ##TO DO
     }  
     
     ## update R matrices: ## Note this is a set of nested if statements
