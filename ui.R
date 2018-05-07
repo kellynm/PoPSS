@@ -50,7 +50,12 @@ fluidPage(theme = "shiny.css",
                      numericInput(inputId ="sporeRate", label = infoLabelInputUI(id = "sporeRate", label = "Spread Rate", title = "Determines the average number of individuals that infect another cell during a time step."), value = "4.4", min=0, max = 100, step = 0.1),
                      fileInput(inputId = "initialInfection", label = infoLabelInputUI(id = "initialInfection", label = "Initial Infection Data:", title = "Input a raster or shapefile of the location of infections at the start of simulation."), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")),
                      bsAlert("initialInfectionID"),
-                     selectInput(inputId = "kernelType", label = infoLabelInputUI(id = "kernelType", label = "Select the best dispersal kernel.", title = "Choose the dispersal kernel that heuristically fits the dispersal pattern of your pest/pathogen."), choices = c('Cauchy', 'Cauchy Mixture', 'Exponential', 'Gauss'))
+                     selectInput(inputId = "kernelType", label = infoLabelInputUI(id = "kernelType", label = "Select the best dispersal kernel.", title = "Choose the dispersal kernel that heuristically fits the dispersal pattern of your pest/pathogen."), choices = c('Cauchy', 'Cauchy Mixture', 'Exponential', 'Gauss')),
+                     numericInput(inputId ="scale_1", label = infoLabelInputUI(id = "scale_1", label = "Short distance dispersal scale parameter", title = "Short distance scale parameter for dispersal kernel"), value = "20.57", min=0, max = 1000, step = 0.01),
+                     numericInput(inputId ="scale_2", label = infoLabelInputUI(id = "scale_2", label = "Long distance dispersal scale parameter", title = "Long distance scale parameter for dispersal kernel"), value = "8557", min=0, max = 50000, step = 11),
+                     numericInput(inputId ="gamma", label = infoLabelInputUI(id = "gamma", label = "Gamma", title = "Sets the percent of short distance dispersal. If only short distance set to 1"), value = "1", min=0, max = 1, step = 0.01),
+                     numericInput(inputId ="seed", label = infoLabelInputUI(id = "seed", label = "Random Seed Number", title = "Random Seed Number: Use to duplicate a single run"), value = "42", min=0, max = 5000, step = 1),
+                     selectInput(inputId = "time_step", label = infoLabelInputUI(id = "time_step", label = "Time Step", title = "Time step: Monthly or Weekly"), choices = c("weeks","months"))
                      ),
            # Create panel for Host variables
            wellPanel(h3("Hosts", icon("tree")),

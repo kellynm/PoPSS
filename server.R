@@ -4,9 +4,12 @@ pal <<- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "tr
 #usCounties <<- readOGR("layers/usLower48Counties.shp")
 #usStates <<- readOGR("layers/usLower48States.shp")
 dataList <<- c()
-pest_vars <<- list(host1_rast = NULL,host1_score = NULL, host2_rast=NULL,host2_score=NULL,host3_rast=NULL,host3_score=NULL, host4_rast=NULL,host4_score=NULL,host5_rast=NULL,host5_score=NULL,
-                  host6_rast=NULL,host6_score=NULL,host7_rast=NULL,host7_score=NULL,host8_rast=NULL,host8_score=NULL,host9_rast=NULL,host9_score=NULL,host10_rast=NULL,host10_score=NULL,
-                  allTrees=NULL,initialPopulation=NULL, start=2000, end=2010, seasonality = 'NO', s1 = 1 , s2 = 12, sporeRate = 4.4, windQ =NULL, windDir=NULL, tempQ="NO", tempData=NULL, precipQ="NO", precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1)
+pest_vars <<- list(host1_rast = NULL, host1_score = NULL, host2_rast=NULL, host2_score=NULL, host3_rast=NULL, host3_score=NULL, host4_rast=NULL, host4_score=NULL,
+                  host5_rast=NULL, host5_score=NULL, host6_rast=NULL, host6_score=NULL, host7_rast=NULL, host7_score=NULL, host8_rast=NULL, host8_score=NULL,
+                  host9_rast=NULL, host9_score=NULL, host10_rast=NULL, host10_score=NULL, allTrees=NULL, initialPopulation=NULL, start=2000, end=2010, 
+                  seasonality = 'NO', s1 = 1 , s2 = 12, sporeRate = 4.4, windQ =NULL, windDir=NULL, tempQ="NO", tempData=NULL, precipQ="NO", 
+                  precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1, scale1 = 20.57, scale2 = NULL, gamma = 1, seed_n = 42,
+                  time_step ="weeks")
 
 function(input, output, session) {
   options(shiny.maxRequestSize=70000*1024^2) 
@@ -85,6 +88,11 @@ function(input, output, session) {
   pest_vars$s2 <<- input$seasonMonths[2]})
   observeEvent(input$sporeRate, {pest_vars$sporeRate <<- input$sporeRate})
   observeEvent(input$kernelType, {pest_vars$kernelType <<- input$kernelType})
+  observeEvent(input$scale_1, {pest_vars$scale_1 <<- input$scale_1})
+  observeEvent(input$scale_2, {pest_vars$scale_2 <<- input$scale_2})
+  observeEvent(input$seed, {pest_vars$seed_n <<- input$seed})
+  observeEvent(input$gamma, {pest_vars$gamma <<- input$gamma})
+  observeEvent(input$time_step, {pest_vars$time_step <<- input$time_step})
   observeEvent(input$hostMulti, {pest_vars$number_of_hosts <<- input$hostMulti})
   observeEvent(input$windQ, {pest_vars$windQ <<- input$windQ})
   observeEvent(input$windDir, {pest_vars$windDir <<- input$windDir})

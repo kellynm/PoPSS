@@ -12,9 +12,11 @@ suppressPackageStartupMessages(library(ncdf4))     # work with NetCDF datasets
 suppressPackageStartupMessages(library(dismo))     # Regression for ecological datasets
 suppressPackageStartupMessages(library(sp))        # Classes and methods for spatial data
 
-pest <- function(host1_rast,host1_score = NULL, host2_rast=NULL,host2_score=NULL,host3_rast=NULL,host3_score=NULL, host4_rast=NULL,host4_score=NULL,host5_rast=NULL,host5_score=NULL,
-                 host6_rast=NULL,host6_score=NULL,host7_rast=NULL,host7_score=NULL,host8_rast=NULL,host8_score=NULL,host9_rast=NULL,host9_score=NULL,host10_rast=NULL,host10_score=NULL,
-                 allTrees,initialPopulation, start, end, seasonality = 'NO', s1 = 1 , s2 = 12, sporeRate, windQ, windDir, tempData, precipData, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1){
+pest <- function(host1_rast, host1_score = NULL, host2_rast=NULL, host2_score=NULL, host3_rast=NULL, host3_score=NULL, host4_rast=NULL, host4_score=NULL,
+                 host5_rast=NULL, host5_score=NULL, host6_rast=NULL, host6_score=NULL, host7_rast=NULL, host7_score=NULL, host8_rast=NULL, host8_score=NULL,
+                 host9_rast=NULL, host9_score=NULL, host10_rast=NULL, host10_score=NULL, allTrees, initialPopulation, start, end, seasonality = 'NO',
+                 s1 = 1 , s2 = 12, sporeRate, windQ, windDir, tempQ, tempData, precipQ, precipData, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1, 
+                 scale1 = 20.57, scale2 = NULL, gamma = 1, seed_n = 42, time_step = "weeks"){
   
 ## Define the main working directory based on the current script path (un commment next line if used outside of shiny framework)
 # setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
@@ -23,44 +25,14 @@ pest <- function(host1_rast,host1_score = NULL, host2_rast=NULL,host2_score=NULL
 ## Use FULL PATH if source file is not in the same folder w/ this script
 # source('scripts/myfunctions_SOD.r') # loads custom functions for dispersal using R
 sourceCpp("scripts/myCppFunctions2.cpp") # load custom functions dispersal that use C++ (Faster)
-
-## Input rasters: individual species abundance (tree density per hectare) (if host score = 0 don't count in spread calculations)
-# Host 1
-#host1_rast <- host1_rast
-#host1_score <- host1_score
-# Host 2
-#host2_rast <- host2_rast
-#host2_score <- host2_score
-# Host 3
-#host3_rast <- host3_rast
-#host3_score <- host3_score
-# Host 4
-#host4_rast <- host4_rast
-#host4_score <- host4_score
-# Host 5
-#host5_rast <- host5_rast
-#host5_score <- host5_score
-# Host 6
-#host6_rast <- host6_rast
-#host6_score <- host6_score
-# Host 7
-#host7_rast <- host7_rast
-#host7_score <- host7_score
-# Host 8
-#host8_rast <- host8_rast
-#host8_score <- host8_score
-# Host 9
-#host9_rast <- host9_rast
-#host9_score <- host9_score
-# Host 10
-#host10_rast <- host10_rast
-#host10_score <- host10_score
-#host_score_list <- list(host1_score, host2_score, host3_score, host4_score, host5_score, host6_score, host7_score, host8_score, host9_score, host10_score)
+source("scripts/myfunctions_SOD.r")
+  
 host_score <- c(host1_score, host2_score, host3_score, host4_score, host5_score, host6_score, host7_score, host8_score, host9_score, host10_score)
 host_score[(number_of_hosts+1):10] <-0
 host_score <- host_score/10
 ## All live trees (for calculating the proportion of infected) (tree density per hectare)
 all_trees_rast <- allTrees
+all_trees_rast[is.na(all_trees_rast)]<- 0
 
 ## raster resolution
 res_win <- res(host1_rast)[1]
@@ -71,11 +43,13 @@ n_rows <- as.numeric(nrow(host1_rast))
 
 ### INFECTED AND SUSCEPTIBLES ####
 ## Initial infection:
+initialPopulation[is.na(initialPopulation)]<- 0
 initial_infection <- as.matrix(initialPopulation)
 number_of_hosts = number_of_hosts
 
 ## define matrices for infected species of interest
 if (number_of_hosts>0){ I_host1 <- matrix(0, nrow=n_rows, ncol=n_cols)
+host1_rast[is.na(host1_rast)]<- 0
 S_host1 <- as.matrix(host1_rast)
 if(any(S_host1[initial_infection > 0] > 0)) I_host1[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host1[initial_infection > 0], initial_infection[initial_infection > 0])
 S_host1 <- S_host1 - I_host1 
@@ -87,6 +61,7 @@ S_matrix_list <- list(S_host1)
 I_matrix_list <- list(I_host1)
 
 if (number_of_hosts>1) {I_host2 <- matrix(0, nrow=n_rows, ncol=n_cols)
+host2_rast[is.na(host2_rast)]<- 0
 S_host2 <- as.matrix(host2_rast)
 if(any(S_host2[initial_infection > 0] > 0)) I_host2[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host2[initial_infection > 0], initial_infection[initial_infection > 0]) 
 S_host2 <- S_host2 - I_host2 
@@ -98,6 +73,7 @@ S_matrix_list[[2]] <- S_host2
 I_matrix_list[[2]] <- I_host2
 
 if (number_of_hosts>2) {I_host3 <- matrix(0, nrow=n_rows, ncol=n_cols)
+host3_rast[is.na(host3_rast)]<- 0
 S_host3 <- as.matrix(host3_rast)
 if(any(S_host3[initial_infection > 0] > 0)) I_host3[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host3[initial_infection > 0], initial_infection[initial_infection > 0])
 S_host3 <- S_host3 - I_host3 
@@ -109,6 +85,7 @@ S_matrix_list[[3]] <- S_host3
 I_matrix_list[[3]] <- I_host3
 
 if (number_of_hosts>3) {I_host4 <- matrix(0, nrow=n_rows, ncol=n_cols)
+host4_rast[is.na(host4_rast)]<- 0
 S_host4 <- as.matrix(host4_rast)
 if(any(S_host4[initial_infection > 0] > 0)) I_host4[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host4[initial_infection > 0], initial_infection[initial_infection > 0])
 S_host4 <- S_host4 - I_host4 
@@ -120,6 +97,7 @@ S_matrix_list[[4]] <- S_host4
 I_matrix_list[[4]] <- I_host4
 
 if (number_of_hosts>4) {I_host5 <- matrix(0, nrow=n_rows, ncol=n_cols)
+host5_rast[is.na(host5_rast)]<- 0
 S_host5 <- as.matrix(host5_rast)
 if(any(S_host5[initial_infection > 0] > 0)) I_host5[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host5[initial_infection > 0], initial_infection[initial_infection > 0])
 S_host5 <- S_host5 - I_host5 
@@ -131,6 +109,7 @@ S_matrix_list[[5]] <- S_host5
 I_matrix_list[[5]] <- I_host5
 
 if (number_of_hosts>5) {I_host6 <- matrix(0, nrow=n_rows, ncol=n_cols)
+host6_rast[is.na(host6_rast)]<- 0
 S_host6 <- as.matrix(host6_rast)
 if(any(S_host6[initial_infection > 0] > 0)) I_host6[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host6[initial_infection > 0], initial_infection[initial_infection > 0])
 S_host6 <- S_host6 - I_host6 
@@ -142,6 +121,7 @@ S_matrix_list[[6]] <- S_host6
 I_matrix_list[[6]] <- I_host6
 
 if (number_of_hosts>6) {I_host7 <- matrix(0, nrow=n_rows, ncol=n_cols)
+host7_rast[is.na(host7_rast)]<- 0
 S_host7 <- as.matrix(host7_rast)
 if(any(S_host7[initial_infection > 0] > 0)) I_host7[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host7[initial_infection > 0], initial_infection[initial_infection > 0])
 S_host7 <- S_host7 - I_host7 
@@ -153,6 +133,7 @@ S_matrix_list[[7]] <- S_host7
 I_matrix_list[[7]] <- I_host7
 
 if (number_of_hosts>7) {I_host8 <- matrix(0, nrow=n_rows, ncol=n_cols)
+host8_rast[is.na(host8_rast)]<- 0
 S_host8 <- as.matrix(host8_rast)
 if(any(S_host8[initial_infection > 0] > 0)) I_host8[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host8[initial_infection > 0], initial_infection[initial_infection > 0])
 S_host8 <- S_host8 - I_host8 
@@ -164,6 +145,7 @@ S_matrix_list[[8]] <- S_host8
 I_matrix_list[[8]] <- I_host8
 
 if (number_of_hosts>8) {I_host9 <- matrix(0, nrow=n_rows, ncol=n_cols)
+host9_rast[is.na(host9_rast)]<- 0
 S_host9 <- as.matrix(host9_rast)
 if(any(S_host9[initial_infection > 0] > 0)) I_host9[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host9[initial_infection > 0], initial_infection[initial_infection > 0])
 S_host9 <- S_host9 - I_host9 
@@ -175,6 +157,7 @@ S_matrix_list[[9]] <- S_host9
 I_matrix_list[[9]] <- I_host9
 
 if (number_of_hosts>9) {I_host10 <- matrix(0, nrow=n_rows, ncol=n_cols)
+host10_rast[is.na(host10_rast)]<- 0
 S_host10 <- as.matrix(host10_rast)
 if(any(S_host10[initial_infection > 0] > 0)) I_host10[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host10[initial_infection > 0], initial_infection[initial_infection > 0])
 S_host10 <- S_host10 - I_host10
@@ -203,18 +186,23 @@ if (start > end) stop('start date must precede end date!!')
 ## build time series for simulation steps:
 dd_start <- as.POSIXlt(as.Date(paste(start,'-01-01',sep='')))
 dd_end <- as.POSIXlt(as.Date(paste(end,'-12-31',sep='')))
-tstep <- as.character(seq(dd_start, dd_end, 'weeks'))
+tstep <- as.character(seq(dd_start, dd_end, time_step))
 
 ## create list for yearly output
-split_date2 = unlist(strsplit(tstep, '-'))
-split_date2 = as.data.frame(as.numeric(split_date2[seq(2,length(split_date2),3)]))
-listvar = 1
-yearlyoutputlist = 0
-for (i in 2:nrow(split_date2)) {
-  if (split_date2[i,1] > split_date2[i-1,1] && split_date2[i,1] == 10) {
-    yearlyoutputlist[listvar] <- i-1
-    listvar = listvar +1
-  } 
+if (time_step == "weeks") {
+  split_date2 = unlist(strsplit(tstep, '-'))
+  split_date2 = as.data.frame(as.numeric(split_date2[seq(2,length(split_date2),3)]))
+  listvar = 1
+  yearlyoutputlist = 0
+  for (i in 2:nrow(split_date2)) {
+    if (split_date2[i,1] > split_date2[i-1,1] && split_date2[i,1] == 10) {
+      yearlyoutputlist[listvar] <- i-1
+      listvar = listvar +1
+    } 
+  }
+} else if (time_step == "months") {
+  n_years <- end-start+1
+  yearlyoutputlist <- seq(s2, s2+(n_years-1)*12,12)
 }
 
 ## Create data frame for infected host data 
@@ -222,23 +210,43 @@ years = seq(start, end, 1)
 dataForOutput <- data.frame(years = years, infectedHost1Individuals = 0, infectedHost1Area = 0, infectedHost2Individuals = 0, infectedHost2Area = 0) # replace infected host with actual host names
 yearTracker = 0
 
-## create formatting expression for padding zeros depending on total number of steps
-formatting_str = paste("%0", floor( log10( length(tstep) ) ) + 1, "d", sep='')
-
 ### WEATHER SUITABILITY: read and stack weather suitability raster BEFORE running the simulation ### 
 ## weather coefficients
-mcf.array <- ncvar_get(nc_open(precipData),  varid = "Mcoef") #M = moisture;
-ccf.array <- ncvar_get(nc_open(tempData),  varid = "Ccoef") #C = temperature;
+if (tempQ == "YES" && precipQ == "YES") {
+  if (extension(precipData)==".nc"){
+    mcf.array <- ncvar_get(nc_open(precipData),  varid = "Mcoef") #M = moisture;
+    ccf.array <- ncvar_get(nc_open(tempData),  varid = "Ccoef") #C = temperature;
+  } else {
+    mcf.array <- as.array(stack(precipData))
+    ccf.array <- as.array(stack(tempData))
+  }
+} else if (tempQ == "YES" && precipQ == "NO") {
+  if (extension(tempData)==".nc"){
+    ccf.array <- ncvar_get(nc_open(tempData),  varid = "Ccoef") #C = temperature;
+  } else {
+    temp_data <- stack(tempData)
+    temp_data[is.na(temp_data)] <- 0
+    ccf.array <- as.array(temp_data)
+  }
+} else if (tempQ == "NO" && precipQ == "YES") {
+  if (extension(precipData)==".nc"){
+    mcf.array <- ncvar_get(nc_open(precipData),  varid = "Mcoef") #M = moisture;
+  } else {
+    mcf.array <- as.array(stack(precipData))
+  }}
 
 ## Seasonality: Do you want the spread to be limited to certain months?
 seasonality <- seasonality   #'YES' or 'NO'
-if (seasonality == 'YES') months_msk <- paste('0', s1:s2, sep='') #1=January 9=September (Default to 1-12)
+if (seasonality == 'YES') months_msk <- formatC(s1:s2, width = 2, format = "d", flag = "0") # 1=January 12=December(Default to 1-12)
 
-##Wind: Do you want the spread to be affected by wind?
+## Wind: Do you want the spread to be affected by wind?
 wind <- windQ #'YES' or 'NO'
-pwdir <- windDir
-spore_rate <- sporeRate
+if (wind == "YES"){
+  pwdir <- windDir
+}
 
+spore_rate <- sporeRate
+#if (kernelType == "Exponential") { scale1 = 1/scale1}
 #time counter to access pos index in weather raster stacks
 cnt <- 1 
 
@@ -248,25 +256,25 @@ for (tt in tstep){
   ## split date string for raster time stamp
   split_date = unlist(strsplit(tt, '-'))
   
-  if (tt == tstep[1]) {
-    
-    if(!any(S_host1 > 0)) stop('Simulation ended. All host1 are infected!')
-    
-    ##CALCULATE OUTPUT TO PLOT: 
-    # 1) values as % infected
-    #I_host2_rast[] <- ifelse(I_host2_rast[] == 0, NA, I_host2_rast[]/host2_rast[])
-    
-    # 2) values as number of infected per cell
-    I_host2_rast[] <- ifelse(I_host2_rast[] == 0, NA, I_host2_rast[])
-    
-    # 3) values as 0 (non infected) and 1 (infected) cell
-    #I_host2_rast[] <- ifelse(I_host2_rast[] > 0, 1, 0) 
-    #I_host2_rast[] <- ifelse(I_host2_rast[] > 0, 1, NA) 
-
-  }else{
+  # if (tt == tstep[1]) {
+  #   
+  #   if(!any(S_host1 > 0)) stop('Simulation ended. All host1 are infected!')
+  #   
+  #   ##CALCULATE OUTPUT TO PLOT: 
+  #   # 1) values as % infected
+  #   #I_host2_rast[] <- ifelse(I_host2_rast[] == 0, NA, I_host2_rast[]/host2_rast[])
+  #   
+  #   # 2) values as number of infected per cell
+  #   I_host1_rast[] <- ifelse(I_host1_rast[] == 0, NA, I_host1_rast[])
+  #   
+  #   # 3) values as 0 (non infected) and 1 (infected) cell
+  #   #I_host2_rast[] <- ifelse(I_host2_rast[] > 0, 1, 0) 
+  #   #I_host2_rast[] <- ifelse(I_host2_rast[] > 0, 1, NA) 
+  # 
+  # }else{
     
     ## check if there are any susceptible host2 left on the landscape (IF NOT continue LOOP till the end)
-    if(!any(S_host2 > 0)) break
+    if(!any(S_host1 > 0)) break
     
     ## update week counter
     cnt <- cnt + 1
@@ -275,11 +283,18 @@ for (tt in tstep){
     if (seasonality == 'YES' & !any(substr(tt,6,7) %in% months_msk)) next
     
     ## Total weather suitability:
-    weather_suitability <- mcf.array[,,cnt] * ccf.array[,,cnt]
+    ## Total weather suitability:
+    if (tempQ == "YES" && precipQ == "YES") {
+      weather_suitability <- mcf.array[,,cnt] * ccf.array[,,cnt]
+    } else if (tempQ == "YES" && precipQ == "NO") {
+      weather_suitability <- ccf.array[,,cnt]
+    } else if (tempQ == "NO" && precipQ == "YES") {
+      weather_suitability <- mcf.array[,,cnt]
+    }
     
     ## GENERATE SPORES:  
-    set.seed(42)
-    infected_matrix <- matrix(0, nrow=res_win, ncol=res_win)
+    set.seed(seed_n)
+    infected_matrix <- matrix(0, nrow=n_rows, ncol=n_cols)
     for (i in 1:number_of_hosts){
       infected_matrix <- infected_matrix + (I_matrix_list[[i]]*(host_score[i]))
     }
@@ -307,7 +322,7 @@ for (tt in tstep){
                              N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57, host_score = host_score) ##TO DO
     }  
     
-    ## update R matrices:
+    ## update R matrices: ## Note this is a set of nested if statements
     if (number_of_hosts>0){
     S_matrix_list[[1]] <- out$S_host1_mat
     I_matrix_list[[1]] <- out$I_host1_mat
@@ -341,20 +356,20 @@ for (tt in tstep){
     }}}}}}}}}}
     
     ## CALCULATE OUTPUT TO PLOT:
-    I_host1_rast[] <- I_matrix_list[[1]]
-    I_host2_rast[] <- I_matrix_list[[2]]
+    #I_host1_rast[] <- I_matrix_list[[1]]
+    #I_host2_rast[] <- I_matrix_list[[2]]
     
     # 1) values as % infected
     #I_host2_rast[] <- ifelse(I_host2_rast[] == 0, NA, I_host2_rast[]/host2_rast[])
     
     # 2) values as number of infected per cell
-    I_host2_rast[] <- ifelse(I_host2_rast[] == 0, NA, I_host2_rast[])
-    I_host1_rast[] <- ifelse(I_host1_rast[] == 0, NA, I_host1_rast[])
+    #I_host2_rast[] <- ifelse(I_host2_rast[] == 0, NA, I_host2_rast[])
+    #I_host1_rast[] <- ifelse(I_host1_rast[] == 0, NA, I_host1_rast[])
     
     # 3) values as 0 (non infected) and 1 (infected) cell
     #I_host2_rast[] <- ifelse(I_host2_rast[] > 0, 1, 0) 
     #I_host2_rast[] <- ifelse(I_host2_rast[] > 0, 1, NA) 
-        
+      ## This is a set of nested if Statements
     if (cnt %in% yearlyoutputlist){
       yearTracker = yearTracker+1
       if (number_of_hosts>0){
@@ -427,7 +442,7 @@ for (tt in tstep){
       # dataForOutput$infectedHost2Area[yearTracker] <- ncell(na.omit(I_host2_rast@data@values))*res(I_host2_rast)[2]*res(I_host2_rast)[1]
     }
     
-  }
+  # }
   
 }
 

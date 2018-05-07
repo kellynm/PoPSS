@@ -226,15 +226,16 @@ if (tempQ == "YES" && precipQ == "YES") {
 
 ## Seasonality: Do you want the spread to be limited to certain months?
 seasonality <- seasonality   #'YES' or 'NO'
-if (seasonality == 'YES') months_msk <- paste('0', s1:s2, sep='') #1=January 9=September (Default to 1-12)
+if (seasonality == 'YES') months_msk <- paste('0', s1:s2, sep='') # 1=January 12=December(Default to 1-12)
 months_msk[5:6] <- c("10","11")
-##Wind: Do you want the spread to be affected by wind?
+## Wind: Do you want the spread to be affected by wind?
 wind <- windQ #'YES' or 'NO'
 if (wind == "YES"){
   pwdir <- windDir
 }else {}
 
 spore_rate <- sporeRate
+if (kernelType == "Exponential"){ scale1 = 1/scale1}
 
 #time counter to access pos index in weather raster stacks
 cnt <- 1 
