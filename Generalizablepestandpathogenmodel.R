@@ -217,8 +217,12 @@ if (tempQ == "YES" && precipQ == "YES") {
     mcf.array <- ncvar_get(nc_open(precipData),  varid = "Mcoef") #M = moisture;
     ccf.array <- ncvar_get(nc_open(tempData),  varid = "Ccoef") #C = temperature;
   } else {
-    mcf.array <- as.array(stack(precipData))
-    ccf.array <- as.array(stack(tempData))
+    temp_data <- stack(tempData)
+    temp_data[is.na(temp_data)] <- 0
+    precip_data <- stack(precipData)
+    precip_data[is.na(precip_data)] <- 0
+    mcf.array <- as.array(stack(precip_data))
+    ccf.array <- as.array(stack(temp_data))
   }
 } else if (tempQ == "YES" && precipQ == "NO") {
   if (extension(tempData)==".nc"){
@@ -232,6 +236,8 @@ if (tempQ == "YES" && precipQ == "YES") {
   if (extension(precipData)==".nc"){
     mcf.array <- ncvar_get(nc_open(precipData),  varid = "Mcoef") #M = moisture;
   } else {
+    precip_data <- stack(precipData)
+    precip_data[is.na(precip_data)] <- 0
     mcf.array <- as.array(stack(precipData))
   }}
 
@@ -246,7 +252,7 @@ if (wind == "YES"){
 }
 
 spore_rate <- sporeRate
-#if (kernelType == "Exponential") { scale1 = 1/scale1}
+if (kernelType == "Exponential") { scale1 = 1/scale1}
 #time counter to access pos index in weather raster stacks
 cnt <- 0 
 
