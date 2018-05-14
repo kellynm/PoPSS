@@ -17,7 +17,7 @@ suppressPackageStartupMessages(library(ncdf4))     # work with NetCDF datasets
 suppressPackageStartupMessages(library(dismo))     # Regression for ecological datasets
 suppressPackageStartupMessages(library(sp))        # Classes and methods for spatial data
 source("helpers.R")
-source("Generalizablepestandpathogenmodel_slf.R")
+source("Generalizablepestandpathogenmodel.R")
 source("InfoLabelInput.R")
 source("getUnit.R")
 source("zipcreator.R")
