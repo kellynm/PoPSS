@@ -49,10 +49,58 @@ for (i in 2:length(prcp)){
   print(i)
 }
 
+
+## Create initial model data from 1990 to 2000
 directory <- "G:/DaymetUS/California/WeatherCoeff"
 c_coef <- list.files(directory,pattern='c_coef', full.names = TRUE)
 m_coef <- list.files(directory,pattern='m_coef', full.names = TRUE)
-c_coef_s <- stack(c_coef)
-m_coef_s <- stack(m_coef)
-writeRaster(x=m_coef_s, filename = paste("m_coef_1990_2017_california.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
-writeRaster(x=c_coef_s, filename = paste("c_coef_1990_2017_california.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+c_coef_s <- stack(c_coef[5:32])
+m_coef_s <- stack(m_coef[5:32])
+c_coef1990_2000 <- c_coef_s[[1:572]]
+m_coef1990_2000 <- m_coef_s[[1:572]]
+
+## Create scores for the years from 1990 to 2017
+## Temperature score
+c_coef_r <- lapply(c_coef_s[3:30], stack)
+coef_a <- lapply(c_coef_r, as.array)
+for (i in 1:length(coef_a)){
+  coef_a[[i]][is.na(coef_a[[i]])] <-0
+}
+Cscore <- lapply(coef_a, mean)
+## Moisture Score
+m_coef_r <- lapply(m_coef_s[3:30], stack)
+moef_a <- lapply(m_coef_r, as.array)
+for (i in 1:length(moef_a)){
+  moef_a[[i]][is.na(moef_a[[i]])] <-0
+}
+Mscore <- lapply(moef_a, mean)
+
+Tscore <- Mscore
+for (i in 1:length(Mscore)){
+  Tscore[[i]] <- Mscore[[i]]*Cscore[[i]]
+}
+tscore <- as.data.frame(Tscore)
+names(tscore) <- seq(1990,2017,1)
+tscore <- t(tscore)
+tscore [order(tscore)]
+
+writeRaster(x=m_coef1990_2000, filename = paste("m_coef_1990_2000_california.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+writeRaster(x=c_coef1990_2000, filename = paste("c_coef_1990_2000_california.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+## Create bad weather scenario
+c_coef2000_2010 <- c_coef_s[[573:1092]]
+m_coef2000_2010 <- c_coef_s[[573:1092]]
+writeRaster(x=m_coef2000_2010, filename = paste("m_coef_2000_2010_california.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+writeRaster(x=c_coef2000_2010, filename = paste("c_coef_2000_2010_california.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+
+
+bc_coef2010_2030 <- c_coef_s[[c(1093:1456,1197:1248,625:676,885:936,1:52,937:988,1301:1352,1197:1248,625:676,885:936,1:52,937:988,1301:1352,1197:1248)]]
+bm_coef2010_2030 <- c_coef_s[[c(1093:1456,1197:1248,625:676,885:936,1:52,937:988,1301:1352,1197:1248,625:676,885:936,1:52,937:988,1301:1352,1197:1248)]]
+writeRaster(x=bm_coef2010_2030, filename = paste("bm_coef_2010_2030_california.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+writeRaster(x=bc_coef2010_2030, filename = paste("bc_coef_2010_2030_california.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+
+## Create good weather scenario
+gc_coef2010_2030 <- c_coef_s[[c(1093:1456,417:468,1041:1092,261:312,781:832,313:364,157:208,417:468,1041:1092,261:312,781:832,313:364,157:208,417:468)]]
+gm_coef2010_2030 <- c_coef_s[[c(1093:1456,417:468,1041:1092,261:312,781:832,313:364,157:208,417:468,1041:1092,261:312,781:832,313:364,157:208,417:468)]]
+writeRaster(x=gm_coef2010_2030, filename = paste("gm_coef_2010_2030_california.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+writeRaster(x=gc_coef2010_2030, filename = paste("gc_coef_2010_2030_california.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+

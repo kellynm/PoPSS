@@ -19,7 +19,7 @@ pest <- function(host1_rast, host1_score = NULL, host2_rast=NULL, host2_score=NU
                  scale1 = 20.57, scale2 = NULL, gamma = 1, seed_n = 42, time_step = "weeks"){
   
 ## Define the main working directory based on the current script path (un commment next line if used outside of shiny framework)
-# setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
+## setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\APHIS-Modeling-Project2")
 
 ## Use an external source file w/ all modules (functions) used within this script. 
 ## Use FULL PATH if source file is not in the same folder w/ this script
@@ -252,7 +252,7 @@ if (wind == "YES"){
 }
 
 spore_rate <- sporeRate
-if (kernelType == "Exponential") { scale1 = 1/scale1}
+#if (kernelType == "Exponential") { scale1 = 1/scale1}
 #time counter to access pos index in weather raster stacks
 cnt <- 0 
 
@@ -260,7 +260,7 @@ cnt <- 0
 for (tt in tstep){
   
   ## split date string for raster time stamp
-  split_date = unlist(strsplit(tt, '-'))
+  #split_date = unlist(strsplit(tt, '-'))
   
   # if (tt == tstep[1]) {
   #   

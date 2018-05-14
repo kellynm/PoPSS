@@ -222,9 +222,9 @@ List SporeDispCpp_mh(IntegerMatrix spore_matrix,
             else 
               dist = abs(R::rcauchy(0, scale2));
           }
-          // else if (rtype == "Exponential"){
-          //   dist = R::rexp(scale1);
-          // }
+          else if (rtype == "Exponential"){
+            dist = R::rexp(scale1);
+          }
           else 
             stop("The parameter rtype must be set to either 'Cauchy' or 'Cauchy Mixture'");
           
@@ -624,3 +624,10 @@ List SporeDispCppWind_mh(IntegerMatrix spore_matrix,
     _["I_host3_mat"] = I_host3_mat
   );
 }
+
+// [[Rcpp::export]]
+double d_return(double scale1) {
+  double dist = R::rexp(scale1);
+  return dist;
+}
+               

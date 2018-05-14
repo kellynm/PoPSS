@@ -58,8 +58,8 @@ rclmat <- matrix(m, ncol=3, byrow=TRUE)
 
 for (i in 1:length(tavg)){
   #tavg_rast <- stack(tavg[i])
-  tmin_rast <- stack(tmin[i])
-  tmin_rast <- tmin_rast[[1:31]]
+  tmin_rast <- stack(tavg[i])
+  tmin_rast <- tmin_avg[[1:31]]
   #r <- stack(tmin_files[i])
   #names(tavg_rast) <- names(r)
   #indices <- format(as.Date(names(r), format = "X%Y.%m.%d"), format = "%m")
@@ -116,3 +116,26 @@ crit_temp_s <- stack(crit_temp[4:6])
 writeRaster(x=crit_temp_s, filename = paste("crit_temp_2015_2017_slfarea2.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
 writeRaster(x=c_coef_s, filename = paste("c_coef_2015_2017_slfarea.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
 
+
+## Create final scenario
+lst <- dir("G:/DaymetUS/SLF_area/WeatherCoeff", pattern='.tif$', full.names=T)
+c_coef <- lst[c(1:3,5:7)]
+c_coef_r <- lapply(c_coef, stack)
+coef_a <- lapply(c_coef_r, as.array)
+for (i in 1:length(coef_a)){
+  coef_a[[i]][is.na(coef_a[[i]])] <-0
+}
+score <- lapply(coef_a, mean)
+b2017_2027 <- stack(c_coef_r[[6]], c_coef_r[[3]], c_coef_r[[4]],c_coef_r[[3]], c_coef_r[[4]],c_coef_r[[3]], c_coef_r[[4]],c_coef_r[[3]], c_coef_r[[4]],c_coef_r[[3]], c_coef_r[[4]])
+g2017_2027 <- stack(c_coef_r[[6]], c_coef_r[[1]], c_coef_r[[6]],c_coef_r[[1]], c_coef_r[[6]],c_coef_r[[1]], c_coef_r[[6]],c_coef_r[[1]], c_coef_r[[6]],c_coef_r[[1]], c_coef_r[[6]])
+writeRaster(x=b2017_2027, filename = paste("b_coef_2017_2027_slfarea.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+writeRaster(x=g2017_2027, filename = paste("g_coef_2017_2027_slfarea.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+
+b2018_2027 <- stack(c_coef_r[[3]], c_coef_r[[4]],c_coef_r[[3]], c_coef_r[[4]],c_coef_r[[3]], c_coef_r[[4]],c_coef_r[[3]], c_coef_r[[4]],c_coef_r[[3]], c_coef_r[[4]])
+g2018_2027 <- stack(c_coef_r[[1]], c_coef_r[[6]],c_coef_r[[1]], c_coef_r[[6]],c_coef_r[[1]], c_coef_r[[6]],c_coef_r[[1]], c_coef_r[[6]],c_coef_r[[1]], c_coef_r[[6]])
+writeRaster(x=b2018_2027, filename = paste("b_coef_2018_2027_slfarea.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+writeRaster(x=g2018_2027, filename = paste("g_coef_2018_2027_slfarea.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+
+
+c2016_2017 <- stack(c_coef_r[[5]], c_coef_r[[6]])
+writeRaster(x=c2016_2017, filename = paste("c_coef_2016_2017_slfarea.tif", sep = ""), overwrite=TRUE, format = 'GTiff')

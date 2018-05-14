@@ -1,29 +1,34 @@
-host1_rast = raster("./layers/UMCA_den_100m.img")
-host2_rast = raster("./layers/OAKS_den_100m.img")
-host3_rast = raster("./layers/LIDE3_den_100m.img")
-allTrees = raster("./layers/TPH_den_100m.img")
-initialPopulation = raster ("./layers/init_2000_cnt.img")
-start = 2000
-end = 2010
-SS = 'YES'
-s1 = 1
-s2 = 9
-sporeRate =4.4 ## spore rate default of original attempt
-windQ ='YES'
-windDir = 'NE'
-tempData = './layers/weather/weatherCoeff_2000_2014.nc'
-precipData = tempData
-number_of_hosts = 2
-host1_score = 10
-host2_score = 0
-host3_score = 5
-host4_score = NULL
-host5_score = NULL
-host6_score = NULL
-host7_score = NULL
-host8_score = NULL
-host9_score = NULL
-host10_score = NULL
+pest_vars$host1_rast = raster("./layers/UMCA_den_100m.img")
+pest_vars$host2_rast = raster("./layers/OAKS_den_100m.img")
+pest_vars$host3_rast = raster("./layers/LIDE3_den_100m.img")
+pest_vars$allTrees = raster("./layers/TPH_den_100m.img")
+pest_vars$initialPopulation = raster ("./layers/init_2000_cnt.img")
+pest_vars$start = 2000
+pest_vars$end = 2010
+pest_vars$seasonality = 'YES'
+pest_vars$s1 = 1
+pest_vars$s2 = 9
+pest_vars$sporeRate =4.4 ## spore rate default of original attempt
+pest_vars$windQ ='YES'
+pest_vars$windDir = 'NE'
+pest_vars$tempQ = "YES"
+pest_vars$precipQ = "YES"
+pest_vars$tempData = './layers/weather/weatherCoeff_2000_2014.nc'
+pest_vars$precipData = pest_vars$tempData
+pest_vars$scale2 =NULL
+pest_vars$number_of_hosts = 2
+pest_vars$host1_score = 10
+pest_vars$host2_score = 0
+pest_vars$host3_score = 5
+pest_vars$host4_score = NULL
+pest_vars$host5_score = NULL
+pest_vars$host6_score = NULL
+pest_vars$host7_score = NULL
+pest_vars$host8_score = NULL
+pest_vars$host9_score = NULL
+pest_vars$host10_score = NULL
+
+dataList <- do.call(pest, pest_vars)
 
 #setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
 I_oaks_rast2 <- pest(host1,host2,allTrees,initialPopulation, start, end, SS, s1, s2, sporeRate, windQ, windDir, tempData)
