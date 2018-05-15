@@ -7,7 +7,7 @@ suppressPackageStartupMessages(library(rgdal))     # Geospatial data abstraction
 suppressPackageStartupMessages(library(lubridate)) # Make dealing with dates a little easier. Depends R (≥ 3.0.0)
 suppressPackageStartupMessages(library(CircStats)) # Circular Statistics - Von Mises distribution
 suppressPackageStartupMessages(library(Rcpp))      # Seamless R and C++ Integration. Depends R (≥ 3.0.0)
-suppressPackageStartupMessages(library(plotrix))   # Add text annotations to plot
+#suppressPackageStartupMessages(library(plotrix))   # Add text annotations to plot
 suppressPackageStartupMessages(library(ncdf4))     # work with NetCDF datasets
 suppressPackageStartupMessages(library(dismo))     # Regression for ecological datasets
 suppressPackageStartupMessages(library(sp))        # Classes and methods for spatial data
@@ -19,7 +19,7 @@ pest <- function(host1_rast, host1_score = NULL, host2_rast=NULL, host2_score=NU
                  scale1 = 20.57, scale2 = NULL, gamma = 1, seed_n = 42, time_step = "weeks"){
   
 ## Define the main working directory based on the current script path (un commment next line if used outside of shiny framework)
-## setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\APHIS-Modeling-Project2")
+# setwd("C:\\Users\\chris\\Dropbox\\Projects\\Code\\Aphis Modeling Project")
 
 ## Use an external source file w/ all modules (functions) used within this script. 
 ## Use FULL PATH if source file is not in the same folder w/ this script
@@ -252,7 +252,7 @@ if (wind == "YES"){
 }
 
 spore_rate <- sporeRate
-#if (kernelType == "Exponential") { scale1 = 1/scale1}
+if (kernelType == "Exponential") { scale1 = 1/scale1}
 #time counter to access pos index in weather raster stacks
 cnt <- 0 
 
@@ -260,7 +260,7 @@ cnt <- 0
 for (tt in tstep){
   
   ## split date string for raster time stamp
-  #split_date = unlist(strsplit(tt, '-'))
+  split_date = unlist(strsplit(tt, '-'))
   
   # if (tt == tstep[1]) {
   #   
@@ -296,6 +296,8 @@ for (tt in tstep){
       weather_suitability <- ccf.array[,,cnt]
     } else if (tempQ == "NO" && precipQ == "YES") {
       weather_suitability <- mcf.array[,,cnt]
+    } else if (tempQ =="NO" && precipQ=="NO"){
+      weather_suitability <-  matrix(1, nrow=n_rows, ncol=n_cols)
     }
     
     ## GENERATE SPORES:  
@@ -312,20 +314,39 @@ for (tt in tstep){
       
       #Check if predominant wind direction has been specified correctly:
       if (!(pwdir %in% c('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'))) stop('A predominant wind direction must be specified: N, NE, E, SE, S, SW, W, NW')
-      out <- SporeDispCppWind_mh(spores_mat, 
-                                 S_host1_mat=S_matrix_list[[1]],S_host2_mat=S_matrix_list[[2]],S_host3_mat=S_matrix_list[[3]],S_host4_mat=S_matrix_list[[4]],S_host5_mat=S_matrix_list[[5]],
-                                 S_host6_mat=S_matrix_list[[6]],S_host7_mat=S_matrix_list[[7]],S_host8_mat=S_matrix_list[[8]],S_host9_mat=S_matrix_list[[9]],S_host10_mat=S_matrix_list[[10]],
-                                 I_host1_mat=I_matrix_list[[1]],I_host2_mat=I_matrix_list[[2]],I_host3_mat=I_matrix_list[[3]],I_host4_mat=I_matrix_list[[4]],I_host5_mat=I_matrix_list[[5]],
-                                 I_host6_mat=I_matrix_list[[6]],I_host7_mat=I_matrix_list[[7]],I_host8_mat=I_matrix_list[[8]],I_host9_mat=I_matrix_list[[9]],I_host10_mat=I_matrix_list[[10]],
-                                 N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=scale1, wdir=pwdir, kappa=kappa, host_score = host_score)
-    
+      if (kernelType == "Cauchy Mixture") {
+        out <- SporeDispCppWind_mh(spores_mat, 
+                                   S_host1_mat=S_matrix_list[[1]],S_host2_mat=S_matrix_list[[2]],S_host3_mat=S_matrix_list[[3]],S_host4_mat=S_matrix_list[[4]],S_host5_mat=S_matrix_list[[5]],
+                                   S_host6_mat=S_matrix_list[[6]],S_host7_mat=S_matrix_list[[7]],S_host8_mat=S_matrix_list[[8]],S_host9_mat=S_matrix_list[[9]],S_host10_mat=S_matrix_list[[10]],
+                                   I_host1_mat=I_matrix_list[[1]],I_host2_mat=I_matrix_list[[2]],I_host3_mat=I_matrix_list[[3]],I_host4_mat=I_matrix_list[[4]],I_host5_mat=I_matrix_list[[5]],
+                                   I_host6_mat=I_matrix_list[[6]],I_host7_mat=I_matrix_list[[7]],I_host8_mat=I_matrix_list[[8]],I_host9_mat=I_matrix_list[[9]],I_host10_mat=I_matrix_list[[10]],
+                                   N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=kappa, host_score = host_score, scale2 = scale2, gamma = gamma)
+      }else{
+        out <- SporeDispCppWind_mh(spores_mat, 
+                                   S_host1_mat=S_matrix_list[[1]],S_host2_mat=S_matrix_list[[2]],S_host3_mat=S_matrix_list[[3]],S_host4_mat=S_matrix_list[[4]],S_host5_mat=S_matrix_list[[5]],
+                                   S_host6_mat=S_matrix_list[[6]],S_host7_mat=S_matrix_list[[7]],S_host8_mat=S_matrix_list[[8]],S_host9_mat=S_matrix_list[[9]],S_host10_mat=S_matrix_list[[10]],
+                                   I_host1_mat=I_matrix_list[[1]],I_host2_mat=I_matrix_list[[2]],I_host3_mat=I_matrix_list[[3]],I_host4_mat=I_matrix_list[[4]],I_host5_mat=I_matrix_list[[5]],
+                                   I_host6_mat=I_matrix_list[[6]],I_host7_mat=I_matrix_list[[7]],I_host8_mat=I_matrix_list[[8]],I_host9_mat=I_matrix_list[[9]],I_host10_mat=I_matrix_list[[10]],
+                                   N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57, wdir=pwdir, kappa=kappa, host_score = host_score)
+      }
+
     }else{
-      out <- SporeDispCpp_mh(spores_mat, 
-                             S_host1_mat=S_matrix_list[[1]],S_host2_mat=S_matrix_list[[2]],S_host3_mat=S_matrix_list[[3]],S_host4_mat=S_matrix_list[[4]],S_host5_mat=S_matrix_list[[5]],
-                             S_host6_mat=S_matrix_list[[6]],S_host7_mat=S_matrix_list[[7]],S_host8_mat=S_matrix_list[[8]],S_host9_mat=S_matrix_list[[9]],S_host10_mat=S_matrix_list[[10]],
-                             I_host1_mat=I_matrix_list[[1]],I_host2_mat=I_matrix_list[[2]],I_host3_mat=I_matrix_list[[3]],I_host4_mat=I_matrix_list[[4]],I_host5_mat=I_matrix_list[[5]],
-                             I_host6_mat=I_matrix_list[[6]],I_host7_mat=I_matrix_list[[7]],I_host8_mat=I_matrix_list[[8]],I_host9_mat=I_matrix_list[[9]],I_host10_mat=I_matrix_list[[10]],
-                             N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=scale1, host_score = host_score) ##TO DO
+      if (kernelType == "Cauchy Mixture") {
+        out <- SporeDispCpp_mh(spores_mat, 
+                               S_host1_mat=S_matrix_list[[1]],S_host2_mat=S_matrix_list[[2]],S_host3_mat=S_matrix_list[[3]],S_host4_mat=S_matrix_list[[4]],S_host5_mat=S_matrix_list[[5]],
+                               S_host6_mat=S_matrix_list[[6]],S_host7_mat=S_matrix_list[[7]],S_host8_mat=S_matrix_list[[8]],S_host9_mat=S_matrix_list[[9]],S_host10_mat=S_matrix_list[[10]],
+                               I_host1_mat=I_matrix_list[[1]],I_host2_mat=I_matrix_list[[2]],I_host3_mat=I_matrix_list[[3]],I_host4_mat=I_matrix_list[[4]],I_host5_mat=I_matrix_list[[5]],
+                               I_host6_mat=I_matrix_list[[6]],I_host7_mat=I_matrix_list[[7]],I_host8_mat=I_matrix_list[[8]],I_host9_mat=I_matrix_list[[9]],I_host10_mat=I_matrix_list[[10]],
+                               N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57, host_score = host_score, gamma = gamma, scale2 = scale2) ##TO DO
+      }else{
+        out <- SporeDispCpp_mh(spores_mat, 
+                               S_host1_mat=S_matrix_list[[1]],S_host2_mat=S_matrix_list[[2]],S_host3_mat=S_matrix_list[[3]],S_host4_mat=S_matrix_list[[4]],S_host5_mat=S_matrix_list[[5]],
+                               S_host6_mat=S_matrix_list[[6]],S_host7_mat=S_matrix_list[[7]],S_host8_mat=S_matrix_list[[8]],S_host9_mat=S_matrix_list[[9]],S_host10_mat=S_matrix_list[[10]],
+                               I_host1_mat=I_matrix_list[[1]],I_host2_mat=I_matrix_list[[2]],I_host3_mat=I_matrix_list[[3]],I_host4_mat=I_matrix_list[[4]],I_host5_mat=I_matrix_list[[5]],
+                               I_host6_mat=I_matrix_list[[6]],I_host7_mat=I_matrix_list[[7]],I_host8_mat=I_matrix_list[[8]],I_host9_mat=I_matrix_list[[9]],I_host10_mat=I_matrix_list[[10]],
+                               N_LVE=all_trees, weather_suitability, rs=res_win, rtype=kernelType, scale1=20.57, host_score = host_score) ##TO DO
+      }
+
     }  
     
     ## update R matrices: ## Note this is a set of nested if statements
