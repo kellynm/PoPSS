@@ -7,7 +7,7 @@ suppressPackageStartupMessages(library(rgdal))     # Geospatial data abstraction
 suppressPackageStartupMessages(library(lubridate)) # Make dealing with dates a little easier. Depends R (≥ 3.0.0)
 suppressPackageStartupMessages(library(CircStats)) # Circular Statistics - Von Mises distribution
 suppressPackageStartupMessages(library(Rcpp))      # Seamless R and C++ Integration. Depends R (≥ 3.0.0)
-suppressPackageStartupMessages(library(plotrix))   # Add text annotations to plot
+#suppressPackageStartupMessages(library(plotrix))   # Add text annotations to plot
 suppressPackageStartupMessages(library(ncdf4))     # work with NetCDF datasets
 suppressPackageStartupMessages(library(dismo))     # Regression for ecological datasets
 suppressPackageStartupMessages(library(sp))        # Classes and methods for spatial data
@@ -296,6 +296,8 @@ for (tt in tstep){
       weather_suitability <- ccf.array[,,cnt]
     } else if (tempQ == "NO" && precipQ == "YES") {
       weather_suitability <- mcf.array[,,cnt]
+    } else if (tempQ =="NO" && precipQ=="NO"){
+      weather_suitability <-  matrix(1, nrow=n_rows, ncol=n_cols)
     }
     
     ## GENERATE SPORES:  

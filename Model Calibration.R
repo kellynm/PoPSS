@@ -179,6 +179,7 @@ pest_vars <<- list(host1_rast = NULL,host1_score = NULL, host2_rast=NULL,host2_s
                    precipQ="NO", precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1,scale1 = 20.57, scale2 = NULL, gamma = 1, seed_n = 42, time_step = "weeks")
 pest_vars$host1_rast = raster("C:/Users/Chris/Desktop/California/UMCA_1000m.tif")
 pest_vars$host2_rast = raster("C:/Users/Chris/Desktop/California/oaks_1000m.tif")
+pest_vars$host3_rast = raster("C:/Users/Chris/Desktop/California/LIDE_1000m.tif")
 pest_vars$allTrees = raster("C:/Users/Chris/Desktop/California/Total_dens_1000m.tif")
 pest_vars$initialPopulation = raster ("C:/Users/Chris/Desktop/California/InitialInfections.tif")
 pest_vars$start = 1990
@@ -191,11 +192,12 @@ pest_vars$tempData = 'G:/DaymetUS/California/WeatherCoeff/c_coef_1990_2000_calif
 pest_vars$precipData = 'G:/DaymetUS/California/WeatherCoeff/m_coef_1990_2000_california.tif'
 pest_vars$host1_score = 10
 pest_vars$host2_score = 0
+pest_vars$host2_score = 7
 pest_vars$number_of_hosts = 2
 pest_vars$tempQ = "YES"
 pest_vars$precipQ = "YES"
 pest_vars$windQ = "NO"
-pest_vars$kernelType = "Cauchy"
+pest_vars$kernelType = "Cauchy Mixture"
 pest_vars$scale1 = 20.57
 pest_vars$scale2 = 9504
 pest_vars$gamma = .995
