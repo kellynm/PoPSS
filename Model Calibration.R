@@ -5,7 +5,7 @@ pest_vars <<- list(host1_rast = NULL,host1_score = NULL, host2_rast=NULL,host2_s
                    host6_rast=NULL,host6_score=NULL,host7_rast=NULL,host7_score=NULL,host8_rast=NULL,host8_score=NULL,host9_rast=NULL,host9_score=NULL,host10_rast=NULL,host10_score=NULL,
                    allTrees=NULL,initialPopulation=NULL, start=2000, end=2010, seasonality = 'NO', s1 = 1 , s2 = 12, sporeRate = 4.4, windQ =NULL, windDir=NULL, tempQ="NO", tempData=NULL, 
                    precipQ="NO", precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1, scale1 = 20.57, seed_n = 42, scale2 = NULL, gamma = 1,  time_step = "weeks")
-pest_vars$host1_rast = raster("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/ToF.tif")
+pest_vars$host1_rast = raster("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/Treeofheaven.tif")
 pest_vars$allTrees = raster("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/totalhost.tif")
 pest_vars$initialPopulation = raster("C:/Users/Chris/Dropbox/Projects/APHIS/Ailanthus/2017Infestation.tif")
 pest_vars$start = 2017
@@ -169,7 +169,7 @@ for (i in 1:length(data2)) {
 
 checks2 <- aggregate(params2, by = list(params2$scale, params2$sporeRate), mean)
 write.csv(checks, "C:/Users/Chris/Desktop/slftests.csv")
-writeRaster(data[[2]], "C:/Users/Chris/Desktop/slftest2.tif", overwrite = TRUE, format = 'GTiff')
+writeRaster(d[[11]], "C:/Users/Chris/Desktop/InitialInfection2000.tif", overwrite = TRUE, format = 'GTiff')
 writeRaster(p17, "C:/Users/Chris/Desktop/slftest6.tif", overwrite = TRUE, format = 'GTiff')
 
 ## Set up and test SOD
@@ -181,29 +181,29 @@ pest_vars$host1_rast = raster("C:/Users/Chris/Desktop/California/UMCA_1000m.tif"
 pest_vars$host2_rast = raster("C:/Users/Chris/Desktop/California/oaks_1000m.tif")
 pest_vars$host3_rast = raster("C:/Users/Chris/Desktop/California/LIDE_1000m.tif")
 pest_vars$allTrees = raster("C:/Users/Chris/Desktop/California/Total_dens_1000m.tif")
-pest_vars$initialPopulation = raster ("C:/Users/Chris/Desktop/California/InitialInfections.tif")
-pest_vars$start = 1990
-pest_vars$end = 2000
+pest_vars$initialPopulation = raster ("C:/Users/Chris/Desktop/California/InitialInfection2000.tif")
+pest_vars$start = 2001
+pest_vars$end = 2010
 pest_vars$seasonality = 'YES'
 pest_vars$s1 = 1
 pest_vars$s2 = 9
 pest_vars$sporeRate =4.4 ## spore rate default of original attempt
-pest_vars$tempData = 'G:/DaymetUS/California/WeatherCoeff/c_coef_1990_2000_california.tif'
-pest_vars$precipData = 'G:/DaymetUS/California/WeatherCoeff/m_coef_1990_2000_california.tif'
+pest_vars$tempData = 'G:/DaymetUS/California/WeatherCoeff/c_coef_2000_2010_california.tif'
+pest_vars$precipData = 'G:/DaymetUS/California/WeatherCoeff/m_coef_2000_2010_california.tif'
 pest_vars$host1_score = 10
 pest_vars$host2_score = 0
 pest_vars$host2_score = 7
-pest_vars$number_of_hosts = 2
+pest_vars$number_of_hosts = 3
 pest_vars$tempQ = "YES"
 pest_vars$precipQ = "YES"
 pest_vars$windQ = "NO"
-pest_vars$kernelType = "Cauchy Mixture"
+pest_vars$kernelType = "Cauchy"
 pest_vars$scale1 = 20.57
 pest_vars$scale2 = 9504
 pest_vars$gamma = .995
 pest_vars$time_step = "weeks"
 data <- do.call(pest, pest_vars)
-scale = 2
+stascale = 2
 sporeRate = 2
 seed_n = 22
 i=0

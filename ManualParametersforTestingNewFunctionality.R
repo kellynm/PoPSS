@@ -89,7 +89,7 @@ ccf.array2 <- as.array(precip)
 
 
 
-writeRaster(I_host1_stack, "C:/Users/Chris/Desktop/slftest2.tif", overwrite = TRUE, format = 'GTiff')
+writeRaster(d, "C:/Users/Chris/Desktop/dodtest.tif", overwrite = TRUE, format = 'GTiff')
 
 for (tt in tstep){
   cnt <- cnt + 1
