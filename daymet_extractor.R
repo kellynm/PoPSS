@@ -15,7 +15,6 @@ end <- 2017
 time_range <- seq(start, end, 1)
 ## set up directory with files and create a new directory based on location of interest
 directory <- "G:/DaymetUS"
-#output_directory <- dir.create("G:/DaymetUS/California")
 
 ## reference shapefile used to clip, project, and resample 
 states <- readOGR("C:/Users/Chris/Desktop/California/us_states_lccproj.shp") # link to your local copy

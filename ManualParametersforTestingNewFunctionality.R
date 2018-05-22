@@ -1,3 +1,9 @@
+pest_vars <<- list(host1_rast = NULL,host1_score = NULL, host2_rast=NULL,host2_score=NULL,host3_rast=NULL,host3_score=NULL, host4_rast=NULL,host4_score=NULL,host5_rast=NULL,host5_score=NULL,
+                   host6_rast=NULL,host6_score=NULL,host7_rast=NULL,host7_score=NULL,host8_rast=NULL,host8_score=NULL,host9_rast=NULL,host9_score=NULL,host10_rast=NULL,host10_score=NULL,
+                   allTrees=NULL,initialPopulation=NULL, start=2000, end=2010, seasonality = 'NO', s1 = 1 , s2 = 12, sporeRate = 4.4, windQ =NULL, windDir=NULL, tempQ="NO", tempData=NULL, 
+                   precipQ="NO", precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1, scale1 = 20.57, seed_n = 42, scale2 = NULL, gamma = 1,  time_step = "weeks")
+
+
 pest_vars$host1_rast = raster("./layers/UMCA_den_100m.img")
 pest_vars$host2_rast = raster("./layers/OAKS_den_100m.img")
 pest_vars$host3_rast = raster("./layers/LIDE3_den_100m.img")

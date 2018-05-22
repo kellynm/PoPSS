@@ -456,43 +456,53 @@ for (tt in tstep){
 if (number_of_hosts>0){
   I_host1_stack <- subset(I_host1_stack, order(seq(nlayers(I_host1_stack)-1, 1, -1)))
   names(I_host1_stack) <- years
-  data <- list(dataForOutput, I_host1_stack)
+  I_totalhost_stack <- I_host1_stack
+  data <- list(dataForOutput, I_totalhost_stack, I_host1_stack)
 if (number_of_hosts>1){
   I_host2_stack <- subset(I_host2_stack, order(seq(nlayers(I_host2_stack)-1, 1, -1)))
   names(I_host2_stack) <- years
-  data[[3]] <- I_host2_stack
+  data[[2]] <- data[[2]]+I_host2_stack
+  data[[4]] <- I_host2_stack
 if (number_of_hosts>2){
   I_host3_stack <- subset(I_host3_stack, order(seq(nlayers(I_host3_stack)-1, 1, -1)))
   names(I_host3_stack) <- years
-  data[[4]] <- I_host3_stack
+  data[[2]] <- data[[2]]+I_host3_stack
+  data[[5]] <- I_host3_stack
 if (number_of_hosts>3){
   I_host4_stack <- subset(I_host4_stack, order(seq(nlayers(I_host4_stack)-1, 1, -1)))
   names(I_host4_stack) <- years
-  data[[5]] <- I_host4_stack
+  data[[2]] <- data[[2]]+I_host4_stack
+  data[[6]] <- I_host4_stack
 if (number_of_hosts>4){
   I_host5_stack <- subset(I_host5_stack, order(seq(nlayers(I_host5_stack)-1, 1, -1)))
   names(I_host5_stack) <- years
-  data[[6]] <- I_host5_stack
+  data[[2]] <- data[[2]]+I_host5_stack
+  data[[7]] <- I_host5_stack
 if (number_of_hosts>5){
   I_host6_stack <- subset(I_host6_stack, order(seq(nlayers(I_host6_stack)-1, 1, -1)))
   names(I_host6_stack) <- years
-  data[[7]] <- I_host6_stack
+  data[[2]] <- data[[2]]+I_host6_stack
+  data[[8]] <- I_host6_stack
 if (number_of_hosts>6){
   I_host7_stack <- subset(I_host7_stack, order(seq(nlayers(I_host7_stack)-1, 1, -1)))
   names(I_host7_stack) <- years
-  data[[8]] <- I_host7_stack
+  data[[2]] <- data[[2]]+I_host7_stack
+  data[[9]] <- I_host7_stack
 if (number_of_hosts>7){
   I_host8_stack <- subset(I_host8_stack, order(seq(nlayers(I_host8_stack)-1, 1, -1)))
   names(I_host8_stack) <- years
-  data[[9]] <- I_host8_stack
+  data[[2]] <- data[[2]]+I_host8_stack
+  data[[10]] <- I_host8_stack
 if (number_of_hosts>8){
   I_host9_stack <- subset(I_host9_stack, order(seq(nlayers(I_host9_stack)-1, 1, -1)))
   names(I_host9_stack) <- years
-  data[[10]] <- I_host9_stack
+  data[[2]] <- data[[2]]+I_host9_stack
+  data[[11]] <- I_host9_stack
 if (number_of_hosts>9){
   I_host10_stack <- subset(I_host10_stack, order(seq(nlayers(I_host10_stack)-1, 1, -1)))
   names(I_host10_stack) <- years
-  data[[11]] <- I_host10_stack
+  data[[2]] <- data[[2]]+I_host10_stack
+  data[[12]] <- I_host10_stack
 }}}}}}}}}}
 
 # data <- list(dataForOutput, I_host2_stack, I_host1_stack, I_host3_stack)
