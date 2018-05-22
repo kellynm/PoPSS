@@ -6,13 +6,32 @@ library(sp)
 library(googledrive)
 
 daymet_setup <- function(directory, output_directory, start, end, timestep, states_of_interest= c('California'), variables = c("prcp")){
+  ## create time range
+  time_range <- seq(start, end, 1)
+  ## read in list of daymet files to choose from later
+  precip_files <- list.files(directory,pattern='prcp', full.names = TRUE)
+  tmax_files <- list.files(directory,pattern='tmax', full.names = TRUE)
+  tmin_files <- list.files(directory,pattern='tmin', full.names = TRUE)
+  dates <- substr(precip_files,28,31)
+  precip_files <- precip_files[dates %in% time_range]
+  tmin_files <- tmin_files[dates %in% time_range]
+  tmax_files <- tmax_files[dates %in% time_range]
+  
+  ## reference shapefile used to clip, project, and resample 
+  states <- readOGR("C:/Users/Chris/Desktop/California/us_states_lccproj.shp") # link to your local copy
+  reference_area <- states[states@data$STATE_NAME %in% states_of_interest,]
+  rm(states)
+  
+  ## create directory for writing files
+  dir.create(output_directory)
+  setwd(output_directory)
   
 }
 
 ## Setup start and stop years
 start <-  2014
 end <- 2017
-time_range <- seq(start, end, 1)
+
 ## set up directory with files and create a new directory based on location of interest
 directory <- "G:/DaymetUS"
 
@@ -23,17 +42,8 @@ reference_area <- states[states@data$STATE_NAME %in% states_of_interest,]
 rm(states)
 
 ## list of files
-precip_files <- list.files(directory,pattern='prcp', full.names = TRUE)
-precip_files <- precip_files[2:length(precip_files)]
-tmax_files <- list.files(directory,pattern='tmax', full.names = TRUE)
-tmin_files <- list.files(directory,pattern='tmin', full.names = TRUE)
-dates <- substr(precip_files,28,31)
-precip_files <- precip_files[dates %in% time_range]
-tmin_files <- tmin_files[dates %in% time_range]
-tmax_files <- tmax_files[dates %in% time_range]
 
-dir.create(output_directory)
-setwd(output_directory)
+
 
 for (i in 1:length(precip_files)) {
   precip <- stack(precip_files[[i]], varname = "prcp")
