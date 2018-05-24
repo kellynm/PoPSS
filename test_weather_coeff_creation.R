@@ -5,6 +5,6 @@ timestep <- "weeks"
 directory <- "G:/DaymetUS"
 output_directory <- "G:/DaymetUS/test"
 #output_directory <- dir.create("G:/DaymetUS/test")
-states_of_interest= c('Maryland')
-
+states_of_interest <- c('Maryland')
+pest <- "ECFF"
 
