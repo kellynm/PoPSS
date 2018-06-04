@@ -1,3 +1,19 @@
+.content-wrapper, .main-footer, .right-side {
+  background-color:#000000;
+}
+
+.skin-blue .main-header .logo {
+  background-color:#CC0000;
+}
+
+.skin-blue .main-header .logo:hover {
+  background-color:#55994A;
+}
+
+.skin-blue .main-header .navbar {
+  background-color:#55994A;
+}
+
 body {background-color: black}
 
 body, label, input, button, select { 
