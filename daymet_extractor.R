@@ -5,7 +5,7 @@ library(ncdf4)
 library(sp)
 library(googledrive)
 
-daymet_setup <- function(directory, output_directory, start, end, timestep, states_of_interest= c('California'), variables = c("prcp"), pest){
+weather_coeff <- function(directory, output_directory, start, end, timestep, states_of_interest= c('California'), variables = c("prcp"), pest){
   ## create time range
   time_range <- seq(start, end, 1)
   ## read in list of daymet files to choose from later 
@@ -26,7 +26,7 @@ daymet_setup <- function(directory, output_directory, start, end, timestep, stat
     precip <- stack(precip_files[[i]], varname = "prcp")
     precip <- crop(precip, reference_area)
     precip <- mask(precip, reference_area)
-    
+    ifelse(i==1, prec <- precip, prec <- stack(prec, precip))
     #writeRaster(x=precip, filename = paste("daymet_v3_prcp_",time_range[i],"_slfarea.tif", sep = ""), overwrite=TRUE, format = 'GTiff')
     print(i)
   }
@@ -39,6 +39,9 @@ daymet_setup <- function(directory, output_directory, start, end, timestep, stat
   writeRaster(x=temp, filename = paste(output_directory, "/prcp_coeff_", start, "_", end, "_", pest, ".tif", sep = ""), overwrite=TRUE, format = 'GTiff')
   
 }
+
+
+
 
 ## Setup start and stop years
 start <-  2014
