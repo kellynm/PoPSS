@@ -2,7 +2,7 @@
 r <<- raster("UMCA_den_100m.img")
 pal <<- colorNumeric(c("#0C2C84","#41B6C4","#FFFFCC"), values(r), na.color = "transparent")
 #usCounties <<- readOGR("layers/usLower48Counties.shp")
-#usStates <<- readOGR("layers/usLower48States.shp")
+usStates <<- readOGR("layers/usLower48States.shp")
 dataList <<- c()
 pest_vars <<- list(host1_rast = NULL, host1_score = NULL, host2_rast=NULL, host2_score=NULL, host3_rast=NULL, host3_score=NULL, host4_rast=NULL, host4_score=NULL,
                   host5_rast=NULL, host5_score=NULL, host6_rast=NULL, host6_score=NULL, host7_rast=NULL, host7_score=NULL, host8_rast=NULL, host8_score=NULL,
@@ -65,13 +65,13 @@ function(input, output, session) {
   ## Set up plot and tab GUI state and county maps
   output$plotData <- renderPlot({plot(dataReturn$years, dataReturn$infectedHost2Individuals)})
   
-  # output$stateData <- renderLeaflet({
-  #   leaflet(usStates) %>%
-  #     addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
-  #                 opacity = 1.0, fillOpacity = 0.5,
-  #                 highlightOptions = highlightOptions(color = "white", weight = 2, bringToFront = TRUE))
-  # })
-  # 
+  output$stateData <- renderLeaflet({
+    leaflet(usStates) %>%
+      addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
+                  opacity = 1.0, fillOpacity = 0.5,
+                  highlightOptions = highlightOptions(color = "white", weight = 2, bringToFront = TRUE))
+  })
+
   # output$countyData <- renderLeaflet({
   #   leaflet(usCounties) %>%
   #     addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
@@ -146,9 +146,6 @@ function(input, output, session) {
           overlayGroups = olg,
           baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
           options = layersControlOptions(collapsed = TRUE, opacity =0.6))
-        # addLegend("bottomright", pal = pal, values = values(rastTotalSpeciesData),
-        #           title = "Host species",
-        #           opacity = 1)
   })
   observeEvent(input$hostDataM1, {
     inHostDataM1 <- input$hostDataM1
@@ -162,9 +159,6 @@ function(input, output, session) {
         overlayGroups = olg,
         baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
         options = layersControlOptions(collapsed = TRUE, opacity =0.6))
-      # addLegend("bottomright", pal = pal, values = values(rastHostDataM1),
-      #           title = "Host species",
-      #           opacity = 1)
   })
   observeEvent(input$hostDataM2, {
     inHostDataM2 <- input$hostDataM2
@@ -178,22 +172,19 @@ function(input, output, session) {
         overlayGroups = olg,
         baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
         options = layersControlOptions(collapsed = TRUE, opacity =0.6))
-      # addLegend("bottomright", pal = pal, values = values(rastHostDataM2),
-      #           title = "Host species",
-      #           opacity = 1)
   })
   
   output$mapData <- renderLeaflet({
       leaflet(height = "300px") %>%
+        addProviderTiles("Stamen.Terrain", group = "Terrain") %>%
         addProviderTiles("Esri.WorldImagery", group = "Imagery") %>%
         addProviderTiles("Stamen.TonerLite", group = "Toner Lite") %>%
         addProviderTiles("Stamen.Toner", group = "Toner") %>%
-        addProviderTiles("Stamen.Terrain", group = "Terrain") %>%
         addProviderTiles("CartoDB.Positron", group = "Carto") %>%
         addProviderTiles("CartoDB.DarkMatterNoLabels", group = "Carto Dark") %>%
         addRasterImage(r, opacity=0.0) %>%
         addLayersControl(
-          baseGroups = c("Imagery", "Toner", "Toner Lite", "Terrain", "Carto", "Carto Dark"),
+          baseGroups = c( "Terrain","Imagery", "Toner", "Toner Lite", "Carto", "Carto Dark"),
           options = layersControlOptions(collapsed = TRUE)
         )
   })
