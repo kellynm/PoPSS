@@ -29,7 +29,7 @@ rUnit <<- ''
 
 dashboardPage(
   dashboardHeader(
-    title = img(src ="C:/Users/Chris/Dropbox/Projects/PoPSS_Logo-30.png")
+    title = tags$a(href = 'https://github.com/ChrisJones687/APHIS-Modeling-Project/milestones', tags$img(src = "PoPSS_Logo.png", height = '80', width ='100%'))
   ),
   dashboardSidebar(
     sidebarMenu(
@@ -46,6 +46,8 @@ dashboardPage(
       br(),
       withBusyIndicatorUI(actionButton("run", " Run Model", icon = icon("play"))),
       br(),
+      br(),
+      #img(src='PoPSS_Logo.png'),
       br(),
       socialButton(url = "https://github.com/ChrisJones687/APHIS-Modeling-Project/issues", type="github")
     )
@@ -183,7 +185,35 @@ dashboardPage(
       tabItem(
         tabName = "weather",
         wellPanel(h3("Weather Indices", icon("thermometer-half"), style = "color: black"), 
-                  style = "color: black;background-color: #D7BDE2; border: #D7BDE2; padding: 1px 10px 1px 10px",
+                  style = "color: black;background-color: #AED6F1; border: #AED6F1; padding: 1px 10px 1px 10px",
+                  # Structure of Precipitation index inputs
+                  selectInput(inputId = "prec", label = infoLabelInputUI(id = "prec", label = "Create moisture index?", title = "Select yes if you want to create a moisture index for your study area and pest species."), choices = c("NO","YES")),
+                  conditionalPanel(
+                    condition = "input.prec == 'YES'", 
+                    selectInput("prec_select", label = infoLabelInputUI(id = "prec_select", label = "Select function type:", title = "Select the type of function to use to create your moisture index."), choices = c("# of days > or < threshold", "polynomial"))
+                  ),
+                  conditionalPanel(
+                    condition = "input.prec == 'YES' && input.prec_select == '# of days > or < threshold'",
+                    selectInput("prec_operator", label = infoLabelInputUI(id = "prec_operator", label = "Choose operator:", title = "Select the correct operator for your threshold"), choices = c("<", "<=", ">", ">=")),
+                    numericInput(inputId = "prec_thresh", label = infoLabelInputUI(id = "prec_thresh", label = "Precipitation threshold:", title = "Input the threshold at which precipitation affects your pests."), value = 2.5, min=0, max=1000, step = .1)
+                  ),
+                  conditionalPanel( 
+                    condition = "input.prec == 'YES' && input.prec_select == 'polynomial'",
+                    numericInput("prec_degree", label = infoLabelInputUI(id = "prec_degree", label = "Select the degree of the polynomial", title = "What degree of polynomial is the function you are trying to fit? (up to 3rd degree)"), value = 1, min = 1, max = 3, step = 1),
+                    numericInput(inputId = "prec_a0", label = infoLabelInputUI(id = "prec_a0", label = "Value of a0", title = "a0 is the constant value that sets the y-intercept"), value = -0.066, min=-100, max=100, step = .0001),
+                    numericInput(inputId = "prec_a1", label = infoLabelInputUI(id = "prec_a1", label = "Value of a1", title = "a1 is the constant that is mulitplied by x. (x is the precipitation value)"), value = 0.056, min=-100, max=100, step = .0001),
+                    conditionalPanel(
+                      condition = "input.prec_degree > 1",
+                      numericInput(inputId = "prec_a2", label = infoLabelInputUI(id = "prec_a2", label = "Value of a2", title = "a2 is the constant that is mulitplied by x^2. (x is the precipitation value)"), value = -0.0036, min=-100, max=100, step = .0001)   
+                    ),
+                    conditionalPanel(
+                      condition = "input.prec_degree > 2",
+                      numericInput(inputId = "prec_a3", label = infoLabelInputUI(id = "prec_a3", label = "Value of a3", title = "a3 is the constant that is mulitplied by x^3. (x is the precipitation value)"), value = -0.0003, min=-100, max=100, step = .0001)
+                    )
+                  )
+        ),
+        wellPanel(h3("Temperature Index", icon("thermometer-half"), style = "color: black"), 
+                  style = "color: black;background-color: #EDBB99; border: #EDBB99; padding: 1px 10px 1px 10px",
                   # Structure of Precipitation index inputs
                   selectInput(inputId = "prec", label = infoLabelInputUI(id = "prec", label = "Create moisture index?", title = "Select yes if you want to create a moisture index for your study area and pest species."), choices = c("NO","YES")),
                   conditionalPanel(

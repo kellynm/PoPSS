@@ -3,7 +3,7 @@
 }
 
 .skin-blue .main-header .logo {
-  background-color:#A2D9CE;
+  background-color:#464646;
 }
 
 .skin-blue .main-header .logo:hover {
@@ -11,11 +11,36 @@
 }
 
 .skin-blue .main-header .navbar {
-  background-color:#A2D9CE;
+  background-color:#464646;
 }
 
 .skin-blue .main-header .navbar:hover {
   background-color:#73C6B6;
+}
+
+.skin-blue .sidebar-toggle:hover {
+  background-color:#73C6B6;
+}
+
+
+.main-header {
+  max-height: 80px;
+}
+
+.main-header .logo {
+  height: 80px;
+}
+
+.sidebar-toggle {
+  height:80px; padding-top: 1px;
+}
+
+.navbar {
+  min-height: 80px;
+}
+
+.left-side, .main-sidebar {
+  padding-top:80px;
 }
 
 body {background-color: black}

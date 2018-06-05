@@ -5,7 +5,7 @@ library(ncdf4)
 library(sp)
 library(googledrive)
 
-weather_coeff <- function(directory, output_directory, start, end, timestep, states_of_interest= c('California'), variables = c("prcp"), pest){
+weather_coeff <- function(directory, output_directory, start, end, timestep, states_of_interest= c('California'), pest, prcp_index = 'NO', temp_index = 'YES'){
   ## create time range
   time_range <- seq(start, end, 1)
   
@@ -57,6 +57,11 @@ weather_coeff <- function(directory, output_directory, start, end, timestep, sta
     tavg_s <- stack(tavg, tavg_s)
     
     print(i)
+  }
+  
+  ## create temperature and/or precipitation indices from daymet data based on time-step and variables of interest
+  for (q in length(tavg_s)){
+    
   }
   
   ## create directory for writing files
