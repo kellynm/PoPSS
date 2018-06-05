@@ -140,8 +140,8 @@ dashboardPage(
                         style = "color: black;background-color: #E7B15F; border: #E7B15F; padding: 1px 10px 1px 10px",
                         # Create box asking if wind affects spread and if wind data is available
                         selectInput(inputId = "windQ", label = infoLabelInputUI(id = "WindQ", label = "Does wind affect spread?", title = "Select yes if you have wind data for your study area and wind affects the spread of your pest/pathogen."), choices = c("NO","YES")),
-                        conditionalPanel(
-                          condition = "input.windQ == 'YES'", selectInput("windType",label = infoLabelInputUI(id = "windType", label = "Wind data type:", title = "Do you have detailed raster wind data or only predominate wind direction?"), choices = c("Direction","Raster"))
+                        conditionalPanel(condition = "input.windQ == 'YES'", 
+                          selectInput("windType",label = infoLabelInputUI(id = "windType", label = "Wind data type:", title = "Do you have detailed raster wind data or only predominate wind direction?"), choices = c("Direction","Raster"))
                         ),
                         # add a data input box if yes is selected
                         conditionalPanel(condition = "input.windQ == 'YES' && input.windType == 'Raster'", 
@@ -155,14 +155,14 @@ dashboardPage(
                         # Create box asking if temperature affects spread and if Temperature data is available
                         selectInput(inputId = "temp", label = infoLabelInputUI(id = "temp", label = "Does temperature affect spread?", title = "Select yes if you have temperature data for your study area and temperature affects the ability of your species to disperse."), choices = c("NO","YES")),
                         # add a data input box if yes is selected
-                        conditionalPanel(
-                          condition = "input.temp == 'YES'", fileInput("tempData", label = infoLabelInputUI(id = "tempData", label = "Temperature Data:", title = "Select the temperature raster or netcdf file."), accept = c(".tif", ".nc"))
+                        conditionalPanel( condition = "input.temp == 'YES'", 
+                          fileInput("tempData", label = infoLabelInputUI(id = "tempData", label = "Temperature Data:", title = "Select the temperature raster or netcdf file."), accept = c(".tif", ".nc"))
                         ),
                         # Create box asking if precipitation affects spread and if precipitation data is available
                         selectInput(inputId = "precip", label = infoLabelInputUI(id = "precip", label = "Does precipitation affect spread?", title = "Select yes if you have precipitation data for your study area and precipitation affects the ability of your species to disperse."), choices = c("NO","YES")),
                         # add a data input box if yes is selected
-                        conditionalPanel(
-                          condition = "input.precip == 'YES'", fileInput("precipData", label = infoLabelInputUI(id = "precipData", label = "Precipitation Data:?", title = "Select the precipitation raster or netcdf file"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img"))
+                        conditionalPanel( condition = "input.precip == 'YES'", 
+                          fileInput("precipData", label = infoLabelInputUI(id = "precipData", label = "Precipitation Data:?", title = "Select the precipitation raster or netcdf file"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img"))
                         )
               )
       ),
@@ -170,11 +170,19 @@ dashboardPage(
       tabItem(tabName = "weather",
               wellPanel(h3("Weather Indices", icon("thermometer-half"), style = "color: black"), 
                         style = "color: black;background-color: #D7BDE2; border: #D7BDE2; padding: 1px 10px 1px 10px",
-                        # Create box asking if precipitation affects spread and if precipitation data is available
+                        # Structure of Precipitation index inputs
                         selectInput(inputId = "prec", label = infoLabelInputUI(id = "prec", label = "Create moisture index?", title = "Select yes if you want to create a moisture index for your study area and pest species."), choices = c("NO","YES")),
-                        conditionalPanel(
-                          condition = "input.prec == 'YES'", selectInput("prec_select", label = infoLabelInputUI(id = "prec_select", label = "Select function type:", title = "Select the type of function to use to create your moisture index"), choices = c("# of days > or < threshold", "polynomial"))
-                        )
+                        conditionalPanel( condition = "input.prec == 'YES'", 
+                          selectInput("prec_select", label = infoLabelInputUI(id = "prec_select", label = "Select function type:", title = "Select the type of function to use to create your moisture index"), choices = c("# of days > or < threshold", "polynomial"))
+                              ),
+                        conditionalPanel( condition = "input.prec == 'YES' && input.prec_select == '# of days > or < threshold'",
+                          selectInput("prec_operator", label = infoLabelInputUI(id = "prec_operator", label = "Choose operator:", title = "Select the correct operator for your threshold"), choices = c("<", "<=", ">", ">=")),
+                          numericInput(inputId = "prec_thresh", label = infoLabelInputUI(id = "prec_thresh", label = "Precipitation threshold:", title = "What is the "), value = 2.5, min=0, max=1000, step = .1)
+                              ),
+                        conditionalPanel( condition = "input.prec == 'YES' && input.prec_select == 'polynomial'",
+                          numericInput("prec_degree", label = infoLabelInputUI(id = "prec_degree", label = "Select the degree of the polynomial", title = "What degree of polynomial is the function you are trying to fit up to degree 3"), value = 1, min = 0, max = 3, step = 1),
+                          numericInput(inputId = "prec_a0", label = infoLabelInputUI(id = "prec_a0", label = "Precipitation threshold:", title = "What is the "), value = 2.5, min=0, max=1000, step = .01)
+                              )
               )
       ),
       
