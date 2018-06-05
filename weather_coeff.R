@@ -8,6 +8,7 @@ library(googledrive)
 weather_coeff <- function(directory, output_directory, start, end, timestep, states_of_interest= c('California'), variables = c("prcp"), pest){
   ## create time range
   time_range <- seq(start, end, 1)
+  
   ## read in list of daymet files to choose from later 
   precip_files <- list.files(directory,pattern='prcp', full.names = TRUE)
   tmax_files <- list.files(directory,pattern='tmax', full.names = TRUE)
@@ -27,6 +28,7 @@ weather_coeff <- function(directory, output_directory, start, end, timestep, sta
   tmin_s <- stack()
   tmax_s <- stack()
   tavg_s <- stack()
+  
   for (i in 1:length(precip_files)) {
     ## Precipitation 
     precip <- stack(precip_files[[i]], varname = "prcp")

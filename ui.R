@@ -168,7 +168,14 @@ dashboardPage(
       ),
       
       tabItem(tabName = "weather",
-              leafletOutput("stateData", height = "600px")
+              wellPanel(h3("Weather Indices", icon("thermometer-half"), style = "color: black"), 
+                        style = "color: black;background-color: #D7BDE2; border: #D7BDE2; padding: 1px 10px 1px 10px",
+                        # Create box asking if precipitation affects spread and if precipitation data is available
+                        selectInput(inputId = "prec", label = infoLabelInputUI(id = "prec", label = "Create moisture index?", title = "Select yes if you want to create a moisture index for your study area and pest species."), choices = c("NO","YES")),
+                        conditionalPanel(
+                          condition = "input.prec == 'YES'", selectInput("prec_select", label = infoLabelInputUI(id = "prec_select", label = "Select function type:", title = "Select the type of function to use to create your moisture index"), choices = c("# of days > or < threshold", "polynomial"))
+                        )
+              )
       ),
       
       tabItem(tabName = "dispersal"

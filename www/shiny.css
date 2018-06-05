@@ -3,15 +3,19 @@
 }
 
 .skin-blue .main-header .logo {
-  background-color:#CC0000;
+  background-color:#A2D9CE;
 }
 
 .skin-blue .main-header .logo:hover {
-  background-color:#55994A;
+  background-color:#73C6B6;
 }
 
 .skin-blue .main-header .navbar {
-  background-color:#55994A;
+  background-color:#A2D9CE;
+}
+
+.skin-blue .main-header .navbar:hover {
+  background-color:#73C6B6;
 }
 
 body {background-color: black}
