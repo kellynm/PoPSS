@@ -28,8 +28,9 @@ dataForPlot <<- data.frame(Year = 0,  Area = 0,  Count =0, Host =0)
 rUnit <<- ''
 
 dashboardPage(
-  dashboardHeader(title = img(src ="C:/Users/Chris/Dropbox/Projects/PoPSS_Logo-30.png")
-                  ),
+  dashboardHeader(
+    title = img(src ="C:/Users/Chris/Dropbox/Projects/PoPSS_Logo-30.png")
+  ),
   dashboardSidebar(
     sidebarMenu(
       menuItem("PoPSS Overview", tabName = "overview", icon = icon("question")),
@@ -49,38 +50,44 @@ dashboardPage(
       socialButton(url = "https://github.com/ChrisJones687/APHIS-Modeling-Project/issues", type="github")
     )
   ),
-  dashboardBody(tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "shiny.css")),
-                tags$head(tags$style(HTML('background-color: "black'))),
+  dashboardBody(
+    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "shiny.css")),
+    tags$head(tags$style(HTML('background-color: "black'))),
+    
     tabItems(
-      tabItem(tabName = "overview",
-              tags$video(src='modelexplanation.mp4', type = "video/mp4", width = "560px", height = "315px", controls = "controls", autoplay = NA)
-
-              ),
-      
-      tabItem(tabName = "species",
-              column(width = 4, style = "padding: 10px",
-                     wellPanel(h3("Species Parameters", icon("bug")),
-                               style = "background-color: #54ACC1; border: #ADBD60; color: black; padding: 1px 10px 1px 10px",
-                               textInput(inputId = "pest", label = infoLabelInputUI("pest", label = "Species Name", title = "Pest or Pathogen that is being simulated!")),
-                               numericInput("start", label = infoLabelInputUI(id = "start", label = "Start Year", title = "Year to start simulation"), value = 2000, min = 1960, max = 2020),
-                               numericInput("end", label = infoLabelInputUI(id = "end", label = "End Year", title = "Year to end simulation"), value = 2010, min = 1960, max = 2020),
-                               selectInput(inputId = "seasonQ", label = infoLabelInputUI(id = "SeasonQ", label = "Does seasonality affect spread?", title = "Limits spread to only months selected to limit computational time"), choices = c("YES","NO")),
-                               conditionalPanel(
-                                 condition = "input.seasonQ == 'YES'", sliderInput("seasonMonths", label = infoLabelInputUI(id = "seasonMonths", label = "Month Range", title = "Months that contribute to the spread of pest/pathogen."), value = c(1,9), min =1, max =12, step =1)
-                               ),
-                               numericInput(inputId ="sporeRate", label = infoLabelInputUI(id = "sporeRate", label = "Spread Rate", title = "Determines the average number of individuals that infect another cell during a time step."), value = "4.4", min=0, max = 100, step = 0.1),
-                               fileInput(inputId = "initialInfection", label = infoLabelInputUI(id = "initialInfection", label = "Initial Infection Data:", title = "Input a raster or shapefile of the location of infections at the start of simulation."), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")),
-                               bsAlert("initialInfectionID"),
-                               selectInput(inputId = "kernelType", label = infoLabelInputUI(id = "kernelType", label = "Select the best dispersal kernel.", title = "Choose the dispersal kernel that heuristically fits the dispersal pattern of your pest/pathogen."), choices = c('Cauchy', 'Cauchy Mixture', 'Exponential', 'Gauss')),
-                               numericInput(inputId ="scale_1", label = infoLabelInputUI(id = "scale_1", label = "Short distance dispersal scale parameter", title = "Short distance scale parameter for dispersal kernel"), value = "20.57", min=0, max = 1000, step = 0.01),
-                               numericInput(inputId ="scale_2", label = infoLabelInputUI(id = "scale_2", label = "Long distance dispersal scale parameter", title = "Long distance scale parameter for dispersal kernel"), value = "8557", min=0, max = 50000, step = 11),
-                               numericInput(inputId ="gamma", label = infoLabelInputUI(id = "gamma", label = "Gamma", title = "Sets the percent of short distance dispersal. If only short distance set to 1"), value = "1", min=0, max = 1, step = 0.01),
-                               numericInput(inputId ="seed", label = infoLabelInputUI(id = "seed", label = "Random Seed Number", title = "Random Seed Number: Use to duplicate a single run"), value = "42", min=0, max = 5000, step = 1),
-                               selectInput(inputId = "time_step", label = infoLabelInputUI(id = "time_step", label = "Time Step", title = "Time step: Monthly or Weekly"), choices = c("weeks","months"))
-                     ))
+      tabItem(
+        tabName = "overview",
+        tags$video(src='modelexplanation.mp4', type = "video/mp4", width = "560px", height = "315px", controls = "controls", autoplay = NA)
       ),
       
-      tabItem(tabName = "hosts",
+      tabItem(
+        tabName = "species",
+        column(width = 12, style = "padding: 10px",
+               wellPanel(h3("Species Parameters", icon("bug")),
+                         style = "background-color: #54ACC1; border: #ADBD60; color: black; padding: 1px 10px 1px 10px",
+                         textInput(inputId = "pest", label = infoLabelInputUI("pest", label = "Species Name", title = "Pest or Pathogen that is being simulated!")),
+                         numericInput("start", label = infoLabelInputUI(id = "start", label = "Start Year", title = "Year to start simulation"), value = 2000, min = 1960, max = 2020),
+                         numericInput("end", label = infoLabelInputUI(id = "end", label = "End Year", title = "Year to end simulation"), value = 2010, min = 1960, max = 2020),
+                         selectInput(inputId = "seasonQ", label = infoLabelInputUI(id = "SeasonQ", label = "Does seasonality affect spread?", title = "Limits spread to only months selected to limit computational time"), choices = c("YES","NO")),
+                         conditionalPanel(
+                           condition = "input.seasonQ == 'YES'", 
+                           sliderInput("seasonMonths", label = infoLabelInputUI(id = "seasonMonths", label = "Month Range", title = "Months that contribute to the spread of pest/pathogen."), value = c(1,9), min =1, max =12, step =1)
+                         ),
+                         numericInput(inputId ="sporeRate", label = infoLabelInputUI(id = "sporeRate", label = "Spread Rate", title = "Determines the average number of individuals that infect another cell during a time step."), value = "4.4", min=0, max = 100, step = 0.1),
+                         fileInput(inputId = "initialInfection", label = infoLabelInputUI(id = "initialInfection", label = "Initial Infection Data:", title = "Input a raster or shapefile of the location of infections at the start of simulation."), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")),
+                         bsAlert("initialInfectionID"),
+                         selectInput(inputId = "kernelType", label = infoLabelInputUI(id = "kernelType", label = "Select the best dispersal kernel.", title = "Choose the dispersal kernel that heuristically fits the dispersal pattern of your pest/pathogen."), choices = c('Cauchy', 'Cauchy Mixture', 'Exponential', 'Gauss')),
+                         numericInput(inputId ="scale_1", label = infoLabelInputUI(id = "scale_1", label = "Short distance dispersal scale parameter", title = "Short distance scale parameter for dispersal kernel"), value = "20.57", min=0, max = 1000, step = 0.01),
+                         numericInput(inputId ="scale_2", label = infoLabelInputUI(id = "scale_2", label = "Long distance dispersal scale parameter", title = "Long distance scale parameter for dispersal kernel"), value = "8557", min=0, max = 50000, step = 11),
+                         numericInput(inputId ="gamma", label = infoLabelInputUI(id = "gamma", label = "Gamma", title = "Sets the percent of short distance dispersal. If only short distance set to 1"), value = "1", min=0, max = 1, step = 0.01),
+                         numericInput(inputId ="seed", label = infoLabelInputUI(id = "seed", label = "Random Seed Number", title = "Random Seed Number: Use to duplicate a single run"), value = "42", min=0, max = 5000, step = 1),
+                         selectInput(inputId = "time_step", label = infoLabelInputUI(id = "time_step", label = "Time Step", title = "Time step: Monthly or Weekly"), choices = c("weeks","months"))
+               )
+        )
+      ),
+      
+      tabItem(
+        tabName = "hosts",
         wellPanel(h3("Hosts", icon("tree")),
                   style = "background-color: #ADBD60; border: #ADBD60; color: black; padding: 1px 10px 1px 10px",
                   numericInput("hostMulti", label = infoLabelInputUI(id = "hostMulti", label = "Number of host species", title = "Select the number of host species that affect spread."), value = 1, min =1, max =10, step =1),
@@ -135,77 +142,95 @@ dashboardPage(
         )
       ),
       
-      tabItem(tabName = "environmental",
-              wellPanel(h3("Environmental Effects", icon("sun-o"), style = "color: black"), 
-                        style = "color: black;background-color: #E7B15F; border: #E7B15F; padding: 1px 10px 1px 10px",
-                        # Create box asking if wind affects spread and if wind data is available
-                        selectInput(inputId = "windQ", label = infoLabelInputUI(id = "WindQ", label = "Does wind affect spread?", title = "Select yes if you have wind data for your study area and wind affects the spread of your pest/pathogen."), choices = c("NO","YES")),
-                        conditionalPanel(condition = "input.windQ == 'YES'", 
-                          selectInput("windType",label = infoLabelInputUI(id = "windType", label = "Wind data type:", title = "Do you have detailed raster wind data or only predominate wind direction?"), choices = c("Direction","Raster"))
-                        ),
-                        # add a data input box if yes is selected
-                        conditionalPanel(condition = "input.windQ == 'YES' && input.windType == 'Raster'", 
-                                         fileInput("windData", label = infoLabelInputUI(id = "windData", label = "Wind data:", title = "Select wind wind data raster or netcdf file"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img"))
-                        ),
-                        # add a data type option for wind in case detailed wind data isn't available but predominate wind direction
-                        conditionalPanel(condition = "input.windQ == 'YES' && input.windType == 'Direction'", 
-                                         selectInput("windDir", label = infoLabelInputUI(id = "windDir", label = "Predominate wind direction:", title = "Select the predominate wind direction for your study area."), choices = c("NE","E","SE","S","SW","W","NW","N")),
-                                         numericInput("kappa", label = infoLabelInputUI(id = "kappa", label = "Kappa:", title = "Kappa controls the dispersal direction dominance (i.e. kappa = 0 all directions equally likely, kappa = 8 much more likely to disperse in predominate direction)"), value = 2, min = 0, max = 100)
-                        ),
-                        # Create box asking if temperature affects spread and if Temperature data is available
-                        selectInput(inputId = "temp", label = infoLabelInputUI(id = "temp", label = "Does temperature affect spread?", title = "Select yes if you have temperature data for your study area and temperature affects the ability of your species to disperse."), choices = c("NO","YES")),
-                        # add a data input box if yes is selected
-                        conditionalPanel( condition = "input.temp == 'YES'", 
-                          fileInput("tempData", label = infoLabelInputUI(id = "tempData", label = "Temperature Data:", title = "Select the temperature raster or netcdf file."), accept = c(".tif", ".nc"))
-                        ),
-                        # Create box asking if precipitation affects spread and if precipitation data is available
-                        selectInput(inputId = "precip", label = infoLabelInputUI(id = "precip", label = "Does precipitation affect spread?", title = "Select yes if you have precipitation data for your study area and precipitation affects the ability of your species to disperse."), choices = c("NO","YES")),
-                        # add a data input box if yes is selected
-                        conditionalPanel( condition = "input.precip == 'YES'", 
-                          fileInput("precipData", label = infoLabelInputUI(id = "precipData", label = "Precipitation Data:?", title = "Select the precipitation raster or netcdf file"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img"))
-                        )
-              )
+      tabItem(
+        tabName = "environmental",
+        wellPanel(h3("Environmental Effects", icon("sun-o"), style = "color: black"), 
+                  style = "color: black;background-color: #E7B15F; border: #E7B15F; padding: 1px 10px 1px 10px",
+                  # Create box asking if wind affects spread and if wind data is available
+                  selectInput(inputId = "windQ", label = infoLabelInputUI(id = "WindQ", label = "Does wind affect spread?", title = "Select yes if you have wind data for your study area and wind affects the spread of your pest/pathogen."), choices = c("NO","YES")),
+                  conditionalPanel(
+                    condition = "input.windQ == 'YES'", 
+                    selectInput("windType",label = infoLabelInputUI(id = "windType", label = "Wind data type:", title = "Do you have detailed raster wind data or only predominate wind direction?"), choices = c("Direction","Raster"))
+                  ),
+                  # add a data input box if yes is selected
+                  conditionalPanel(
+                    condition = "input.windQ == 'YES' && input.windType == 'Raster'", 
+                    fileInput("windData", label = infoLabelInputUI(id = "windData", label = "Wind data:", title = "Select wind wind data raster or netcdf file"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img"))
+                  ),
+                  # add a data type option for wind in case detailed wind data isn't available but predominate wind direction
+                  conditionalPanel(
+                    condition = "input.windQ == 'YES' && input.windType == 'Direction'", 
+                    selectInput("windDir", label = infoLabelInputUI(id = "windDir", label = "Predominate wind direction:", title = "Select the predominate wind direction for your study area."), choices = c("NE","E","SE","S","SW","W","NW","N")),
+                    numericInput("kappa", label = infoLabelInputUI(id = "kappa", label = "Kappa:", title = "Kappa controls the dispersal direction dominance (i.e. kappa = 0 all directions equally likely, kappa = 8 much more likely to disperse in predominate direction)"), value = 2, min = 0, max = 100)
+                  ),
+                  # Create box asking if temperature affects spread and if Temperature data is available
+                  selectInput(inputId = "temp", label = infoLabelInputUI(id = "temp", label = "Does temperature affect spread?", title = "Select yes if you have temperature data for your study area and temperature affects the ability of your species to disperse."), choices = c("NO","YES")),
+                  # add a data input box if yes is selected
+                  conditionalPanel(
+                    condition = "input.temp == 'YES'", 
+                    fileInput("tempData", label = infoLabelInputUI(id = "tempData", label = "Temperature Data:", title = "Select the temperature raster or netcdf file."), accept = c(".tif", ".nc"))
+                  ),
+                  # Create box asking if precipitation affects spread and if precipitation data is available
+                  selectInput(inputId = "precip", label = infoLabelInputUI(id = "precip", label = "Does precipitation affect spread?", title = "Select yes if you have precipitation data for your study area and precipitation affects the ability of your species to disperse."), choices = c("NO","YES")),
+                  # add a data input box if yes is selected
+                  conditionalPanel(
+                    condition = "input.precip == 'YES'", 
+                    fileInput("precipData", label = infoLabelInputUI(id = "precipData", label = "Precipitation Data:?", title = "Select the precipitation raster or netcdf file"), accept = c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img"))
+                  )
+        )
       ),
       
-      tabItem(tabName = "weather",
-              wellPanel(h3("Weather Indices", icon("thermometer-half"), style = "color: black"), 
-                        style = "color: black;background-color: #D7BDE2; border: #D7BDE2; padding: 1px 10px 1px 10px",
-                        # Structure of Precipitation index inputs
-                        selectInput(inputId = "prec", label = infoLabelInputUI(id = "prec", label = "Create moisture index?", title = "Select yes if you want to create a moisture index for your study area and pest species."), choices = c("NO","YES")),
-                        conditionalPanel( condition = "input.prec == 'YES'", 
-                          selectInput("prec_select", label = infoLabelInputUI(id = "prec_select", label = "Select function type:", title = "Select the type of function to use to create your moisture index"), choices = c("# of days > or < threshold", "polynomial"))
-                              ),
-                        conditionalPanel( condition = "input.prec == 'YES' && input.prec_select == '# of days > or < threshold'",
-                          selectInput("prec_operator", label = infoLabelInputUI(id = "prec_operator", label = "Choose operator:", title = "Select the correct operator for your threshold"), choices = c("<", "<=", ">", ">=")),
-                          numericInput(inputId = "prec_thresh", label = infoLabelInputUI(id = "prec_thresh", label = "Precipitation threshold:", title = "What is the "), value = 2.5, min=0, max=1000, step = .1)
-                              ),
-                        conditionalPanel( condition = "input.prec == 'YES' && input.prec_select == 'polynomial'",
-                          numericInput("prec_degree", label = infoLabelInputUI(id = "prec_degree", label = "Select the degree of the polynomial", title = "What degree of polynomial is the function you are trying to fit up to degree 3"), value = 1, min = 0, max = 3, step = 1),
-                          numericInput(inputId = "prec_a0", label = infoLabelInputUI(id = "prec_a0", label = "Precipitation threshold:", title = "What is the "), value = 2.5, min=0, max=1000, step = .01)
-                              )
-              )
+      tabItem(
+        tabName = "weather",
+        wellPanel(h3("Weather Indices", icon("thermometer-half"), style = "color: black"), 
+                  style = "color: black;background-color: #D7BDE2; border: #D7BDE2; padding: 1px 10px 1px 10px",
+                  # Structure of Precipitation index inputs
+                  selectInput(inputId = "prec", label = infoLabelInputUI(id = "prec", label = "Create moisture index?", title = "Select yes if you want to create a moisture index for your study area and pest species."), choices = c("NO","YES")),
+                  conditionalPanel(
+                    condition = "input.prec == 'YES'", 
+                    selectInput("prec_select", label = infoLabelInputUI(id = "prec_select", label = "Select function type:", title = "Select the type of function to use to create your moisture index."), choices = c("# of days > or < threshold", "polynomial"))
+                  ),
+                  conditionalPanel(
+                    condition = "input.prec == 'YES' && input.prec_select == '# of days > or < threshold'",
+                    selectInput("prec_operator", label = infoLabelInputUI(id = "prec_operator", label = "Choose operator:", title = "Select the correct operator for your threshold"), choices = c("<", "<=", ">", ">=")),
+                    numericInput(inputId = "prec_thresh", label = infoLabelInputUI(id = "prec_thresh", label = "Precipitation threshold:", title = "Input the threshold at which precipitation affects your pests."), value = 2.5, min=0, max=1000, step = .1)
+                  ),
+                  conditionalPanel( 
+                    condition = "input.prec == 'YES' && input.prec_select == 'polynomial'",
+                    numericInput("prec_degree", label = infoLabelInputUI(id = "prec_degree", label = "Select the degree of the polynomial", title = "What degree of polynomial is the function you are trying to fit? (up to 3rd degree)"), value = 1, min = 1, max = 3, step = 1),
+                    numericInput(inputId = "prec_a0", label = infoLabelInputUI(id = "prec_a0", label = "Value of a0", title = "a0 is the constant value that sets the y-intercept"), value = -0.066, min=-100, max=100, step = .0001),
+                    numericInput(inputId = "prec_a1", label = infoLabelInputUI(id = "prec_a1", label = "Value of a1", title = "a1 is the constant that is mulitplied by x. (x is the precipitation value)"), value = 0.056, min=-100, max=100, step = .0001),
+                    conditionalPanel(
+                      condition = "input.prec_degree > 1",
+                      numericInput(inputId = "prec_a2", label = infoLabelInputUI(id = "prec_a2", label = "Value of a2", title = "a2 is the constant that is mulitplied by x^2. (x is the precipitation value)"), value = -0.0036, min=-100, max=100, step = .0001)   
+                    ),
+                    conditionalPanel(
+                      condition = "input.prec_degree > 2",
+                      numericInput(inputId = "prec_a3", label = infoLabelInputUI(id = "prec_a3", label = "Value of a3", title = "a3 is the constant that is mulitplied by x^3. (x is the precipitation value)"), value = -0.0003, min=-100, max=100, step = .0001)
+                    )
+                  )
+        )
       ),
       
       tabItem(tabName = "dispersal"
               
       ),
       
-      tabItem(tabName = "map",
-              column(width = 12,
-                     uiOutput("rSlider"),
-                     leafletOutput("mapData", height = "600px"),
-                     absolutePanel(top=80, left=25,
-                                   sliderInput("dec", "Year", min=1, max=11, value=1, step=1, animate= animationOptions(interval=1000)),
-                                   numericInput("host", label = "Choose species", min = 1, max = 3, value = 1),
-                                   checkboxInput("legend", "Show legend", TRUE) 
-                     ),
-                     br()
-                     # plotOutput("plotData", height = "600px"),
-                     # selectInput(inputId = "plotDataSelect", label = "Select data to display", choices = names(dataForPlot)[2:(length(names(dataForPlot))-1)])
-                     )
-
+      tabItem(
+        tabName = "map",
+        column(width = 12,
+               uiOutput("rSlider"),
+               leafletOutput("mapData", height = "600px"),
+               absolutePanel(top=80, left=25,
+                             sliderInput("dec", "Year", min=1, max=11, value=1, step=1, animate= animationOptions(interval=1000)),
+                             numericInput("host", label = "Choose species", min = 1, max = 3, value = 1),
+                             checkboxInput("legend", "Show legend", TRUE) 
+               ),
+               br()
+               # plotOutput("plotData", height = "600px"),
+               # selectInput(inputId = "plotDataSelect", label = "Select data to display", choices = names(dataForPlot)[2:(length(names(dataForPlot))-1)])
+        )
       )
     )
   )
-  
 )
