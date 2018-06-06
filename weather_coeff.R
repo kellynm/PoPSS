@@ -5,7 +5,8 @@ library(ncdf4)
 library(sp)
 library(googledrive)
 
-weather_coeff <- function(directory, output_directory, start, end, timestep, states_of_interest= c('California'), pest, prcp_index = 'NO', temp_index = 'YES'){
+weather_coeff <- function(directory, output_directory, start, end, timestep, states_of_interest= c('California'), pest, prcp_index = 'NO', temp_index = 'YES', 
+                          prcp_method = "threshold", temp_method = "polynomial", prcp_a0 = 0, prcp_a1 = 0, prcp_a2 = 0, prcp_a3 = 0, ){
   ## create time range
   time_range <- seq(start, end, 1)
   
@@ -31,32 +32,41 @@ weather_coeff <- function(directory, output_directory, start, end, timestep, sta
   
   for (i in 1:length(precip_files)) {
     ## Precipitation 
-    precip <- stack(precip_files[[i]], varname = "prcp")
-    precip <- crop(precip, reference_area)
-    precip <- mask(precip, reference_area)
-    if (i>1 && compareCRS(precip,prec) == FALSE) { precip@crs <- crs(prec) }
-    prec <- stack(prec, precip)
-    rm(precip)
-    
-    ## Temperature
-    tmin <- stack(tmin_files[[i]], varname = "tmin")
-    tmin <- crop(tmin, reference_area)
-    tmin <- mask(tmin, reference_area)
-    if (i>1 && compareCRS(tmin,tmin_s) == FALSE) { tmin@crs <- crs(tmin_s) }
-    tmax <- stack(tmax_files[[i]], varname = "tmax")
-    tmax <- crop(tmax, reference_area)
-    tmax <- mask(tmax, reference_area)
-    if (i>1 && compareCRS(tmax,tmax_s) == FALSE) { tmax@crs <- crs(tmax_s) }
-    tavg <- tmax
-    for (j in 1:nlayers(tmax)){
-      tavg[[j]] <- overlay(tmax[[j]], tmin[[j]], fun = function(r1, r2){return((r1+r2)/2)})
-      print(j)
+    if(prcp_index == 'YES'){
+      precip <- stack(precip_files[[i]], varname = "prcp")
+      precip <- crop(precip, reference_area)
+      precip <- mask(precip, reference_area)
+      if (i>1 && compareCRS(precip,prec) == FALSE) { precip@crs <- crs(prec) }
+      prec <- stack(prec, precip)
+      rm(precip)
     }
-    tmin_s <- stack(tmin, tmin_s)
-    tmax_s <- stack(tmax, tmax_s)
-    tavg_s <- stack(tavg, tavg_s)
-    
+
+    ## Temperature
+    if(temp_index == 'YES'){
+      tmin <- stack(tmin_files[[i]], varname = "tmin")
+      tmin <- crop(tmin, reference_area)
+      tmin <- mask(tmin, reference_area)
+      if (i>1 && compareCRS(tmin,tmin_s) == FALSE) { tmin@crs <- crs(tmin_s) }
+      tmax <- stack(tmax_files[[i]], varname = "tmax")
+      tmax <- crop(tmax, reference_area)
+      tmax <- mask(tmax, reference_area)
+      if (i>1 && compareCRS(tmax,tmax_s) == FALSE) { tmax@crs <- crs(tmax_s) }
+      tavg <- tmax
+      for (j in 1:nlayers(tmax)){
+        tavg[[j]] <- overlay(tmax[[j]], tmin[[j]], fun = function(r1, r2){return((r1+r2)/2)})
+        print(j)
+      }
+      tmin_s <- stack(tmin, tmin_s)
+      tmax_s <- stack(tmax, tmax_s)
+      tavg_s <- stack(tavg, tavg_s)
+    }
     print(i)
+  }
+  
+  ## Create reclassifier if threshold is used
+  if (prec_method == "threshold"){
+    m <- c(0, 2.5, 0,  2.5, Inf, 1)
+    rclmat <- matrix(m, ncol=3, byrow=TRUE)
   }
   
   ## create temperature and/or precipitation indices from daymet data based on time-step and variables of interest
