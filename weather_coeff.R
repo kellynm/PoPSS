@@ -9,7 +9,7 @@ weather_coeff <- function(directory, output_directory, start, end, timestep, sta
                           prcp_index = 'NO', prcp_method = "threshold",  prcp_a0 = 0, prcp_a1 = 0, prcp_a2 = 0, prcp_a3 = 0, 
                           prcp_thresh = 0, prcp_x1mod = 0, prcp_x2mod = 0, prcp_x3mod = 0,
                           temp_index = 'YES', temp_method = "polynomial", temp_a0 = 0, temp_a1 = 0, temp_a2 = 0, temp_a3 = 0, 
-                          temp_thresh = 0, temp_x1mod = 0, temp_x2mod = -15, temp_x3mod = -15){
+                          temp_thresh = 0, temp_x1mod = 0, temp_x2mod = 0, temp_x3mod = 0){
   
   ## create time range
   time_range <- seq(start, end, 1)

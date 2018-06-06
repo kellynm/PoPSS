@@ -185,62 +185,69 @@ dashboardPage(
       
       tabItem(
         tabName = "weather",
-        wellPanel(h3("Weather Indices", icon("thermometer-half"), style = "color: black"), 
+        wellPanel(h3("Weather Indices", icon("tint"), style = "color: black"), 
                   style = "color: black;background-color: #AED6F1; border: #AED6F1; padding: 1px 10px 1px 10px",
                   # Structure of precipitation index inputs
                   selectInput(inputId = "prcp", label = infoLabelInputUI(id = "prcp", label = "Create moisture index?", title = "Select yes if you want to create a moisture index for your study area and pest species."), choices = c("NO","YES")),
                   conditionalPanel(
                     condition = "input.prcp == 'YES'", 
-                    selectInput("prcp_method", label = infoLabelInputUI(id = "prcp_method", label = "Select function type:", title = "Select the type of function to use to create your moisture index."), choices = c("# of days > or < threshold", "polynomial"))
+                    selectInput("prcp_method", label = infoLabelInputUI(id = "prcp_method", label = "Select function type:", title = "Select the type of function to use to create your moisture index."), choices = c("threshold", "polynomial"))
                   ),
                   conditionalPanel(
-                    condition = "input.prcp == 'YES' && input.prcp_method == '# of days > or < threshold'",
+                    condition = "input.prcp == 'YES' && input.prcp_method == 'threshold'",
                     selectInput("prcp_operator", label = infoLabelInputUI(id = "prcp_operator", label = "Choose operator:", title = "Select the correct operator for your threshold"), choices = c("<", "<=", ">", ">=")),
-                    numericInput(inputId = "prcp_thresh", label = infoLabelInputUI(id = "prcp_thresh", label = "Precipitation threshold:", title = "Input the threshold at which precipitation affects your pests."), value = 2.5, min=0, max=1000, step = .1)
+                    numericInput(inputId = "prcp_thresh", label = infoLabelInputUI(id = "prcp_thresh", label = "Precipitation threshold:", title = "Input the threshold at which precipitation affects your pests."), value = 0, min=0, max=1000, step = .1)
                   ),
                   conditionalPanel( 
                     condition = "input.prcp == 'YES' && input.prcp_method == 'polynomial'",
                     numericInput("prcp_degree", label = infoLabelInputUI(id = "prcp_degree", label = "Select the degree of the polynomial", title = "What degree of polynomial is the function you are trying to fit? (up to 3rd degree)"), value = 1, min = 1, max = 3, step = 1),
-                    numericInput(inputId = "prcp_a0", label = infoLabelInputUI(id = "prcp_a0", label = "Value of a0", title = "a0 is the constant value that sets the y-intercept"), value = -0.066, min=-100, max=100, step = .0001),
-                    numericInput(inputId = "prcp_a1", label = infoLabelInputUI(id = "prcp_a1", label = "Value of a1", title = "a1 is the constant that is mulitplied by x. (x is the precipitation value)"), value = 0.056, min=-100, max=100, step = .0001),
+                    numericInput(inputId = "prcp_a0", label = infoLabelInputUI(id = "prcp_a0", label = "Value of a0", title = "a0 is the constant value that sets the y-intercept"), value = 0, min=-100, max=100, step = .0001),
+                    numericInput(inputId = "prcp_a1", label = infoLabelInputUI(id = "prcp_a1", label = "Value of a1", title = "a1 is the constant that is mulitplied by x. (x is the precipitation value)"), value = 0, min=-100, max=100, step = .0001),
                     conditionalPanel(
                       condition = "input.prcp_degree > 1",
-                      numericInput(inputId = "prcp_a2", label = infoLabelInputUI(id = "prcp_a2", label = "Value of a2", title = "a2 is the constant that is mulitplied by x^2. (x is the precipitation value)"), value = -0.0036, min=-100, max=100, step = .0001)   
+                      numericInput(inputId = "prcp_a2", label = infoLabelInputUI(id = "prcp_a2", label = "Value of a2", title = "a2 is the constant that is mulitplied by x^2. (x is the precipitation value)"), value = 0, min=-100, max=100, step = .0001)   
                     ),
                     conditionalPanel(
                       condition = "input.prcp_degree > 2",
-                      numericInput(inputId = "prcp_a3", label = infoLabelInputUI(id = "prcp_a3", label = "Value of a3", title = "a3 is the constant that is mulitplied by x^3. (x is the precipitation value)"), value = -0.0003, min=-100, max=100, step = .0001)
+                      numericInput(inputId = "prcp_a3", label = infoLabelInputUI(id = "prcp_a3", label = "Value of a3", title = "a3 is the constant that is mulitplied by x^3. (x is the precipitation value)"), value = 0, min=-100, max=100, step = .0001)
                     )
                   )
         ),
         wellPanel(h3("Temperature Index", icon("thermometer-half"), style = "color: black"), 
                   style = "color: black;background-color: #EDBB99; border: #EDBB99; padding: 1px 10px 1px 10px",
                   # Structure of temperature index inputs
-                  selectInput(inputId = "prcp", label = infoLabelInputUI(id = "prcp", label = "Create moisture index?", title = "Select yes if you want to create a moisture index for your study area and pest species."), choices = c("NO","YES")),
+                  selectInput(inputId = "temp_index", label = infoLabelInputUI(id = "temp_index", label = "Create moisture index?", title = "Select yes if you want to create a moisture index for your study area and pest species."), choices = c("NO","YES")),
                   conditionalPanel(
-                    condition = "input.prcp == 'YES'", 
-                    selectInput("prec_method", label = infoLabelInputUI(id = "prec_method", label = "Select function type:", title = "Select the type of function to use to create your moisture index."), choices = c("# of days > or < threshold", "polynomial"))
+                    condition = "input.temp_index == 'YES'", 
+                    selectInput("temp_method", label = infoLabelInputUI(id = "temp_method", label = "Select function type:", title = "Select the type of function to use to create your moisture index."), choices = c("threshold", "polynomial"))
                   ),
                   conditionalPanel(
-                    condition = "input.prcp == 'YES' && input.prec_method == '# of days > or < threshold'",
-                    selectInput("prec_operator", label = infoLabelInputUI(id = "prec_operator", label = "Choose operator:", title = "Select the correct operator for your threshold"), choices = c("<", "<=", ">", ">=")),
-                    numericInput(inputId = "prec_thresh", label = infoLabelInputUI(id = "prec_thresh", label = "Precipitation threshold:", title = "Input the threshold at which precipitation affects your pests."), value = 2.5, min=0, max=1000, step = .1)
+                    condition = "input.temp_index == 'YES' && input.temp_method == 'threshold'",
+                    selectInput("temp_operator", label = infoLabelInputUI(id = "temp_operator", label = "Choose operator:", title = "Select the correct operator for your threshold"), choices = c("<", "<=", ">", ">=")),
+                    numericInput(inputId = "temp_thresh", label = infoLabelInputUI(id = "temp_thresh", label = "Precipitation threshold:", title = "Input the threshold at which precipitation affects your pests."), value = 0, min=0, max=1000, step = .1)
                   ),
                   conditionalPanel( 
-                    condition = "input.prcp == 'YES' && input.prec_method == 'polynomial'",
-                    numericInput("prec_degree", label = infoLabelInputUI(id = "prec_degree", label = "Select the degree of the polynomial", title = "What degree of polynomial is the function you are trying to fit? (up to 3rd degree)"), value = 1, min = 1, max = 3, step = 1),
-                    numericInput(inputId = "prec_a0", label = infoLabelInputUI(id = "prec_a0", label = "Value of a0", title = "a0 is the constant value that sets the y-intercept"), value = -0.066, min=-100, max=100, step = .0001),
-                    numericInput(inputId = "prec_a1", label = infoLabelInputUI(id = "prec_a1", label = "Value of a1", title = "a1 is the constant that is mulitplied by x. (x is the precipitation value)"), value = 0.056, min=-100, max=100, step = .0001),
+                    condition = "input.temp_index == 'YES' && input.temp_method == 'polynomial'",
+                    numericInput("temp_degree", label = infoLabelInputUI(id = "temp_degree", label = "Select the degree of the polynomial", title = "What degree of polynomial is the function you are trying to fit? (up to 3rd degree)"), value = 1, min = 1, max = 3, step = 1),
+                    numericInput(inputId = "temp_a0", label = infoLabelInputUI(id = "temp_a0", label = "Value of a0", title = "a0 is the constant value that sets the y-intercept"), value = 0, min=-100, max=100, step = .0001),
+                    numericInput(inputId = "temp_a1", label = infoLabelInputUI(id = "temp_a1", label = "Value of a1", title = "a1 is the constant that is mulitplied by x. (x is the precipitation value)"), value = 0, min=-100, max=100, step = .0001),
                     conditionalPanel(
-                      condition = "input.prec_degree > 1",
-                      numericInput(inputId = "prec_a2", label = infoLabelInputUI(id = "prec_a2", label = "Value of a2", title = "a2 is the constant that is mulitplied by x^2. (x is the precipitation value)"), value = -0.0036, min=-100, max=100, step = .0001)   
+                      condition = "input.temp_degree > 1",
+                      numericInput(inputId = "temp_a2", label = infoLabelInputUI(id = "temp_a2", label = "Value of a2", title = "a2 is the constant that is mulitplied by x^2. (x is the precipitation value)"), value = 0, min=-100, max=100, step = .0001)   
                     ),
                     conditionalPanel(
-                      condition = "input.prec_degree > 2",
-                      numericInput(inputId = "prec_a3", label = infoLabelInputUI(id = "prec_a3", label = "Value of a3", title = "a3 is the constant that is mulitplied by x^3. (x is the precipitation value)"), value = -0.0003, min=-100, max=100, step = .0001)
+                      condition = "input.temp_degree > 2",
+                      numericInput(inputId = "temp_a3", label = infoLabelInputUI(id = "temp_a3", label = "Value of a3", title = "a3 is the constant that is mulitplied by x^3. (x is the precipitation value)"), value = 0, min=-100, max=100, step = .0001)
                     )
                   )
-        )
+        ),
+        wellPanel(h3("Directories", icon("files-o"), style = "color: black"), 
+                  style = "color: black;background-color: #EDBB99; border: #EDBB99; padding: 1px 10px 1px 10px"
+                  # Directory Inputs
+                  #selectInput(inputId = "temp_index", label = infoLabelInputUI(id = "temp_index", label = "Create moisture index?", title = "Select yes if you want to create a moisture index for your study area and pest species."), choices = c("NO","YES")),
+
+        ),
+        withBusyIndicatorUI(actionButton("weather_coeff_button", " Create Weather Coefficients", icon = icon("thermometer-full")))
       ),
       
       tabItem(tabName = "dispersal"

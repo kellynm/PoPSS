@@ -11,6 +11,12 @@ pest_vars <<- list(host1_rast = NULL, host1_score = NULL, host2_rast=NULL, host2
                   precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1, scale1 = 20.57, scale2 = NULL, gamma = 1, seed_n = 42,
                   time_step ="weeks")
 
+weather_coeff_vars <<- list(directory = NULL, output_directory = NULL, start = NULL, end = NULL, timestep = 'daily', states_of_interest = c('Maryland'), pest = NULL, 
+                        prcp_index = 'NO', prcp_method = NULL,  prcp_a0 = 0, prcp_a1 = 0, prcp_a2 = 0, prcp_a3 = 0, 
+                        prcp_thresh = 0, prcp_x1mod =0, prcp_x2mod = 0, prcp_x3mod = 0,
+                        temp_index = 'NO', temp_method = NULL, temp_a0 = 0, temp_a1 = 0, temp_a2 = 0, temp_a3 = 0, 
+                        temp_thresh = 0, temp_x1mod = 0, temp_x2mod = 0, temp_x3mod = 0)
+
 function(input, output, session) {
   options(shiny.maxRequestSize=70000*1024^2) 
   ## Creates the text file that is downloaded upon model completion
@@ -46,13 +52,6 @@ function(input, output, session) {
                            }}
                            })
   ## Download zip folder when download button is pressed
-  #dataModal <- modalDialog(textInput("path", "Choose download location"))
-  # observeEvent(input$zip, {
-  #   showModal(modalDialog(fileInput("path", "Choose download location"),        footer = tagList(
-  #     modalButton("Cancel"),
-  #     actionButton("ok", "OK"))))
-  #   #zipcreator(dataList = dataList, path = input$path)
-  #   })
   observeEvent(input$zip, {
     zippath <- paste(file.path(Sys.getenv("USERPROFILE"),"Desktop"),"/output.zip",sep = "")
     zipcreator(dataList = dataList, path = zippath)
@@ -113,6 +112,8 @@ function(input, output, session) {
   observeEvent(input$hostIndexScore8, {pest_vars$host8_score <<- input$hostIndexScore8})
   observeEvent(input$hostIndexScore9, {pest_vars$host9_score <<- input$hostIndexScore9})
   observeEvent(input$hostIndexScore10, {pest_vars$host10_score <<- input$hostIndexScore10})
+  
+  ## Add/change parameter values when the inputs change in the GUI to weather_coeff_vars parameter list. This list is used to pass the most recent parameter values to the weather coeff creation fuction.
   
   ## Set up GUI maps to be flexible
   observeEvent(input$initialInfection, {
@@ -234,7 +235,7 @@ function(input, output, session) {
     #proxy <<- proxy %>% removeImage(layerID = "hostIMG") %>% addRasterImage(host1Years, colors=pal2, opacity=0.8, layerId = "hostIMG")
   })
   
-  # Allows for the downloading of the user manual when the download link is pressed
+  ## Allows for the downloading of the user manual when the download link is pressed
   output$userManual.pdf <- downloadHandler("user_manual.pdf", content = function(file){
     file.copy("Documentation\\User Manual.pdf",file)
   }, contentType = "pdf")
