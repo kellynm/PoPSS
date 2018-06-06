@@ -5,30 +5,38 @@ library(ncdf4)
 library(sp)
 library(googledrive)
 
-weather_coeff <- function(directory, output_directory, start, end, timestep, states_of_interest= c('California'), pest, prcp_index = 'NO', temp_index = 'YES', 
-                          prcp_method = "threshold", temp_method = "polynomial", prcp_a0 = 0, prcp_a1 = 0, prcp_a2 = 0, prcp_a3 = 0, ){
+weather_coeff <- function(directory, output_directory, start, end, timestep, states_of_interest= c('California'), pest, 
+                          prcp_index = 'NO', prcp_method = "threshold",  prcp_a0 = 0, prcp_a1 = 0, prcp_a2 = 0, prcp_a3 = 0, prcp_thresh = 0,
+                          temp_index = 'YES', temp_method = "polynomial", temp_a0 = 0, temp_a1 = 0, temp_a2 = 0, temp_a3 = 0, temp_thresh = 0){
   ## create time range
   time_range <- seq(start, end, 1)
   
   ## read in list of daymet files to choose from later 
-  precip_files <- list.files(directory,pattern='prcp', full.names = TRUE)
-  tmax_files <- list.files(directory,pattern='tmax', full.names = TRUE)
-  tmin_files <- list.files(directory,pattern='tmin', full.names = TRUE)
-  dates <- substr(precip_files,28,31) # Assumes daymet data is saved in the exact naming format that it is downloaded as
-  precip_files <- precip_files[dates %in% time_range]
-  tmin_files <- tmin_files[dates %in% time_range]
-  tmax_files <- tmax_files[dates %in% time_range]
+  if(prcp_index == 'YES'){
+    precip_files <- list.files(directory,pattern='prcp', full.names = TRUE)
+    prcp <- stack() # Create raster stack for the area of interest and years of interest from Daymet data
+    dates <- substr(precip_files,28,31) # Assumes daymet data is saved in the exact naming format that it is downloaded as
+    precip_files <- precip_files[dates %in% time_range]
+  } 
+  
+  if(temp_index == 'YES'){
+    tmax_files <- list.files(directory,pattern='tmax', full.names = TRUE)
+    tmin_files <- list.files(directory,pattern='tmin', full.names = TRUE)
+    if(prcp_index == 'NO'){
+      dates <- substr(tmax_files,28,31) # Assumes daymet data is saved in the exact naming format that it is downloaded as
+    }
+    tmin_files <- tmin_files[dates %in% time_range]
+    tmax_files <- tmax_files[dates %in% time_range]
+    ## Create raster stacks for the area of interest and years of interest from Daymet data
+    tmin_s <- stack()
+    tmax_s <- stack()
+    tavg_s <- stack()
+  }
   
   ## reference shapefile used to clip, project, and resample 
   states <- readOGR("C:/Users/Chris/Desktop/California/us_states_lccproj.shp") # link to your local copy
   reference_area <- states[states@data$STATE_NAME %in% states_of_interest,]
   rm(states)
-  
-  ## Create raster stacks for the area of interest and years of interest from Daymet data
-  prec <- stack()
-  tmin_s <- stack()
-  tmax_s <- stack()
-  tavg_s <- stack()
   
   for (i in 1:length(precip_files)) {
     ## Precipitation 
@@ -36,8 +44,8 @@ weather_coeff <- function(directory, output_directory, start, end, timestep, sta
       precip <- stack(precip_files[[i]], varname = "prcp")
       precip <- crop(precip, reference_area)
       precip <- mask(precip, reference_area)
-      if (i>1 && compareCRS(precip,prec) == FALSE) { precip@crs <- crs(prec) }
-      prec <- stack(prec, precip)
+      if (i>1 && compareCRS(precip,prcp) == FALSE) { precip@crs <- crs(prcp) }
+      prcp <- stack(prcp, precip)
       rm(precip)
     }
 
@@ -63,22 +71,56 @@ weather_coeff <- function(directory, output_directory, start, end, timestep, sta
     print(i)
   }
   
+  ## create indices based on timestep
+  if(prcp_index =='YES'){
+    if(timestep == "daily"){
+      indices <- format(as.Date(names(prcp), format = "X%Y.%m.%d"), format = "%d")
+      indices <- as.numeric(indices)
+    } else if(timestep == "weekly"){
+      indices <- rep(seq(1,((nlayers(prcp)/7)+1),1),7)
+      indices <- indices[1:nlayers(prcp)]
+      indices <- indices[order(indices)]
+    } else if(timestep == "monthly"){
+      indices <- format(as.Date(names(prcp), format = "X%Y.%m.%d"), format = "%Y%m")
+      indices <- as.numeric(as.factor(indices))
+    }
+  }
+  
   ## Create reclassifier if threshold is used
-  if (prec_method == "threshold"){
-    m <- c(0, 2.5, 0,  2.5, Inf, 1)
-    rclmat <- matrix(m, ncol=3, byrow=TRUE)
+  if (prcp_method == "threshold"){
+    pm <- c(0, prcp_thresh, 0,  prcp_thresh, Inf, 1)
+    prcp_reclass <- matrix(pm, ncol=3, byrow=TRUE)
+    prcp_coeff <- reclassify(prcp,prcp_reclass)
+    prcp_coeff <- stackApply(prcp_coeff, indices, fun=mean)
+  }
+  
+  if (temp_method == "threshold"){
+    tm <- c(0, temp_thresh, 0,  temp_thresh, Inf, 1)
+    temp_reclass <- matrix(tm, ncol=3, byrow=TRUE)
   }
   
   ## create temperature and/or precipitation indices from daymet data based on time-step and variables of interest
   for (q in length(tavg_s)){
-    
+    if(prcp_index == 'YES'){
+      if (prcp_method == "threshold"){
+        
+        
+      }
+    }
+
+    if(temp_index == 'YES'){
+      if (temp_method == "threshold"){
+        temp <- stackApply(tavg_s, indices, fun=mean)
+        temp_coeff <- reclassify(temp,temp_reclass)
+      }
+    }
   }
   
   ## create directory for writing files
   dir.create(output_directory)
   
   ## Write outputs as raster format to output directory
-  writeRaster(x=prec, filename = paste(output_directory, "/prcp_coeff_", start, "_", end, "_", pest, ".tif", sep = ""), overwrite=TRUE, format = 'GTiff')
-  writeRaster(x=temp, filename = paste(output_directory, "/temp_coeff_", start, "_", end, "_", pest, ".tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+  writeRaster(x=prcp_coeff, filename = paste(output_directory, "/prcp_coeff_", start, "_", end, "_", pest, ".tif", sep = ""), overwrite=TRUE, format = 'GTiff')
+  writeRaster(x=temp_coeff, filename = paste(output_directory, "/temp_coeff_", start, "_", end, "_", pest, ".tif", sep = ""), overwrite=TRUE, format = 'GTiff')
   
 }

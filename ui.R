@@ -29,6 +29,7 @@ rUnit <<- ''
 
 dashboardPage(
   dashboardHeader(
+    titleWidth = 350,
     title = tags$a(href = 'https://github.com/ChrisJones687/APHIS-Modeling-Project/milestones', tags$img(src = "PoPSS_Logo.png", height = '80', width ='100%'))
   ),
   dashboardSidebar(
@@ -83,7 +84,7 @@ dashboardPage(
                          numericInput(inputId ="scale_2", label = infoLabelInputUI(id = "scale_2", label = "Long distance dispersal scale parameter", title = "Long distance scale parameter for dispersal kernel"), value = "8557", min=0, max = 50000, step = 11),
                          numericInput(inputId ="gamma", label = infoLabelInputUI(id = "gamma", label = "Gamma", title = "Sets the percent of short distance dispersal. If only short distance set to 1"), value = "1", min=0, max = 1, step = 0.01),
                          numericInput(inputId ="seed", label = infoLabelInputUI(id = "seed", label = "Random Seed Number", title = "Random Seed Number: Use to duplicate a single run"), value = "42", min=0, max = 5000, step = 1),
-                         selectInput(inputId = "time_step", label = infoLabelInputUI(id = "time_step", label = "Time Step", title = "Time step: Monthly or Weekly"), choices = c("weeks","months"))
+                         selectInput(inputId = "time_step", label = infoLabelInputUI(id = "time_step", label = "Time Step", title = "Time step: Monthly, Weekly, or Daily"), choices = c("daily","weekly","monthly"))
                )
         )
       ),
