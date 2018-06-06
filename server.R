@@ -11,7 +11,7 @@ pest_vars <<- list(host1_rast = NULL, host1_score = NULL, host2_rast=NULL, host2
                   precipData=NULL, kernelType ='Cauchy', kappa = 2, number_of_hosts = 1, scale1 = 20.57, scale2 = NULL, gamma = 1, seed_n = 42,
                   time_step ="weeks")
 
-weather_coeff_vars <<- list(directory = NULL, output_directory = NULL, start = NULL, end = NULL, timestep = 'daily', states_of_interest = c('Maryland'), pest = NULL, 
+weather_coeff_vars <<- list(directory = NULL, output_directory = NULL, start = NULL, end = NULL, time_step = 'daily', states_of_interest = c('Maryland'), pest = NULL, 
                         prcp_index = 'NO', prcp_method = NULL,  prcp_a0 = 0, prcp_a1 = 0, prcp_a2 = 0, prcp_a3 = 0, 
                         prcp_thresh = 0, prcp_x1mod =0, prcp_x2mod = 0, prcp_x3mod = 0,
                         temp_index = 'NO', temp_method = NULL, temp_a0 = 0, temp_a1 = 0, temp_a2 = 0, temp_a3 = 0, 
@@ -114,6 +114,33 @@ function(input, output, session) {
   observeEvent(input$hostIndexScore10, {pest_vars$host10_score <<- input$hostIndexScore10})
   
   ## Add/change parameter values when the inputs change in the GUI to weather_coeff_vars parameter list. This list is used to pass the most recent parameter values to the weather coeff creation fuction.
+  observeEvent(input$start, {weather_coeff_vars$start <<- input$start})
+  observeEvent(input$end, {weather_coeff_vars$end <<- input$end})
+  observeEvent(input$time_step, {weather_coeff_vars$time_step <<- input$time_step})
+  observeEvent(input$pest, {weather_coeff_vars$pest <<- input$pest})
+  observeEvent(input$prcp, {weather_coeff_vars$prcp_index <<- input$prcp})
+  observeEvent(input$prcp_method, {weather_coeff_vars$prcp_method <<- input$prcp_method})
+  observeEvent(input$prcp_a0, {weather_coeff_vars$prcp_a0 <<- input$prcp_a0})
+  observeEvent(input$prcp_a1, {weather_coeff_vars$prcp_a1 <<- input$prcp_a1})
+  observeEvent(input$prcp_a2, {weather_coeff_vars$prcp_a2 <<- input$prcp_a2})
+  observeEvent(input$prcp_a3, {weather_coeff_vars$prcp_a3 <<- input$prcp_a3})
+  observeEvent(input$prcp_thresh, {weather_coeff_vars$prcp_thresh <<- input$prcp_thresh})
+  observeEvent(input$prcp_x1mod, {weather_coeff_vars$prcp_x1mod <<- input$prcp_x1mod})
+  observeEvent(input$prcp_x2mod, {weather_coeff_vars$prcp_x2mod <<- input$prcp_x2mod})
+  observeEvent(input$prcp_x3mod, {weather_coeff_vars$prcp_x3mod <<- input$prcp_x3mod})
+  observeEvent(input$temp_index, {weather_coeff_vars$temp_index <<- input$temp_index})
+  observeEvent(input$temp_method, {weather_coeff_vars$temp_method <<- input$temp_method})
+  observeEvent(input$temp_a0, {weather_coeff_vars$temp_a0 <<- input$temp_a0})
+  observeEvent(input$temp_a1, {weather_coeff_vars$temp_a1 <<- input$temp_a1})
+  observeEvent(input$temp_a2, {weather_coeff_vars$temp_a2 <<- input$temp_a2})
+  observeEvent(input$temp_a3, {weather_coeff_vars$temp_a3 <<- input$temp_a3})
+  observeEvent(input$temp_thresh, {weather_coeff_vars$temp_thresh <<- input$temp_thresh})
+  observeEvent(input$temp_x1mod, {weather_coeff_vars$temp_x1mod <<- input$temp_x1mod})
+  observeEvent(input$temp_x2mod, {weather_coeff_vars$temp_x2mod <<- input$temp_x2mod})
+  observeEvent(input$temp_x3mod, {weather_coeff_vars$temp_x3mod <<- input$temp_x3mod})
+  directory = NULL
+  output_directory = NULL 
+  states_of_interest = c('Maryland')
   
   ## Set up GUI maps to be flexible
   observeEvent(input$initialInfection, {

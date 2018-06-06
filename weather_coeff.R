@@ -5,7 +5,7 @@ library(ncdf4)
 library(sp)
 library(googledrive)
 
-weather_coeff <- function(directory, output_directory, start, end, timestep, states_of_interest= c('California'), pest, 
+weather_coeff <- function(directory, output_directory, start, end, time_step, states_of_interest= c('California'), pest, 
                           prcp_index = 'NO', prcp_method = "threshold",  prcp_a0 = 0, prcp_a1 = 0, prcp_a2 = 0, prcp_a3 = 0, 
                           prcp_thresh = 0, prcp_x1mod = 0, prcp_x2mod = 0, prcp_x3mod = 0,
                           temp_index = 'YES', temp_method = "polynomial", temp_a0 = 0, temp_a1 = 0, temp_a2 = 0, temp_a3 = 0, 
@@ -76,14 +76,14 @@ weather_coeff <- function(directory, output_directory, start, end, timestep, sta
   
   ## create indices based on timestep
   if(prcp_index =='YES'){
-    if(timestep == "daily"){
+    if(time_step == "daily"){
       indices <- format(as.Date(names(prcp), format = "X%Y.%m.%d"), format = "%d")
       indices <- as.numeric(indices)
-    } else if(timestep == "weekly"){
+    } else if(time_step == "weekly"){
       indices <- rep(seq(1,((nlayers(prcp)/7)+1),1),7)
       indices <- indices[1:nlayers(prcp)]
       indices <- indices[order(indices)]
-    } else if(timestep == "monthly"){
+    } else if(time_step == "monthly"){
       indices <- format(as.Date(names(prcp), format = "X%Y.%m.%d"), format = "%Y%m")
       indices <- as.numeric(as.factor(indices))
     }
