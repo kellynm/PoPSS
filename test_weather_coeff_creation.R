@@ -4,7 +4,6 @@ end <- 2017
 timestep <- "weekly"
 directory <- "G:/DaymetUS"
 output_directory <- "G:/DaymetUS/test"
-#output_directory <- dir.create("G:/DaymetUS/test")
 states_of_interest <- c('Maryland')
 pest <- "ECFF"
 prcp_index = 'YES'
@@ -27,3 +26,9 @@ temp_x1mod = 0
 temp_x2mod = -15
 temp_x3mod = -15
 temp_thresh = 0
+
+weather_coeff(directory, output_directory, start, end, timestep, states_of_interest, pest, 
+                          prcp_index, prcp_method,  prcp_a0, prcp_a1, prcp_a2, prcp_a3, 
+                          prcp_thresh, prcp_x1mod, prcp_x2mod, prcp_x3mod,
+                          temp_index, temp_method, temp_a0, temp_a1, temp_a2, temp_a3, 
+                          temp_thresh, temp_x1mod, temp_x2mod, temp_x3mod)
