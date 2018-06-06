@@ -86,34 +86,34 @@ weather_coeff <- function(directory, output_directory, start, end, timestep, sta
     }
   }
   
-  ## Create reclassifier if threshold is used
-  if (prcp_method == "threshold"){
+  ## Create temperature and/or precipitation indices if method is threshold
+  if (prcp_index == 'YES' && prcp_method == "threshold"){
     pm <- c(0, prcp_thresh, 0,  prcp_thresh, Inf, 1)
     prcp_reclass <- matrix(pm, ncol=3, byrow=TRUE)
     prcp_coeff <- reclassify(prcp,prcp_reclass)
     prcp_coeff <- stackApply(prcp_coeff, indices, fun=mean)
   }
   
-  if (temp_method == "threshold"){
+  if (temp_index == 'YES' && temp_method == "threshold"){
     tm <- c(0, temp_thresh, 0,  temp_thresh, Inf, 1)
     temp_reclass <- matrix(tm, ncol=3, byrow=TRUE)
+    temp_coeff <- reclassify(temp,temp_reclass)
+    temp_coeff <- stackApply(temp_coeff, indices, fun=mean)
   }
   
   ## create temperature and/or precipitation indices from daymet data based on time-step and variables of interest
-  for (q in length(tavg_s)){
-    if(prcp_index == 'YES'){
-      if (prcp_method == "threshold"){
-        
-        
-      }
-    }
-
-    if(temp_index == 'YES'){
-      if (temp_method == "threshold"){
-        temp <- stackApply(tavg_s, indices, fun=mean)
-        temp_coeff <- reclassify(temp,temp_reclass)
-      }
-    }
+  if (prcp_index == 'YES' && prcp_method == "polynomial"){
+    prcp_coeff <- stackApply(prcp, indices, fun=mean)
+    prcp_coeff <- prcp_a0 + (prcp_a1 * (prcp_coef  + prcp_x1mod)) + (prcp_a2 * (prcp_coef + prcp_x2mod)**2) + (prcp_a3 * (prcp_coef + prcp_x3mod)**3)
+    prcp_coeff[prcp_coeff < 0] <- 0 # restrain lower limit to 0
+    prcp_coeff[prcp_coeff > 1] <- 1 # restrain upper limit to 1
+  }
+  
+  if (temp_index == 'YES' && temp_method == "polynomial"){
+    temp_coeff <- stackApply(tavg_s, indices, fun=mean)
+    temp_coeff <- temp_a0 + (temp_a1 * (temp_coeff + temp_x1mod)) + (temp_a2 * (temp_coeff + temp_x2mod)**2) + (temp_a3 * (temp_coeff + temp_x3mod)**3)
+    temp_coeff[temp_coeff < 0] <- 0 # restrain lower limit to 0
+    temp_coeff[temp_coeff > 1] <- 1 # restrain upper limit to 1
   }
   
   ## create directory for writing files

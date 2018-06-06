@@ -47,125 +47,135 @@ initial_infection <- as.matrix(initialPopulation)
 number_of_hosts = number_of_hosts
 
 ## define matrices for infected species of interest
-if (number_of_hosts>0){ I_host1 <- matrix(0, nrow=n_rows, ncol=n_cols)
-host1_rast[is.na(host1_rast)]<- 0
-S_host1 <- as.matrix(host1_rast)
-if(any(S_host1[initial_infection > 0] > 0)) I_host1[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host1[initial_infection > 0], initial_infection[initial_infection > 0])
-S_host1 <- S_host1 - I_host1 
-I_host1_rast <- initialPopulation
-I_host1_rast[] <- I_host1
-I_host1_stack <- stack(I_host1_rast)
-stack_list <- list(I_host1_stack)
-S_matrix_list <- list(S_host1)
-I_matrix_list <- list(I_host1)
+if (number_of_hosts>0){
+  I_host1 <- matrix(0, nrow=n_rows, ncol=n_cols)
+  host1_rast[is.na(host1_rast)]<- 0
+  S_host1 <- as.matrix(host1_rast)
+  if(any(S_host1[initial_infection > 0] > 0)) I_host1[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host1[initial_infection > 0], initial_infection[initial_infection > 0])
+  S_host1 <- S_host1 - I_host1 
+  I_host1_rast <- initialPopulation
+  I_host1_rast[] <- I_host1
+  I_host1_stack <- stack(I_host1_rast)
+  stack_list <- list(I_host1_stack)
+  S_matrix_list <- list(S_host1)
+  I_matrix_list <- list(I_host1)
 
-if (number_of_hosts>1) {I_host2 <- matrix(0, nrow=n_rows, ncol=n_cols)
-host2_rast[is.na(host2_rast)]<- 0
-S_host2 <- as.matrix(host2_rast)
-if(any(S_host2[initial_infection > 0] > 0)) I_host2[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host2[initial_infection > 0], initial_infection[initial_infection > 0]) 
-S_host2 <- S_host2 - I_host2 
-I_host2_rast <- initialPopulation
-I_host2_rast[] <- I_host2
-I_host2_stack <- stack(I_host2_rast)
-stack_list <- c(stack_list,I_host2_stack)
-S_matrix_list[[2]] <- S_host2
-I_matrix_list[[2]] <- I_host2
+if (number_of_hosts>1) {
+  I_host2 <- matrix(0, nrow=n_rows, ncol=n_cols)
+  host2_rast[is.na(host2_rast)]<- 0
+  S_host2 <- as.matrix(host2_rast)
+  if(any(S_host2[initial_infection > 0] > 0)) I_host2[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host2[initial_infection > 0], initial_infection[initial_infection > 0]) 
+  S_host2 <- S_host2 - I_host2 
+  I_host2_rast <- initialPopulation
+  I_host2_rast[] <- I_host2
+  I_host2_stack <- stack(I_host2_rast)
+  stack_list <- c(stack_list,I_host2_stack)
+  S_matrix_list[[2]] <- S_host2
+  I_matrix_list[[2]] <- I_host2
 
-if (number_of_hosts>2) {I_host3 <- matrix(0, nrow=n_rows, ncol=n_cols)
-host3_rast[is.na(host3_rast)]<- 0
-S_host3 <- as.matrix(host3_rast)
-if(any(S_host3[initial_infection > 0] > 0)) I_host3[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host3[initial_infection > 0], initial_infection[initial_infection > 0])
-S_host3 <- S_host3 - I_host3 
-I_host3_rast <- initialPopulation
-I_host3_rast[] <- I_host3
-I_host3_stack <- stack(I_host3_rast)
-stack_list <- c(stack_list,I_host3_stack)
-S_matrix_list[[3]] <- S_host3
-I_matrix_list[[3]] <- I_host3
+if (number_of_hosts>2) {
+  I_host3 <- matrix(0, nrow=n_rows, ncol=n_cols)
+  host3_rast[is.na(host3_rast)]<- 0
+  S_host3 <- as.matrix(host3_rast)
+  if(any(S_host3[initial_infection > 0] > 0)) I_host3[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host3[initial_infection > 0], initial_infection[initial_infection > 0])
+  S_host3 <- S_host3 - I_host3 
+  I_host3_rast <- initialPopulation
+  I_host3_rast[] <- I_host3
+  I_host3_stack <- stack(I_host3_rast)
+  stack_list <- c(stack_list,I_host3_stack)
+  S_matrix_list[[3]] <- S_host3
+  I_matrix_list[[3]] <- I_host3
+  
+if (number_of_hosts>3) {
+  I_host4 <- matrix(0, nrow=n_rows, ncol=n_cols)
+  host4_rast[is.na(host4_rast)]<- 0
+  S_host4 <- as.matrix(host4_rast)
+  if(any(S_host4[initial_infection > 0] > 0)) I_host4[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host4[initial_infection > 0], initial_infection[initial_infection > 0])
+  S_host4 <- S_host4 - I_host4 
+  I_host4_rast <- initialPopulation
+  I_host4_rast[] <- I_host4
+  I_host4_stack <- stack(I_host4_rast)
+  stack_list <- c(stack_list,I_host4_stack)
+  S_matrix_list[[4]] <- S_host4
+  I_matrix_list[[4]] <- I_host4
 
-if (number_of_hosts>3) {I_host4 <- matrix(0, nrow=n_rows, ncol=n_cols)
-host4_rast[is.na(host4_rast)]<- 0
-S_host4 <- as.matrix(host4_rast)
-if(any(S_host4[initial_infection > 0] > 0)) I_host4[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host4[initial_infection > 0], initial_infection[initial_infection > 0])
-S_host4 <- S_host4 - I_host4 
-I_host4_rast <- initialPopulation
-I_host4_rast[] <- I_host4
-I_host4_stack <- stack(I_host4_rast)
-stack_list <- c(stack_list,I_host4_stack)
-S_matrix_list[[4]] <- S_host4
-I_matrix_list[[4]] <- I_host4
+if (number_of_hosts>4) {
+  I_host5 <- matrix(0, nrow=n_rows, ncol=n_cols)
+  host5_rast[is.na(host5_rast)]<- 0
+  S_host5 <- as.matrix(host5_rast)
+  if(any(S_host5[initial_infection > 0] > 0)) I_host5[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host5[initial_infection > 0], initial_infection[initial_infection > 0])
+  S_host5 <- S_host5 - I_host5 
+  I_host5_rast <- initialPopulation
+  I_host5_rast[] <- I_host5
+  I_host5_stack <- stack(I_host5_rast)
+  stack_list <- c(stack_list,I_host5_stack)
+  S_matrix_list[[5]] <- S_host5
+  I_matrix_list[[5]] <- I_host5
 
-if (number_of_hosts>4) {I_host5 <- matrix(0, nrow=n_rows, ncol=n_cols)
-host5_rast[is.na(host5_rast)]<- 0
-S_host5 <- as.matrix(host5_rast)
-if(any(S_host5[initial_infection > 0] > 0)) I_host5[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host5[initial_infection > 0], initial_infection[initial_infection > 0])
-S_host5 <- S_host5 - I_host5 
-I_host5_rast <- initialPopulation
-I_host5_rast[] <- I_host5
-I_host5_stack <- stack(I_host5_rast)
-stack_list <- c(stack_list,I_host5_stack)
-S_matrix_list[[5]] <- S_host5
-I_matrix_list[[5]] <- I_host5
-
-if (number_of_hosts>5) {I_host6 <- matrix(0, nrow=n_rows, ncol=n_cols)
-host6_rast[is.na(host6_rast)]<- 0
-S_host6 <- as.matrix(host6_rast)
-if(any(S_host6[initial_infection > 0] > 0)) I_host6[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host6[initial_infection > 0], initial_infection[initial_infection > 0])
-S_host6 <- S_host6 - I_host6 
-I_host6_rast <- initialPopulation
-I_host6_rast[] <- I_host6
-I_host6_stack <- stack(I_host6_rast)
-stack_list <- c(stack_list,I_host6_stack)
-S_matrix_list[[6]] <- S_host6
-I_matrix_list[[6]] <- I_host6
-
-if (number_of_hosts>6) {I_host7 <- matrix(0, nrow=n_rows, ncol=n_cols)
-host7_rast[is.na(host7_rast)]<- 0
-S_host7 <- as.matrix(host7_rast)
-if(any(S_host7[initial_infection > 0] > 0)) I_host7[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host7[initial_infection > 0], initial_infection[initial_infection > 0])
-S_host7 <- S_host7 - I_host7 
-I_host7_rast <- initialPopulation
-I_host7_rast[] <- I_host7
-I_host7_stack <- stack(I_host7_rast)
-stack_list <- c(stack_list,I_host7_stack)
-S_matrix_list[[7]] <- S_host7
-I_matrix_list[[7]] <- I_host7
-
-if (number_of_hosts>7) {I_host8 <- matrix(0, nrow=n_rows, ncol=n_cols)
-host8_rast[is.na(host8_rast)]<- 0
-S_host8 <- as.matrix(host8_rast)
-if(any(S_host8[initial_infection > 0] > 0)) I_host8[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host8[initial_infection > 0], initial_infection[initial_infection > 0])
-S_host8 <- S_host8 - I_host8 
-I_host8_rast <- initialPopulation
-I_host8_rast[] <- I_host8
-I_host8_stack <- stack(I_host8_rast)
-stack_list <- c(stack_list,I_host8_stack)
-S_matrix_list[[8]] <- S_host8
-I_matrix_list[[8]] <- I_host8
-
-if (number_of_hosts>8) {I_host9 <- matrix(0, nrow=n_rows, ncol=n_cols)
-host9_rast[is.na(host9_rast)]<- 0
-S_host9 <- as.matrix(host9_rast)
-if(any(S_host9[initial_infection > 0] > 0)) I_host9[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host9[initial_infection > 0], initial_infection[initial_infection > 0])
-S_host9 <- S_host9 - I_host9 
-I_host9_rast <- initialPopulation
-I_host9_rast[] <- I_host9
-I_host9_stack <- stack(I_host9_rast)
-stack_list <- c(stack_list,I_host9_stack)
-S_matrix_list[[9]] <- S_host9
-I_matrix_list[[9]] <- I_host9
-
-if (number_of_hosts>9) {I_host10 <- matrix(0, nrow=n_rows, ncol=n_cols)
-host10_rast[is.na(host10_rast)]<- 0
-S_host10 <- as.matrix(host10_rast)
-if(any(S_host10[initial_infection > 0] > 0)) I_host10[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host10[initial_infection > 0], initial_infection[initial_infection > 0])
-S_host10 <- S_host10 - I_host10
-I_host10_rast <- initialPopulation
-I_host10_rast[] <- I_host10
-I_host10_stack <- stack(I_host10_rast)
-stack_list <- c(stack_list,I_host10_stack)
-S_matrix_list[[10]] <- S_host10
-I_matrix_list[[10]] <- I_host10
+if (number_of_hosts>5) {
+  I_host6 <- matrix(0, nrow=n_rows, ncol=n_cols)
+  host6_rast[is.na(host6_rast)]<- 0
+  S_host6 <- as.matrix(host6_rast)
+  if(any(S_host6[initial_infection > 0] > 0)) I_host6[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host6[initial_infection > 0], initial_infection[initial_infection > 0])
+  S_host6 <- S_host6 - I_host6 
+  I_host6_rast <- initialPopulation
+  I_host6_rast[] <- I_host6
+  I_host6_stack <- stack(I_host6_rast)
+  stack_list <- c(stack_list,I_host6_stack)
+  S_matrix_list[[6]] <- S_host6
+  I_matrix_list[[6]] <- I_host6
+  
+if (number_of_hosts>6) {
+  I_host7 <- matrix(0, nrow=n_rows, ncol=n_cols)
+  host7_rast[is.na(host7_rast)]<- 0
+  S_host7 <- as.matrix(host7_rast)
+  if(any(S_host7[initial_infection > 0] > 0)) I_host7[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host7[initial_infection > 0], initial_infection[initial_infection > 0])
+  S_host7 <- S_host7 - I_host7 
+  I_host7_rast <- initialPopulation
+  I_host7_rast[] <- I_host7
+  I_host7_stack <- stack(I_host7_rast)
+  stack_list <- c(stack_list,I_host7_stack)
+  S_matrix_list[[7]] <- S_host7
+  I_matrix_list[[7]] <- I_host7
+  
+if (number_of_hosts>7) {
+  I_host8 <- matrix(0, nrow=n_rows, ncol=n_cols)
+  host8_rast[is.na(host8_rast)]<- 0
+  S_host8 <- as.matrix(host8_rast)
+  if(any(S_host8[initial_infection > 0] > 0)) I_host8[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host8[initial_infection > 0], initial_infection[initial_infection > 0])
+  S_host8 <- S_host8 - I_host8 
+  I_host8_rast <- initialPopulation
+  I_host8_rast[] <- I_host8
+  I_host8_stack <- stack(I_host8_rast)
+  stack_list <- c(stack_list,I_host8_stack)
+  S_matrix_list[[8]] <- S_host8
+  I_matrix_list[[8]] <- I_host8
+  
+if (number_of_hosts>8) {
+  I_host9 <- matrix(0, nrow=n_rows, ncol=n_cols)
+  host9_rast[is.na(host9_rast)]<- 0
+  S_host9 <- as.matrix(host9_rast)
+  if(any(S_host9[initial_infection > 0] > 0)) I_host9[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host9[initial_infection > 0], initial_infection[initial_infection > 0])
+  S_host9 <- S_host9 - I_host9 
+  I_host9_rast <- initialPopulation
+  I_host9_rast[] <- I_host9
+  I_host9_stack <- stack(I_host9_rast)
+  stack_list <- c(stack_list,I_host9_stack)
+  S_matrix_list[[9]] <- S_host9
+  I_matrix_list[[9]] <- I_host9
+  
+if (number_of_hosts>9) {
+  I_host10 <- matrix(0, nrow=n_rows, ncol=n_cols)
+  host10_rast[is.na(host10_rast)]<- 0
+  S_host10 <- as.matrix(host10_rast)
+  if(any(S_host10[initial_infection > 0] > 0)) I_host10[initial_infection > 0] <- mapply(function(x,y) ifelse(x > y, min(c(x,y*2)), x), S_host10[initial_infection > 0], initial_infection[initial_infection > 0])
+  S_host10 <- S_host10 - I_host10
+  I_host10_rast <- initialPopulation
+  I_host10_rast[] <- I_host10
+  I_host10_stack <- stack(I_host10_rast)
+  stack_list <- c(stack_list,I_host10_stack)
+  S_matrix_list[[10]] <- S_host10
+  I_matrix_list[[10]] <- I_host10
 }}}}}}}}}} 
 
 for (i in (number_of_hosts+1):10){
