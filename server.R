@@ -142,6 +142,11 @@ function(input, output, session) {
   observeEvent(input$output_directory, {weather_coeff_vars$output_directory <<- input$output_directory})
   observeEvent(input$study_area, {weather_coeff_vars$states_of_interest <<- input$study_area})
   
+  ## Run weather coefficient creator to create weather coefficients for model input
+  observeEvent(input$weather_coeff_run, {
+    withBusyIndicatorServer("weather_coeff_run",{do.call(weather_coeff, weather_coeff_vars)})
+  })
+  
   ## Set up GUI maps to be flexible
   observeEvent(input$initialInfection, {
     if (extension(input$initialInfection$datapath) %in% c(".tif", ".grd", ".asc", ".sdat", ".rst", ".nc", ".tif", ".envi", ".bil", ".img")) {

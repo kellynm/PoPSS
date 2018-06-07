@@ -20,6 +20,7 @@ suppressPackageStartupMessages(library(shinydashboard))
 suppressPackageStartupMessages(library(shinydashboardPlus))
 source("helpers.R")
 source("Generalizablepestandpathogenmodel.R")
+source("weather_coeff.R")
 source("InfoLabelInput.R")
 source("getUnit.R")
 source("zipcreator.R")
@@ -246,7 +247,7 @@ dashboardPage(
                   textInput(inputId = "output_directory", label = infoLabelInputUI(id = "output_directory", label = "Daymet Directory", title = "Include complete path to output location (e.g. C://Users/Chris/Desktop/DaymetUS/pest)"), value = "C://Users/Chris/Desktop/DaymetUS/pest"),
                   textInput(inputId = "study_area", label = infoLabelInputUI(id = "study_area", label = "Study Area", title = "List all states that you want in your study area"), value = "Maryland")
         ),
-        withBusyIndicatorUI(actionButton("weather_coeff_button", " Create Weather Coefficients", icon = icon("thermometer-full")))
+        withBusyIndicatorUI(actionButton("weather_coeff_run", " Create Weather Coefficients", icon = icon("thermometer-full")))
       ),
       
       tabItem(tabName = "dispersal"

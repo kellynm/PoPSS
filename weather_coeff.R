@@ -3,7 +3,7 @@ library(rgdal)
 library(raster)
 library(ncdf4)
 library(sp)
-library(googledrive)
+#library(googledrive)
 
 weather_coeff <- function(directory, output_directory, start, end, time_step, states_of_interest= c('California'), pest, 
                           prcp_index = 'NO', prcp_method = "threshold",  prcp_a0 = 0, prcp_a1 = 0, prcp_a2 = 0, prcp_a3 = 0, 
