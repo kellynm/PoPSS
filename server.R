@@ -138,9 +138,9 @@ function(input, output, session) {
   observeEvent(input$temp_x1mod, {weather_coeff_vars$temp_x1mod <<- input$temp_x1mod})
   observeEvent(input$temp_x2mod, {weather_coeff_vars$temp_x2mod <<- input$temp_x2mod})
   observeEvent(input$temp_x3mod, {weather_coeff_vars$temp_x3mod <<- input$temp_x3mod})
-  directory = NULL
-  output_directory = NULL 
-  states_of_interest = c('Maryland')
+  observeEvent(input$input_directory, {weather_coeff_vars$directory <<- input$input_directory})
+  observeEvent(input$output_directory, {weather_coeff_vars$output_directory <<- input$output_directory})
+  observeEvent(input$study_area, {weather_coeff_vars$states_of_interest <<- input$study_area})
   
   ## Set up GUI maps to be flexible
   observeEvent(input$initialInfection, {
