@@ -254,7 +254,6 @@ function(input, output, session) {
   })
   
   ## Create reactive raster for slider object to update and allow for animation
-  # output$rSlider <- renderUI({sliderInput(inputId = 'yearSlider', label = 'Year', value = 1, step = 1, min = 1, max = 11, sep = "")})
   # host1Years <- reactive({subset(modelRastOut, input$yearSlider)})
   # ras_vals <- reactive({values(host1Years())})
   # pal2 <- reactive({colorNumeric(c("#0C2C84", "#41B6C4", "#FFFFCC"), ras_vals(), na.color="transparent")})
@@ -266,6 +265,17 @@ function(input, output, session) {
     #proxy <<- proxy %>% addRasterImage(host1Years(), colors=pal2(), opacity=0.8, layerId = "hostIMG")
     #proxy <<- proxy %>% removeImage(layerID = "hostIMG") %>% addRasterImage(host1Years, colors=pal2, opacity=0.8, layerId = "hostIMG")
   })
+  
+  ## Create slider for playing through years
+  output$movie_slider <- renderUI({
+    sliderInput("dec", "Year", min=1, max=11, value=1, step=1, animate= animationOptions(interval=1000))
+  })
+  
+  ## Create Input for selecting host based on number of hosts
+  output$host_selection <- renderUI({
+    numericInput("host", label = "Choose species", min = 1, max = input$hostMulti, value = 1)
+  })
+  
   
   ## Allows for the downloading of the user manual when the download link is pressed
   output$userManual.pdf <- downloadHandler("user_manual.pdf", content = function(file){

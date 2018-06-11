@@ -260,8 +260,8 @@ dashboardPage(
                uiOutput("rSlider"),
                leafletOutput("mapData", height = "600px"),
                absolutePanel(top=80, left=25,
-                             sliderInput("dec", "Year", min=1, max=11, value=1, step=1, animate= animationOptions(interval=1000)),
-                             numericInput("host", label = "Choose species", min = 1, max = 3, value = 1),
+                             uiOutput("movie_slider"),
+                             uiOutput("host_selection"),
                              checkboxInput("legend", "Show legend", TRUE) 
                ),
                br()
