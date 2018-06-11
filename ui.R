@@ -1,23 +1,23 @@
-suppressPackageStartupMessages(library(leaflet))    # Allows display spatial data
-suppressPackageStartupMessages(library(RColorBrewer)) # For additional color samples
-suppressPackageStartupMessages(library(scales))
-suppressPackageStartupMessages(library(lattice))
-suppressPackageStartupMessages(library(dplyr))
-suppressPackageStartupMessages(library(shiny))
-suppressPackageStartupMessages(library(raster))
-suppressPackageStartupMessages(library(rgdal))
-suppressPackageStartupMessages(library(shinyjs))
-suppressPackageStartupMessages(library(shinyBS))
-suppressPackageStartupMessages(library(ggplot2))
-suppressPackageStartupMessages(library(rgdal))     # Geospatial data abstraction library. Depends R (≥ 2.14.0)
-suppressPackageStartupMessages(library(lubridate)) # Make dealing with dates a little easier. Depends R (≥ 3.0.0)
-suppressPackageStartupMessages(library(CircStats)) # Circular Statistics - Von Mises distribution
-suppressPackageStartupMessages(library(Rcpp))      # Seamless R and C++ Integration. Depends R (≥ 3.0.0)
-suppressPackageStartupMessages(library(ncdf4))     # work with NetCDF datasets
-suppressPackageStartupMessages(library(dismo))     # Regression for ecological datasets
-suppressPackageStartupMessages(library(sp))        # Classes and methods for spatial data
-suppressPackageStartupMessages(library(shinydashboard))
-suppressPackageStartupMessages(library(shinydashboardPlus))
+suppressPackageStartupMessages(library(leaflet))             # Allows display spatial data
+suppressPackageStartupMessages(library(RColorBrewer))        # For additional color samples
+suppressPackageStartupMessages(library(scales))              # For additonal scales   
+suppressPackageStartupMessages(library(lattice))             # Plotting 
+suppressPackageStartupMessages(library(dplyr))               # Easier data table format changes
+suppressPackageStartupMessages(library(shiny))               # Allows creating web based reactive interfaces
+suppressPackageStartupMessages(library(raster))              # Allows for working with raster data sets
+suppressPackageStartupMessages(library(rgdal))               # Allows for working with spatial data such as shape files
+suppressPackageStartupMessages(library(shinyjs))             # Additional functionality for web based interfaces
+suppressPackageStartupMessages(library(shinyBS))             # Additional functionality for web based interfaces
+suppressPackageStartupMessages(library(ggplot2))             # For Plotting
+suppressPackageStartupMessages(library(rgdal))               # Geospatial data abstraction library. Depends R (≥ 2.14.0)
+suppressPackageStartupMessages(library(lubridate))           # Make dealing with dates a little easier. Depends R (≥ 3.0.0)
+suppressPackageStartupMessages(library(CircStats))           # Circular Statistics - Von Mises distribution
+suppressPackageStartupMessages(library(Rcpp))                # Seamless R and C++ Integration. Depends R (≥ 3.0.0)
+suppressPackageStartupMessages(library(ncdf4))               # work with NetCDF datasets
+suppressPackageStartupMessages(library(dismo))               # Regression for ecological datasets
+suppressPackageStartupMessages(library(sp))                  # Classes and methods for spatial data
+suppressPackageStartupMessages(library(shinydashboard))      # Dashboard layout for webbased UI
+suppressPackageStartupMessages(library(shinydashboardPlus))  # Additional functionallity for webbased dashboard UIs
 source("helpers.R")
 source("Generalizablepestandpathogenmodel.R")
 source("weather_coeff.R")
